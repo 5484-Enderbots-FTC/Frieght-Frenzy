@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.odometry.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.odometry.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -329,7 +329,7 @@ public class auto_convert_to_odometry extends LinearOpMode {
 
             if(isStopRequested()){
                 if(drive.isBusy()){
-                    drive.cancelFollowing();
+                    //drive.cancelFollowing();
                 }
                 currentState = State.STOP;
             }

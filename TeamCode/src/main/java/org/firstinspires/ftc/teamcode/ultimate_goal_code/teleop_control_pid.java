@@ -38,7 +38,7 @@ public class teleop_control_pid extends LinearOpMode {
 
     boolean magIsUp = false;
     boolean backwardsMode = false;
-    boolean slowMode = false;
+    boolean slowMode = true;
     boolean intakeRunning = false;
     boolean flywheelRunning = false;
 
@@ -119,7 +119,13 @@ public class teleop_control_pid extends LinearOpMode {
              * Telemetry
              */
 
-            telemetry.addData("topLimit: ", robot.topLimit.getState());
+            //telemetry.addData("topLimit: ", robot.topLimit.getState());
+            if(slowMode == true){
+                telemetry.addLine("baby mode activated");
+            }
+            else{
+                telemetry.addLine("baby mode inactive");
+            }
             telemetry.update();
 
             /**

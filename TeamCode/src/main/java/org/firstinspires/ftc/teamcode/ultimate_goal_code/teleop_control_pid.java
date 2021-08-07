@@ -30,7 +30,7 @@ public class teleop_control_pid extends LinearOpMode {
 
     /***
 
-     ~ Constants ~
+     ~ Booleans ~
 
      */
 

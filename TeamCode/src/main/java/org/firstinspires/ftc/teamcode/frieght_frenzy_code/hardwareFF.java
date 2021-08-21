@@ -43,19 +43,19 @@ public class hardwareFF {
 
         mtrBL = hw.get(DcMotorEx.class, "mtrBL");
         mtrBL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        mtrBL.setDirection(DcMotorEx.Direction.REVERSE);
+        mtrBL.setDirection(DcMotorEx.Direction.FORWARD);
 
         mtrBR = hw.get(DcMotorEx.class, "mtrBR");
         mtrBR.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        mtrBR.setDirection(DcMotorEx.Direction.FORWARD);
+        mtrBR.setDirection(DcMotorEx.Direction.REVERSE);
 
         mtrFL = hw.get(DcMotorEx.class, "mtrFL");
         mtrFL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        mtrFL.setDirection(DcMotorEx.Direction.REVERSE);
+        mtrFL.setDirection(DcMotorEx.Direction.FORWARD);
 
         mtrFR = hw.get(DcMotorEx.class, "mtrFR");
         mtrFR.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        mtrFR.setDirection(DcMotorEx.Direction.FORWARD);
+        mtrFR.setDirection(DcMotorEx.Direction.REVERSE);
 
         batteryVoltage = hw.voltageSensor.iterator().next();
 

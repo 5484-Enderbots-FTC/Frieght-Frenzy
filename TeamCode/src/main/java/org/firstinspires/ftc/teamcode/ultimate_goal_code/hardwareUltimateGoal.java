@@ -105,8 +105,8 @@ public class hardwareUltimateGoal {
 
         int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hwMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        webcam.openCameraDeviceAsync(() -> webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT)
-        );
+        //webcam.openCameraDeviceAsync(webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT));
+        webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
     }
     public void updateDrive(double fwdStick, double turnStick, double strStick){
         mtrBL.setPower((fwdStick - turnStick + strStick));

@@ -31,7 +31,7 @@ public class teleop_two_remotes extends LinearOpMode {
      */
 
     //servos
-    double      extendOut = 0.65;
+    double extendOut = 0.65;
     double extendIn = 0;
 
     double groundArm = 0.05;

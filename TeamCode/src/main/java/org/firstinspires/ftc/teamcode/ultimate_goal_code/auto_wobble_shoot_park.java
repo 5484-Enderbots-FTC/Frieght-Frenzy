@@ -91,7 +91,7 @@ public class auto_wobble_shoot_park extends LinearOpMode {
             webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
             pipeline = new RingStackDeterminationPipeline();
             webcam.setPipeline(pipeline);
-
+/*
             webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
                                              @Override
                                              public void onOpened() {
@@ -99,6 +99,8 @@ public class auto_wobble_shoot_park extends LinearOpMode {
                                              }
                                          }
             );
+
+ */
             //motors
             mtrBL = hardwareMap.get(DcMotorEx.class, "mtrBL");
             mtrBL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);

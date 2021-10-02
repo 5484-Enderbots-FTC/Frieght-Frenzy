@@ -116,9 +116,13 @@ public class auto_odometry_power_shots extends LinearOpMode {
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         pipeline = new RingStackDeterminationPipeline();
         webcam.setPipeline(pipeline);
-
-        webcam.openCameraDeviceAsync(() -> webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT)
+/*
+        webcam.openCameraDeviceAsync(() -> {
+                    return webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
+                }
         );
+
+ */
 
         //Shooter PID config
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {

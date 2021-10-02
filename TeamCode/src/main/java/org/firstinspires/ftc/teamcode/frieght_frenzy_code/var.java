@@ -10,4 +10,13 @@ public class var {
 
     //example:
     public static double variable = 97;
+    //Toms garbage, subject to change, touch as needed
+    /* Thinking about either tying these to switches or making a public doc that works
+     as an alternative to switches, whichever one works better
+     */
+    public static boolean teamRed = false;
+    public static boolean teamBlue = false;
+    public static boolean justPark = false;
+    public static boolean doItAll = false;
+    public static double shippingHub = 0;
 }

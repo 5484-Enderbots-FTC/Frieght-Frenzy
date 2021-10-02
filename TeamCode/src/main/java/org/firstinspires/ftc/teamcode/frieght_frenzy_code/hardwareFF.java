@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
+import android.media.SoundPool;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -28,6 +29,13 @@ public class hardwareFF {
 
     //So far this season we just have motors, so I've done the work to initialize them here:
      */
+    // Sound variables
+    public SoundPool mySound;
+    public int honkID;
+    //note: to make hjonk, you need a file in TeamCode/res/raw called honk.mp3, it should be a duck honking, but it can be whatever
+    // mySound = new SoundPool(1, AudioManager.STREAM_MUSIC, 0); // PSM
+    //honkID = mySound.load(hardwareMap.appContext, R.raw.honk, 1); // PSM
+    // the code above is what goes in the init(), and to play the sound use mySound.play(honkID,1,1,1,0,1);
     public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR;
 
     private VoltageSensor batteryVoltage;

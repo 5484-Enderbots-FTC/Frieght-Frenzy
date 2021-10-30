@@ -6,13 +6,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "teleop ff", group = "teleop")
 public class teleop_two_remotes extends LinearOpMode {
+
+    //imported hardware from "hardwareFF" public class:
     hardwareFF robot = new hardwareFF();
+
+    //this is the timer used to create a toggle switch:
     ElapsedTime toggleBabyTimer = new ElapsedTime();
-    
+
+    //this boolean keeps track of whether or not the toggle is on or off
     boolean babyMode = false;
     
     public void runOpMode() {
-        //init code goes here
+        //initialization code goes here
         robot.init(hardwareMap);
 
         telemetry.addData("Status", "Initialized");
@@ -40,12 +45,14 @@ public class teleop_two_remotes extends LinearOpMode {
             if(babyMode){
                 robot.updateDrive(gamepad1.left_stick_y*0.5, gamepad1.left_stick_x*0.5, gamepad1.right_stick_x*0.5);
             }
-            
-            
-
 
             //we usually add some telemetry at the end to tell us useful information during testing :)
-            telemetry.addData("left stick y value: ", gamepad1.left_stick_y);
+            if(babyMode){
+                telemetry.addLine("baby mode activated");
+            }
+            else{
+                telemetry.addLine("baby mode inactive");
+            }
             telemetry.update();
         }
     }

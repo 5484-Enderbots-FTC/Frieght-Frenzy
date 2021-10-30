@@ -9,5 +9,5 @@ public class var {
     //ez pz :)
 
     //example:
-    public static double variable = 97;
+    public static double toggleWait = 0.5; //(seconds)
 }

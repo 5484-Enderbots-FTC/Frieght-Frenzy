@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -28,7 +30,8 @@ public class hardwareFF {
 
     //So far this season we just have motors, so I've done the work to initialize them here:
      */
-    public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR;
+    private DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR;
+    //private CRServo svoIntake;
 
     private VoltageSensor batteryVoltage;
     private HardwareMap hw = null;
@@ -51,13 +54,18 @@ public class hardwareFF {
 
         mtrFL = hw.get(DcMotorEx.class, "mtrFL");
         mtrFL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        mtrFL.setDirection(DcMotorEx.Direction.FORWARD);
+        mtrFL.setDirection(DcMotorEx.Direction.REVERSE);
 
         mtrFR = hw.get(DcMotorEx.class, "mtrFR");
         mtrFR.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         mtrFR.setDirection(DcMotorEx.Direction.REVERSE);
 
+        //svoIntake = hw.get(CRServo.class, "svoIntake");
+        //svoIntake.setDirection(CRServo.Direction.FORWARD);
+
         batteryVoltage = hw.voltageSensor.iterator().next();
+
+
 
     }
 

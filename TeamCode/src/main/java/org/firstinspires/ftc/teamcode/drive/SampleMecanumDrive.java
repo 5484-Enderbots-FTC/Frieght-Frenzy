@@ -68,7 +68,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private TrajectoryFollower follower;
 
-    private DcMotorEx mtrFL, mtrBL, mtrBR, mtrFR;
+    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
 
     private BNO055IMU imu;
@@ -98,23 +98,12 @@ public class SampleMecanumDrive extends MecanumDrive {
         // upward (normal to the floor) using a command like the following:
         // BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
 
-        mtrBL = hardwareMap.get(DcMotorEx.class, "mtrBL");
-        mtrBL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        mtrBL.setDirection(DcMotorEx.Direction.REVERSE);
+        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
+        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
+        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
+        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
 
-        mtrBR = hardwareMap.get(DcMotorEx.class, "mtrBR");
-        mtrBR.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        mtrBR.setDirection(DcMotorEx.Direction.FORWARD);
-
-        mtrFL = hardwareMap.get(DcMotorEx.class, "mtrFL");
-        mtrFL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        mtrFL.setDirection(DcMotorEx.Direction.REVERSE);
-
-        mtrFR = hardwareMap.get(DcMotorEx.class, "mtrFR");
-        mtrFR.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        mtrFR.setDirection(DcMotorEx.Direction.FORWARD);
-
-        motors = Arrays.asList(mtrFL, mtrBL, mtrBR, mtrFR);
+        motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
@@ -278,10 +267,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        mtrFL.setPower(v);
-        mtrBL.setPower(v1);
-        mtrBR.setPower(v2);
-        mtrFR.setPower(v3);
+        leftFront.setPower(v);
+        leftRear.setPower(v1);
+        rightRear.setPower(v2);
+        rightFront.setPower(v3);
     }
 
     @Override

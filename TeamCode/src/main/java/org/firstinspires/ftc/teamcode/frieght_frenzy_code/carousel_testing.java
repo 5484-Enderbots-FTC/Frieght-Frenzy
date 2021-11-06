@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 @TeleOp(name = "carousel test", group = "teleop")
 public class carousel_testing extends LinearOpMode {
 
+    DcMotorEx mtrCarousel;
     VoltageSensor batteryVoltageSensor;
 
     private static double stop = 0;
@@ -20,28 +21,29 @@ public class carousel_testing extends LinearOpMode {
     private static double smallIncrement = 20;
     private double currentVelocity = 0;
 
-    private static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(12, 1.5, 5, 12.3);
+    private static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0, 0);
 
     public void runOpMode() {
-        batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
         //VelocityPID
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
         //PID motor config
-        DcMotorEx myMotor = hardwareMap.get(DcMotorEx.class, "mtrCarousel");
-
-        myMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        MotorConfigurationType motorConfigurationType = myMotor.getMotorType().clone();
+        mtrCarousel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        MotorConfigurationType motorConfigurationType = mtrCarousel.getMotorType().clone();
         motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
-        myMotor.setMotorType(motorConfigurationType);
-        myMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
-        setPIDFCoefficients(myMotor, MOTOR_VELO_PID);
+        mtrCarousel.setMotorType(motorConfigurationType);
+
+        setPIDFCoefficients(mtrCarousel, MOTOR_VELO_PID);
 
         //init motor and battery
+        batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-
+        mtrCarousel = hardwareMap.get(DcMotorEx.class, "mtrBL");
+        mtrCarousel.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        mtrCarousel.setDirection(DcMotorEx.Direction.FORWARD);
+        mtrCarousel.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         currentVelocity = stop;
 
@@ -51,33 +53,25 @@ public class carousel_testing extends LinearOpMode {
 
         while (!isStopRequested() && opModeIsActive()) {
             //actual controls lmao
-            myMotor.setVelocity(currentVelocity);
+            mtrCarousel.setVelocity(currentVelocity);
 
             if(gamepad1.b){
                 currentVelocity = stop;
             }
             if(gamepad1.dpad_up){
-                currentVelocity = 1200;
+                currentVelocity += largeIncrement;
             }
             if(gamepad1.dpad_down){
-                currentVelocity = 1000;
+                currentVelocity -= largeIncrement;
             }
             if(gamepad1.right_bumper){
-                currentVelocity = 1600;
+                currentVelocity += smallIncrement;
             }
             if(gamepad1.left_bumper){
-                currentVelocity = 1400;
+                currentVelocity -= smallIncrement;
             }
-            if(gamepad1.x){
-                currentVelocity = 1800;
-            }
-if(gamepad1.y){
-    currentVelocity = 2000;
-}
-if(gamepad1.a){
-    currentVelocity = 2200;
-}
-            telemetry.addData("current motor velocity: ", myMotor.getVelocity());
+
+            telemetry.addData("current motor velocity: ", mtrCarousel.getVelocity());
             telemetry.addData("current velocity variable: ", currentVelocity);
             telemetry.update();
         }

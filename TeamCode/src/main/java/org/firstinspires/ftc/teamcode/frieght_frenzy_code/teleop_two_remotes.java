@@ -12,9 +12,11 @@ public class teleop_two_remotes extends LinearOpMode {
 
     //this is the timer used to create a toggle switch:
     ElapsedTime toggleBabyTimer = new ElapsedTime();
+    ElapsedTime toggleCarousel = new ElapsedTime();
 
     //this boolean keeps track of whether or not the toggle is on or off
     boolean babyMode = false;
+    boolean carouselSpinning = false;
     
     public void runOpMode() {
         //initialization code goes here
@@ -46,6 +48,22 @@ public class teleop_two_remotes extends LinearOpMode {
                 robot.updateDrive(gamepad1.left_stick_y*0.5, gamepad1.left_stick_x*0.5, gamepad1.right_stick_x*0.5);
             }
 
+            if(gamepad1.a){
+                carouselSpinning = true;
+                if(robot.alliance_switch.getState() == true){
+                    robot.svoCarousel.setPower(1);
+                }
+                else{
+                    robot.svoCarousel.setPower(-1);
+                }
+
+            }
+            if(gamepad1.b){
+                carouselSpinning = false;
+                robot.svoCarousel.setPower(0);
+            }
+
+
             //we usually add some telemetry at the end to tell us useful information during testing :)
             if(babyMode){
                 telemetry.addLine("baby mode activated");
@@ -53,7 +71,13 @@ public class teleop_two_remotes extends LinearOpMode {
             else{
                 telemetry.addLine("baby mode inactive");
             }
-            telemetry.update();
+            if(robot.alliance_switch.getState() == true) {
+                telemetry.addLine("red alliance");
+            }
+            else {
+                telemetry.addLine("blue alliance");
+                telemetry.update();
+            }
         }
     }
 

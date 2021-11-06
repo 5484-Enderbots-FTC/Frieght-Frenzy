@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -30,12 +33,16 @@ public class hardwareFF {
 
     //So far this season we just have motors, so I've done the work to initialize them here:
      */
-    private DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR;
-    //private CRServo svoIntake;
+    public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR;
+    public CRServo svoCarousel;
 
-    private VoltageSensor batteryVoltage;
-    private HardwareMap hw = null;
+    public DigitalChannel alliance_switch;
+    public VoltageSensor batteryVoltage;
+    public HardwareMap hw = null;
 
+    public double alliance = 0;
+    public final double red = 1;
+    public final double blue = -1;
 
     public hardwareFF() {
         //nothing goes in this- its just a way to call the program
@@ -54,7 +61,7 @@ public class hardwareFF {
 
         mtrFL = hw.get(DcMotorEx.class, "mtrFL");
         mtrFL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        mtrFL.setDirection(DcMotorEx.Direction.REVERSE);
+        mtrFL.setDirection(DcMotorEx.Direction.FORWARD);
 
         mtrFR = hw.get(DcMotorEx.class, "mtrFR");
         mtrFR.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -63,9 +70,18 @@ public class hardwareFF {
         //svoIntake = hw.get(CRServo.class, "svoIntake");
         //svoIntake.setDirection(CRServo.Direction.FORWARD);
 
+        svoCarousel = hw.get(CRServo.class, "svoCarousel");
+        svoCarousel.setDirection(CRServo.Direction.REVERSE);
+
+        alliance_switch = hw.get(DigitalChannel.class, "alliance_switch");
         batteryVoltage = hw.voltageSensor.iterator().next();
 
-
+        if (alliance_switch.getState() == true) {
+            alliance = red;
+        }
+        if (alliance_switch.getState() == false) {
+            alliance = blue;
+        }
 
     }
 

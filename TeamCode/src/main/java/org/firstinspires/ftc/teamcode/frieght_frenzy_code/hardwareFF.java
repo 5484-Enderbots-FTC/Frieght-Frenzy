@@ -36,10 +36,11 @@ public class hardwareFF {
     // mySound = new SoundPool(1, AudioManager.STREAM_MUSIC, 0); // PSM
     //honkID = mySound.load(hardwareMap.appContext, R.raw.honk, 1); // PSM
     // the code above is what goes in the init(), and to play the sound use mySound.play(honkID,1,1,1,0,1);
-    public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR;
+    public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR, mtrNEHL;
 
     private VoltageSensor batteryVoltage;
     private HardwareMap hw = null;
+
 
 
     public hardwareFF() {
@@ -48,6 +49,10 @@ public class hardwareFF {
 
     public void init(HardwareMap thisHwMap){
         hw = thisHwMap;
+
+        mtrNEHL = hw.get(DcMotorEx.class, "mtrNEHL");
+        mtrNEHL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        mtrNEHL.setDirection(DcMotorEx.Direction.FORWARD);
 
         mtrBL = hw.get(DcMotorEx.class, "mtrBL");
         mtrBL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);

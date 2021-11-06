@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
-import android.media.SoundPool;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -29,19 +33,16 @@ public class hardwareFF {
 
     //So far this season we just have motors, so I've done the work to initialize them here:
      */
-    // Sound variables
-    public SoundPool mySound;
-    public int honkID;
-    //note: to make hjonk, you need a file in TeamCode/res/raw called honk.mp3, it should be a duck honking, but it can be whatever
-    // mySound = new SoundPool(1, AudioManager.STREAM_MUSIC, 0); // PSM
-    //honkID = mySound.load(hardwareMap.appContext, R.raw.honk, 1); // PSM
-    // the code above is what goes in the init(), and to play the sound use mySound.play(honkID,1,1,1,0,1);
-    public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR, mtrNEHL;
+    public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR;
+    public CRServo svoCarousel;
 
-    private VoltageSensor batteryVoltage;
-    private HardwareMap hw = null;
+    public DigitalChannel alliance_switch;
+    public VoltageSensor batteryVoltage;
+    public HardwareMap hw = null;
 
-
+    public double alliance = 0;
+    public final double red = 1;
+    public final double blue = -1;
 
     public hardwareFF() {
         //nothing goes in this- its just a way to call the program
@@ -49,10 +50,6 @@ public class hardwareFF {
 
     public void init(HardwareMap thisHwMap){
         hw = thisHwMap;
-
-        mtrNEHL = hw.get(DcMotorEx.class, "mtrNEHL");
-        mtrNEHL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        mtrNEHL.setDirection(DcMotorEx.Direction.FORWARD);
 
         mtrBL = hw.get(DcMotorEx.class, "mtrBL");
         mtrBL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -70,7 +67,21 @@ public class hardwareFF {
         mtrFR.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         mtrFR.setDirection(DcMotorEx.Direction.REVERSE);
 
+        //svoIntake = hw.get(CRServo.class, "svoIntake");
+        //svoIntake.setDirection(CRServo.Direction.FORWARD);
+
+        svoCarousel = hw.get(CRServo.class, "svoCarousel");
+        svoCarousel.setDirection(CRServo.Direction.REVERSE);
+
+        alliance_switch = hw.get(DigitalChannel.class, "alliance_switch");
         batteryVoltage = hw.voltageSensor.iterator().next();
+
+        if (alliance_switch.getState() == true) {
+            alliance = red;
+        }
+        if (alliance_switch.getState() == false) {
+            alliance = blue;
+        }
 
     }
 

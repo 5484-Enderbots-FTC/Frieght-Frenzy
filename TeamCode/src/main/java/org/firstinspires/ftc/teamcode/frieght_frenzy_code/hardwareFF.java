@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
@@ -49,10 +49,10 @@ public class hardwareFF {
 
     public void init(HardwareMap thisHwMap){
         hw = thisHwMap;
-
-        mtrNEHL = hw.get(DcMotorEx.class, "mtrNEHL");
-        mtrNEHL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        mtrNEHL.setDirection(DcMotorEx.Direction.FORWARD);
+        //important
+        //mtrNEHL = hw.get(DcMotorEx.class, "mtrNEHL");
+        //mtrNEHL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        //mtrNEHL.setDirection(DcMotorEx.Direction.FORWARD);
 
         mtrBL = hw.get(DcMotorEx.class, "mtrBL");
         mtrBL.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);

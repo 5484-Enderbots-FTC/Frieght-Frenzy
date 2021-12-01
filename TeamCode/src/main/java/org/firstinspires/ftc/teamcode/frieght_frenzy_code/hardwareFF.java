@@ -29,6 +29,7 @@ public class hardwareFF {
     //So far this season we just have motors, so I've done the work to initialize them here:
      */
     public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR;
+    public Servo carouselServo;
 
     private VoltageSensor batteryVoltage;
     private HardwareMap hw = null;
@@ -59,6 +60,8 @@ public class hardwareFF {
 
         batteryVoltage = hw.voltageSensor.iterator().next();
 
+        carouselServo = hw.get(Servo.class, "carouselServo");
+
     }
 
     public void updateDrive(double fwdStick, double turnStick, double strStick){
@@ -73,6 +76,78 @@ public class hardwareFF {
         mtrBR.setPower((-fwdStick - turnStick + strStick));
         mtrFL.setPower((-fwdStick + turnStick + strStick));
         mtrFR.setPower((-fwdStick - turnStick - strStick));
+    }
+    public void brake(){
+        mtrBR.setPower(0);
+        mtrBL.setPower(0);
+        mtrFR.setPower(0);
+        mtrFL.setPower(0);
+    }
+    public void reset(){
+        mtrBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+    public void forward (double power, int position){
+        reset();
+        int adjustment = 1;
+        mtrBR.setPower(power);
+        mtrBR.setTargetPosition(position*adjustment);
+        mtrBL.setPower(power);
+        mtrBL.setTargetPosition(position*adjustment);
+        mtrFR.setPower(power);
+        mtrFR.setTargetPosition(position*adjustment);
+        mtrFL.setPower(power);
+        mtrFL.setTargetPosition(position*adjustment);
+        mtrBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while(mtrFR.isBusy() | mtrFL.isBusy() | mtrBR.isBusy() | mtrBL.isBusy()){
+
+        }
+        brake();
+    }
+    public void strafe (double power, int position){
+        reset();
+        int adjustment = 1;
+        mtrBR.setPower(power);
+        mtrBR.setTargetPosition(position*adjustment);
+        mtrBL.setPower(-power);
+        mtrBL.setTargetPosition(position*adjustment);
+        mtrFR.setPower(-power);
+        mtrFR.setTargetPosition(position*adjustment);
+        mtrFL.setPower(power);
+        mtrFL.setTargetPosition(position*adjustment);
+        mtrBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while(mtrFR.isBusy() | mtrFL.isBusy() | mtrBR.isBusy() | mtrBL.isBusy()){
+
+        }
+        brake();
+    }
+    public void turn (double power, int position){
+        reset();
+        int adjustment = 1;
+        mtrBR.setPower(power);
+        mtrBR.setTargetPosition(position*adjustment);
+        mtrBL.setPower(-power);
+        mtrBL.setTargetPosition(position*adjustment);
+        mtrFR.setPower(power);
+        mtrFR.setTargetPosition(position*adjustment);
+        mtrFL.setPower(-power);
+        mtrFL.setTargetPosition(position*adjustment);
+        mtrBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while(mtrFR.isBusy() | mtrFL.isBusy() | mtrBR.isBusy() | mtrBL.isBusy()){
+
+        }
+        brake();
     }
 
 

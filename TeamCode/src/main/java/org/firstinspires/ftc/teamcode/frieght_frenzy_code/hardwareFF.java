@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
-import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
-import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -28,11 +27,20 @@ public class hardwareFF {
 
     //So far this season we just have motors, so I've done the work to initialize them here:
      */
-    public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR;
+    public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR; //control hub ports , , ,
+    public DcMotorEx mtrArm, mtrTurret;
+    public CRServo svoCarousel, svoIntake; //servo port 0, 1
+    public Servo svoIntakeTilt;
 
-    private VoltageSensor batteryVoltage;
-    private HardwareMap hw = null;
+    public TouchSensor leftLimit, rightLimit, topLimit, bottomLimit;
 
+    public DigitalChannel alliance_switch;
+    public VoltageSensor batteryVoltage;
+    public HardwareMap hw = null;
+
+    public double alliance = 0;
+    public final double red = 1;
+    public final double blue = -1;
 
     public hardwareFF() {
         //nothing goes in this- its just a way to call the program
@@ -57,7 +65,45 @@ public class hardwareFF {
         mtrFR.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         mtrFR.setDirection(DcMotorEx.Direction.REVERSE);
 
+        mtrArm = hw.get(DcMotorEx.class, "mtrArm");
+        mtrArm.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        mtrArm.setDirection(DcMotorEx.Direction.FORWARD);
+
+        mtrTurret = hw.get(DcMotorEx.class, "mtrTurret");
+        mtrTurret.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        mtrTurret.setDirection(DcMotorEx.Direction.FORWARD);
+
+        svoCarousel = hw.get(CRServo.class, "svoCarousel");
+        svoCarousel.setDirection(CRServo.Direction.REVERSE);
+
+        svoIntake = hw.get(CRServo.class, "svoIntake");
+        svoIntake.setDirection(CRServo.Direction.FORWARD);
+
+        svoIntakeTilt = hw.get(Servo.class, "svoIntakeTilt");
+
+        leftLimit = hw.get(TouchSensor.class, "leftLimit");
+        rightLimit = hw.get(TouchSensor.class, "rightLimit");
+        topLimit = hw.get(TouchSensor.class, "topLimit");
+        bottomLimit = hw.get(TouchSensor.class, "bottomLimit");
+
+        alliance_switch = hw.get(DigitalChannel.class, "alliance_switch");
         batteryVoltage = hw.voltageSensor.iterator().next();
+
+        if (alliance_switch.getState() == true) {
+            alliance = red;
+        }
+        if (alliance_switch.getState() == false) {
+            alliance = blue;
+        }
+
+    }
+
+    public void initWebcam (){
+
+    }
+
+    public void initPID (){
+
 
     }
 

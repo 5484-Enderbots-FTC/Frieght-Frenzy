@@ -10,4 +10,9 @@ public class var {
 
     //example:
     public static double toggleWait = 1; //(seconds)
+    public static double intakeTiltDown = 0.9;
+    public static double intakeTiltUp = 0;
+    public static double fullPower = 1;
+    public static double stop = 0;
+
 }

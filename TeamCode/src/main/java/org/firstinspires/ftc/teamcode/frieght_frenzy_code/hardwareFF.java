@@ -28,13 +28,13 @@ public class hardwareFF {
     //So far this season we just have motors, so I've done the work to initialize them here:
      */
     public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR; //control hub ports , , ,
-    public DcMotorEx mtrArm, mtrTurret;
+    public DcMotorEx mtrArm, mtrTurret; //expansion hub ports ,
     public CRServo svoCarousel, svoIntake; //servo port 0, 1
-    public Servo svoIntakeTilt;
+    public Servo svoIntakeTilt; //servo port
 
-    public TouchSensor leftLimit, rightLimit, topLimit, bottomLimit;
+    public TouchSensor leftLimit, rightLimit, topLimit, bottomLimit; //digital ports . . .
 
-    public DigitalChannel alliance_switch;
+    public DigitalChannel alliance_switch;//digital port
     public VoltageSensor batteryVoltage;
     public HardwareMap hw = null;
 

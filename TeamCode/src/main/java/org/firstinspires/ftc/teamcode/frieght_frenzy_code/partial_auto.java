@@ -52,8 +52,8 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
  * of multiple stones, switching the viewport output, and communicating the results
  * of the vision processing to usercode.
  */
-@Autonomous
-public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
+@Autonomous(name = "partial auto", group = "auto")
+public class partial_auto extends LinearOpMode
 {
     OpenCvWebcam webcam;
     ElementAnalysisPipeline pipeline;
@@ -100,43 +100,49 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
 
         sleep(5000);
         while (!isStarted())
+        {
+            // Don't burn an insane amount of CPU cycles in this sample because
+            // we're not doing anything else
+
+            // Figure out which stones the pipeline detected, and print them to telemetry
+            ArrayList<ElementAnalysisPipeline.AnalyzedElement> elements = pipeline.getDetectedElements();
+            sleep(250);
+
+            if(elements.isEmpty())
             {
-                // Don't burn an insane amount of CPU cycles in this sample because
-                // we're not doing anything else
-
-                // Figure out which stones the pipeline detected, and print them to telemetry
-                ArrayList<ElementAnalysisPipeline.AnalyzedElement> elements = pipeline.getDetectedElements();
-                sleep(250);
-
-                if(elements.isEmpty())
+                telemetry.addLine("No objects detected");
+            }
+            else
+            {
+                for(ElementAnalysisPipeline.AnalyzedElement element : elements)
                 {
-                    telemetry.addLine("No objects detected");
-                }
-                else
-                {
-                    for(ElementAnalysisPipeline.AnalyzedElement element : elements)
-                    {
-                        telemetry.addLine(String.format("%s: Width=%f, Height=%f, Angle=%f", element.object.toString(), element.rectWidth, element.rectHeight, element.angle));
-                        telemetry.addLine("Ratio of W/H: " + element.rectWidth/element.rectHeight);
-                        telemetry.addLine("Section: " + element.section);
-                        if (element.section == ElementAnalysisPipeline.Section.LEFT){
-                            alliance_element_location = 1;
-                        }
-                        else if (element.section == ElementAnalysisPipeline.Section.MID){
-                            alliance_element_location = 2;
-                        }
-                        else if (element.section == ElementAnalysisPipeline.Section.RIGHT){
-                            alliance_element_location = 3;
-                        }
-
+                    telemetry.addLine(String.format("%s: Width=%f, Height=%f, Angle=%f", element.object.toString(), element.rectWidth, element.rectHeight, element.angle));
+                    telemetry.addLine("Ratio of W/H: " + element.rectWidth/element.rectHeight);
+                    telemetry.addLine("Section: " + element.section);
+                    if (element.section == ElementAnalysisPipeline.Section.LEFT){
+                        alliance_element_location = 1;
                     }
+                    else if (element.section == ElementAnalysisPipeline.Section.MID){
+                        alliance_element_location = 2;
+                    }
+                    else if (element.section == ElementAnalysisPipeline.Section.RIGHT){
+                        alliance_element_location = 3;
+                    }
+
                 }
+            }
 
             telemetry.update();
         }
         waitForStart();
         while (opModeIsActive()){
             telemetry.addData("Alliance Element Location: ", alliance_element_location);
+            if(robot.alliance_switch.getState() == true) {
+                telemetry.addLine("red alliance");
+            }
+            else {
+                telemetry.addLine("blue alliance");
+            }
             telemetry.update();
             //robot.forward(0.2,300);
             //robot.strafe(0.2,100);

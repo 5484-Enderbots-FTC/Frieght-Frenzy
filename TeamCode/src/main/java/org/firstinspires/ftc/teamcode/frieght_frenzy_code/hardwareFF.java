@@ -34,13 +34,17 @@ public class hardwareFF {
 
     public TouchSensor leftLimit, rightLimit, topLimit, bottomLimit; //digital ports . . .
 
-    public DigitalChannel alliance_switch;//digital port
+    public DigitalChannel alliance_switch, position_switch;//digital port
     public VoltageSensor batteryVoltage;
     public HardwareMap hw = null;
 
     public double alliance = 0;
     public final double red = 1;
     public final double blue = -1;
+
+    public double position = 0;
+    public final double carousel = 1;
+    public final double warehouse = -1;
 
     public hardwareFF() {
         //nothing goes in this- its just a way to call the program
@@ -87,6 +91,7 @@ public class hardwareFF {
         bottomLimit = hw.get(TouchSensor.class, "bottomLimit");
 
         alliance_switch = hw.get(DigitalChannel.class, "alliance_switch");
+        position_switch = hw.get(DigitalChannel.class, "position_switch");
         batteryVoltage = hw.voltageSensor.iterator().next();
 
         if (alliance_switch.getState() == true) {
@@ -94,6 +99,12 @@ public class hardwareFF {
         }
         if (alliance_switch.getState() == false) {
             alliance = blue;
+        }
+        if (position_switch.getState() == true) {
+            position = carousel;
+        }
+        if (position_switch.getState() == false) {
+            position = warehouse;
         }
 
     }

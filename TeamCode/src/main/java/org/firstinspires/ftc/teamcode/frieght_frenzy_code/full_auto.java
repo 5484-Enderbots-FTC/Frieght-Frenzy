@@ -24,6 +24,7 @@ package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.Core;
@@ -45,50 +46,99 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
 
 /*
  * This is an advanced sample showcasing detecting and determining the orientation
  * of multiple stones, switching the viewport output, and communicating the results
  * of the vision processing to usercode.
  */
-@Autonomous
-public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
-{
+@Autonomous(name = "full auto", group = "auto")
+public class full_auto extends LinearOpMode {
     OpenCvWebcam webcam;
     ElementAnalysisPipeline pipeline;
     hardwareFF robot = new hardwareFF();
 
+    State currentState;
+
+    double strafeSwapper = 1;
+
+    public enum shippingHub {
+        bottom,
+        middle,
+        top
+    }
+
+    public enum State {
+        DUCK,
+        DETECT_BARCODE,
+        LEFT,
+        MIDDLE,
+        RIGHT,
+        STOP
+    }
+
+    /***
+     *
+     * Auto steps:
+     * 1. Detect Barcode to determine left middle or right
+     * 2. Do carousel
+     * 3. Split auto within left, middle, and right states into the in/out position
+     *      - take into account alliance within this phase
+     * 3. Place the preloaded block
+     * 5. Park lol
+     *
+     */
+
     @Override
-    public void runOpMode()
-    {
+    public void runOpMode() {
         robot.init(hardwareMap);
-        /**
-         * NOTE: Many comments have been omitted from this sample for the
-         * sake of conciseness. If you're just starting out with EasyOpenCv,
-         * you should take a look at {@link InternalCamera2Example} or its
-         * webcam counterpart, {@link WebcamExample} first.
-         */
+        robot.mtrArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
         int alliance_element_location = 0;
+
+        /**
+         * Switches
+         */
+
+        if (robot.alliance == robot.red) {
+            strafeSwapper = 1;
+            telemetry.addLine("red alliance");
+        }
+        if (robot.alliance == robot.blue) {
+            strafeSwapper = -1;
+            telemetry.addLine("blue alliance");
+        }
+
+        if (robot.position == robot.carousel) {
+            telemetry.addLine("carousel side");
+        }
+        if (robot.position == robot.warehouse) {
+            telemetry.addLine("warehouse side");
+        }
+        telemetry.update();
+
+        /**
+         * Webcam things
+         */
+
         // Create camera instance
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
 
         // Open async and start streaming inside opened callback
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
-            public void onOpened()
-            {
+            public void onOpened() {
                 webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
 
                 pipeline = new ElementAnalysisPipeline();
                 webcam.setPipeline(pipeline);
             }
+
             @Override
-            public void onError(int errorCode)
-            {
+            public void onError(int errorCode) {
                 /*
                  * This will be called if the camera could not be opened
                  */
@@ -99,44 +149,130 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
         telemetry.setMsTransmissionInterval(20);
 
         sleep(5000);
-        while (!isStarted())
-            {
-                // Don't burn an insane amount of CPU cycles in this sample because
-                // we're not doing anything else
+        while (!isStarted()) {
+            // Don't burn an insane amount of CPU cycles in this sample because
+            // we're not doing anything else
 
-                // Figure out which stones the pipeline detected, and print them to telemetry
-                ArrayList<ElementAnalysisPipeline.AnalyzedElement> elements = pipeline.getDetectedElements();
-                sleep(250);
+            // Figure out which stones the pipeline detected, and print them to telemetry
+            ArrayList<ElementAnalysisPipeline.AnalyzedElement> elements = pipeline.getDetectedElements();
+            sleep(250);
 
-                if(elements.isEmpty())
-                {
-                    telemetry.addLine("No objects detected");
-                }
-                else
-                {
-                    for(ElementAnalysisPipeline.AnalyzedElement element : elements)
-                    {
-                        telemetry.addLine(String.format("%s: Width=%f, Height=%f, Angle=%f", element.object.toString(), element.rectWidth, element.rectHeight, element.angle));
-                        telemetry.addLine("Ratio of W/H: " + element.rectWidth/element.rectHeight);
-                        telemetry.addLine("Section: " + element.section);
-                        if (element.section == ElementAnalysisPipeline.Section.LEFT){
-                            alliance_element_location = 1;
-                        }
-                        else if (element.section == ElementAnalysisPipeline.Section.MID){
-                            alliance_element_location = 2;
-                        }
-                        else if (element.section == ElementAnalysisPipeline.Section.RIGHT){
-                            alliance_element_location = 3;
-                        }
-
+            if (elements.isEmpty()) {
+                telemetry.addLine("No objects detected");
+            } else {
+                for (ElementAnalysisPipeline.AnalyzedElement element : elements) {
+                    telemetry.addLine(String.format("%s: Width=%f, Height=%f, Angle=%f", element.object.toString(), element.rectWidth, element.rectHeight, element.angle));
+                    telemetry.addLine("Ratio of W/H: " + element.rectWidth / element.rectHeight);
+                    telemetry.addLine("Section: " + element.section);
+                    if (element.section == ElementAnalysisPipeline.Section.LEFT) {
+                        alliance_element_location = 1;
+                    } else if (element.section == ElementAnalysisPipeline.Section.MID) {
+                        alliance_element_location = 2;
+                    } else if (element.section == ElementAnalysisPipeline.Section.RIGHT) {
+                        alliance_element_location = 3;
                     }
+
                 }
+            }
 
             telemetry.update();
         }
+
+        /**
+         *
+         * Start of Code
+         *
+         */
+
         waitForStart();
-        while (opModeIsActive()){
-            telemetry.addData("Alliance Element Location: ", alliance_element_location);
+
+        //arm movements to 'initialize' the arm happen outside the switch state cuz it's the same for all of em
+
+        //move arm up slightly (encoders)
+
+        //use the intake tilt servo to get it out in releasing position
+
+        //turret spin to middle ish doesn't have to be perfect
+
+        //lift the arm to bottom slot deposit height
+
+        //THEN switch to DUCK
+        currentState = State.DUCK;
+
+        while (opModeIsActive()) {
+            switch (currentState) {
+
+                case DUCK:
+
+                    if (robot.position == robot.carousel) {
+                        telemetry.addLine("carousel side");
+                        telemetry.update();
+                        //drive to duck
+
+                        //do duck
+
+                        currentState = State.DETECT_BARCODE;
+                    }
+                    if (robot.position == robot.warehouse) {
+                        telemetry.addLine("warehouse side");
+                        telemetry.update();
+                        //go around other robot then get to same position for duck
+
+                        //do duck
+
+                        currentState = State.DETECT_BARCODE;
+                    }
+                    break;
+
+                case DETECT_BARCODE:
+                    if (alliance_element_location == 1) {
+                        currentState = State.LEFT;
+                    } else if (alliance_element_location == 2) {
+                        currentState = State.MIDDLE;
+                    } else if (alliance_element_location == 3) {
+                        currentState = State.RIGHT;
+                    }
+                    break;
+
+                case LEFT:
+                    telemetry.addLine("Barcode Position: Left");
+                    telemetry.update();
+                    //left and forward to bottom slot
+
+                    //run intake backwards to spit out
+
+                    //park
+
+                    currentState = State.STOP;
+                    break;
+
+                case MIDDLE:
+                    telemetry.addLine("Barcode Position: Middle");
+                    telemetry.update();
+
+                    currentState = State.STOP;
+                    break;
+
+                case RIGHT:
+                    telemetry.addLine("Barcode Position: Right");
+                    telemetry.update();
+
+                    currentState = State.STOP;
+                    break;
+
+                case STOP:
+                    break;
+            }
+
+            if (alliance_element_location == 1) {
+                telemetry.addLine("Barcode Position: Left");
+            } else if (alliance_element_location == 2) {
+                telemetry.addLine("Barcode Position: Middle");
+            } else if (alliance_element_location == 3) {
+                telemetry.addLine("Barcode Position: Right");
+            }
+
+
             telemetry.update();
             //robot.forward(0.2,300);
             //robot.strafe(0.2,100);
@@ -148,8 +284,7 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
 
     }
 
-    static class ElementAnalysisPipeline extends OpenCvPipeline
-    {
+    static class ElementAnalysisPipeline extends OpenCvPipeline {
         /*
          * Our working image buffers
          */
@@ -187,8 +322,7 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
         static final int DIVISION_ONE = 90;
         static final int DIVISION_TWO = 200;
 
-        static class AnalyzedElement
-        {
+        static class AnalyzedElement {
             ObjectType object;
             double angle;
             double rectWidth;
@@ -197,14 +331,14 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
             Section section;
 
         }
-        enum Section
-        {
+
+        enum Section {
             LEFT,
             MID,
             RIGHT
         }
-        enum ObjectType
-        {
+
+        enum ObjectType {
             PWR_SHOT,
             RED_GOAL
         }
@@ -215,8 +349,7 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
         /*
          * Some stuff to handle returning our various buffers
          */
-        enum Stage
-        {
+        enum Stage {
             FINAL,
             Cb,
             MASK,
@@ -230,8 +363,7 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
         int stageNum = 0;
 
         @Override
-        public void onViewportTapped()
-        {
+        public void onViewportTapped() {
             /*
              * Note that this method is invoked from the UI thread
              * so whatever we do here, we must do quickly.
@@ -239,8 +371,7 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
 
             int nextStageNum = stageNum + 1;
 
-            if(nextStageNum >= stages.length)
-            {
+            if (nextStageNum >= stages.length) {
                 nextStageNum = 0;
             }
 
@@ -248,16 +379,14 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
         }
 
         @Override
-        public Mat processFrame(Mat input)
-        {
+        public Mat processFrame(Mat input) {
             // We'll be updating this with new data below
             internalElementList.clear();
 
             /*
              * Run the image processing
              */
-            for(MatOfPoint contour : findContours(input))
-            {
+            for (MatOfPoint contour : findContours(input)) {
                 analyzeContour(contour, input);
             }
 
@@ -266,30 +395,24 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
             /*
              * Decide which buffer to send to the viewport
              */
-            switch (stages[stageNum])
-            {
-                case Cb:
-                {
+            switch (stages[stageNum]) {
+                case Cb: {
                     return cbMat;
                 }
 
-                case FINAL:
-                {
+                case FINAL: {
                     return input;
                 }
 
-                case MASK:
-                {
+                case MASK: {
                     return thresholdMat;
                 }
 
-                case MASK_NR:
-                {
+                case MASK_NR: {
                     return morphedThreshold;
                 }
 
-                case CONTOURS:
-                {
+                case CONTOURS: {
                     return contoursOnPlainImageMat;
                 }
             }
@@ -297,13 +420,11 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
             return input;
         }
 
-        public ArrayList<AnalyzedElement> getDetectedElements()
-        {
+        public ArrayList<AnalyzedElement> getDetectedElements() {
             return clientElementList;
         }
 
-        ArrayList<MatOfPoint> findContours(Mat input)
-        {
+        ArrayList<MatOfPoint> findContours(Mat input) {
             // A list we'll be using to store the contours we find
             ArrayList<MatOfPoint> contoursList = new ArrayList<>();
 
@@ -325,8 +446,7 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
             return contoursList;
         }
 
-        void morphMask(Mat input, Mat output)
-        {
+        void morphMask(Mat input, Mat output) {
             /*
              * Apply some erosion and dilation for noise reduction
              */
@@ -338,8 +458,7 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
             //Imgproc.dilate(output, output, dilateElement);
         }
 
-        void analyzeContour(MatOfPoint contour, Mat input)
-        {
+        void analyzeContour(MatOfPoint contour, Mat input) {
             // Transform the contour to a different format
             Point[] points = contour.toArray();
             MatOfPoint2f contour2f = new MatOfPoint2f(contour.toArray());
@@ -421,9 +540,7 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
         }
 
 
-
-        static class ContourRegionAnalysis
-        {
+        static class ContourRegionAnalysis {
             /*
              * This class holds the results of analyzeContourRegion()
              */
@@ -434,8 +551,7 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
             List<MatOfPoint> listHolderOfMatOfPoint;
         }
 
-        static ContourRegionAnalysis analyzeContourRegion(ArrayList<Point> contourPoints)
-        {
+        static ContourRegionAnalysis analyzeContourRegion(ArrayList<Point> contourPoints) {
             // drawContours() requires a LIST of contours (there's no singular drawContour()
             // method), so we have to make a list, even though we're only going to use a single
             // position in it...
@@ -448,8 +564,7 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
             Imgproc.convexHull(matOfPoint, hullMatOfInt);
 
             // Was the convex hull calculation successful?
-            if(hullMatOfInt.toArray().length > 0)
-            {
+            if (hullMatOfInt.toArray().length > 0) {
                 // The convex hull calculation tells us the INDEX of the points which
                 // which were passed in eariler which form the convex hull. That's all
                 // well and good, but now we need filter out that original list to find
@@ -457,8 +572,7 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
                 Point[] hullPoints = new Point[hullMatOfInt.rows()];
                 List<Integer> hullContourIdxList = hullMatOfInt.toList();
 
-                for (int i = 0; i < hullContourIdxList.size(); i++)
-                {
+                for (int i = 0; i < hullContourIdxList.size(); i++) {
                     hullPoints[i] = contourPoints.get(hullContourIdxList.get(i));
                 }
 
@@ -476,15 +590,12 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
                 analysis.density = analysis.contourArea / analysis.hullArea;
 
                 return analysis;
-            }
-            else
-            {
+            } else {
                 return null;
             }
         }
 
-        static Point computeDisplacementForSecondPointOfStoneOrientationLine(RotatedRect rect, double unambiguousAngle)
-        {
+        static Point computeDisplacementForSecondPointOfStoneOrientationLine(RotatedRect rect, double unambiguousAngle) {
             // Note: we return a point, but really it's not a point in space, we're
             // simply using it to hold X & Y displacement values from the middle point
             // of the bounding rect.
@@ -498,28 +609,26 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
 
             // The line is to be drawn at 90 deg relative to the midline running through
             // the rect lengthwise
-            point.x = (int) (lineLength * Math.cos(Math.toRadians(unambiguousAngle+90)));
-            point.y = (int) (lineLength * Math.sin(Math.toRadians(unambiguousAngle+90)));
+            point.x = (int) (lineLength * Math.cos(Math.toRadians(unambiguousAngle + 90)));
+            point.y = (int) (lineLength * Math.sin(Math.toRadians(unambiguousAngle + 90)));
 
             return point;
         }
 
-        static void drawTagText(RotatedRect rect, String text, Mat mat)
-        {
+        static void drawTagText(RotatedRect rect, String text, Mat mat) {
             Imgproc.putText(
                     mat, // The buffer we're drawing on
                     text, // The text we're drawing
                     new Point( // The anchor point for the text
                             rect.center.x,  // x anchor point
-                            rect.center.y+25), // y anchor point
+                            rect.center.y + 25), // y anchor point
                     Imgproc.FONT_HERSHEY_PLAIN, // Font
                     0.6, // Font size
                     TEAL, // Font color
                     1); // Font thickness
         }
 
-        static void drawRotatedRect(RotatedRect rect, Mat drawOn)
-        {
+        static void drawRotatedRect(RotatedRect rect, Mat drawOn) {
             /*
              * Draws a rotated rect by drawing each of the 4 lines individually
              */
@@ -527,9 +636,8 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
             Point[] points = new Point[4];
             rect.points(points);
 
-            for(int i = 0; i < 4; ++i)
-            {
-                Imgproc.line(drawOn, points[i], points[(i+1)%4], RED, 2);
+            for (int i = 0; i < 4; ++i) {
+                Imgproc.line(drawOn, points[i], points[(i + 1) % 4], RED, 2);
             }
         }
     }

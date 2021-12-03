@@ -133,6 +133,12 @@ public class teleop_two_remotes extends LinearOpMode {
             else {
                 telemetry.addLine("blue alliance");
             }
+            if(robot.position_switch.getState() == true) {
+                telemetry.addLine("carousel side");
+            }
+            else {
+                telemetry.addLine("warehouse side");
+            }
             telemetry.update();
         }
 

@@ -13,4 +13,6 @@ public class var {
     public static double intakeInit = 0.5;
     public static double intakeTiltMid = 0.2;
     public static double intakeTiltCollect = 0.28;
+    public static int parkStrafe = 1200;
+    public static int parkBack = -900;
 }

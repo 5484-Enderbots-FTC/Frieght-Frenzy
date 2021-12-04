@@ -54,7 +54,7 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
  * of the vision processing to usercode.
  */
 @Autonomous
-public class RochesterAuto extends LinearOpMode
+public class RochesterAutoRedCarousel extends LinearOpMode
 {
     OpenCvWebcam webcam;
     ElementAnalysisPipeline pipeline;
@@ -145,11 +145,11 @@ public class RochesterAuto extends LinearOpMode
             robot.strafe(0.5,350);
             robot.forward(0.4,1000);
             robot.forward(0.3,500);
-            robot.strafe(-0.2,-200);
+            robot.strafe(-0.1,-200);
             robot.svoCarousel.setPower(1);
             sleep(3000);
             robot.svoCarousel.setPower(0);
-            //robot.turn(0.2,100);
+            robot.strafe(0.3,1050);
             break;
         }
 

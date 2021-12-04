@@ -18,11 +18,16 @@ public class teleop_two_remotes extends LinearOpMode {
     boolean babyMode = false;
     boolean carouselSpinning = false;
 
+    double svoPosition = 0;
+    double svoIncrem = 0.1;
+    double svo0 = 0;
+
 
     
     public void runOpMode() {
         //initialization code goes here
         robot.init(hardwareMap);
+        //robot.svoIntakeTilt.setPosition(0.5);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -75,25 +80,22 @@ public class teleop_two_remotes extends LinearOpMode {
              */
 
             //turret spin to da right
-            if(gamepad2.left_stick_x > 0 && robot.rightLimit.isPressed()){
-                robot.mtrTurret.setPower(-0.1);
+            if(robot.rightLimit.isPressed()){
+                robot.mtrTurret.setPower(-0.25);
+                telemetry.addLine("REEE");
             }else {
                 robot.mtrTurret.setPower(gamepad2.left_stick_x);
             }
             //turret spin to da left
-            if(gamepad2.left_stick_x < 0 && robot.leftLimit.isPressed()){
+            if(robot.leftLimit.isPressed()){
                 robot.mtrTurret.setPower(0.1);
             }else{
                robot.mtrTurret.setPower(gamepad2.left_stick_x);
             }
 
- /*
-            robot.mtrTurret.setPower(gamepad2.left_stick_x);
-            robot.mtrArm.setPower(gamepad2.right_stick_y);
-
-  */
-
-
+            if(gamepad2.x){
+                robot.svoIntake.setPower(var.stop);
+            }
             //arm go up
             if(gamepad2.right_stick_y > 0 && robot.topLimit.isPressed()){
                 robot.mtrArm.setPower(var.stop);
@@ -109,12 +111,12 @@ public class teleop_two_remotes extends LinearOpMode {
 
             //servo tilt down
             if(gamepad2.left_bumper){
-                robot.svoIntakeTilt.setPosition(var.intakeTiltDown);
+                robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
             }
 
             //servo tilt up
             if(gamepad2.right_bumper){
-                robot.svoIntakeTilt.setPosition(var.intakeTiltUp);
+                robot.svoIntakeTilt.setPosition(var.intakeTiltCollect);
             }
 
             //run intake
@@ -125,9 +127,12 @@ public class teleop_two_remotes extends LinearOpMode {
             if(gamepad2.b){
                 robot.svoIntake.setPower(-var.fullPower);
             }
+            /*
             if(gamepad2.x){
                 robot.svoIntake.setPower(var.stop);
             }
+
+             */
 
 /*
             //we usually add some telemetry at the end to tell us useful information during testing :)
@@ -152,8 +157,8 @@ public class teleop_two_remotes extends LinearOpMode {
                 telemetry.addLine("warehouse side");
             }
 
-            telemetry.addData("top limit status", robot.topLimit.getValue());
-            telemetry.addData("bottom limit status", robot.bottomLimit.getValue());
+            telemetry.addData("top limit status", robot.topLimit.isPressed());
+            telemetry.addData("bottom limit status", robot.bottomLimit.isPressed());
             telemetry.addData("right limit status", robot.rightLimit.isPressed());
             telemetry.addData("left limit status", robot.leftLimit.isPressed());
 

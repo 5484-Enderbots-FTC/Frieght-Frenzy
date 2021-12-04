@@ -76,16 +76,23 @@ public class teleop_two_remotes extends LinearOpMode {
 
             //turret spin to da right
             if(gamepad2.left_stick_x > 0 && robot.rightLimit.isPressed()){
-                robot.mtrTurret.setPower(var.stop);
-            }else{
+                robot.mtrTurret.setPower(-0.1);
+            }else {
                 robot.mtrTurret.setPower(gamepad2.left_stick_x);
             }
             //turret spin to da left
             if(gamepad2.left_stick_x < 0 && robot.leftLimit.isPressed()){
-                robot.mtrTurret.setPower(var.stop);
+                robot.mtrTurret.setPower(0.1);
             }else{
-                robot.mtrTurret.setPower(gamepad2.left_stick_x);
+               robot.mtrTurret.setPower(gamepad2.left_stick_x);
             }
+
+ /*
+            robot.mtrTurret.setPower(gamepad2.left_stick_x);
+            robot.mtrArm.setPower(gamepad2.right_stick_y);
+
+  */
+
 
             //arm go up
             if(gamepad2.right_stick_y > 0 && robot.topLimit.isPressed()){
@@ -118,8 +125,11 @@ public class teleop_two_remotes extends LinearOpMode {
             if(gamepad2.b){
                 robot.svoIntake.setPower(-var.fullPower);
             }
+            if(gamepad2.x){
+                robot.svoIntake.setPower(var.stop);
+            }
 
-
+/*
             //we usually add some telemetry at the end to tell us useful information during testing :)
             if(babyMode){
                 telemetry.addLine("baby mode activated");
@@ -127,6 +137,8 @@ public class teleop_two_remotes extends LinearOpMode {
             else{
                 telemetry.addLine("baby mode inactive");
             }
+
+ */
             if(robot.alliance_switch.getState() == true) {
                 telemetry.addLine("red alliance");
             }
@@ -139,6 +151,13 @@ public class teleop_two_remotes extends LinearOpMode {
             else {
                 telemetry.addLine("warehouse side");
             }
+
+            telemetry.addData("top limit status", robot.topLimit.getValue());
+            telemetry.addData("bottom limit status", robot.bottomLimit.getValue());
+            telemetry.addData("right limit status", robot.rightLimit.isPressed());
+            telemetry.addData("left limit status", robot.leftLimit.isPressed());
+
+
             telemetry.update();
         }
 

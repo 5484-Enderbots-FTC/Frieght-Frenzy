@@ -30,7 +30,7 @@ public class hardwareFF {
     public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR; //control hub ports , , ,
     public DcMotorEx mtrArm, mtrTurret; //expansion hub ports ,
     public CRServo svoCarousel, svoIntake; //servo port 0, 1
-    public Servo svoIntakeTilt; //servo port
+    public Servo svoIntakeTilt, LEDstrip; //servo port
 
     public TouchSensor leftLimit, rightLimit, topLimit, bottomLimit; //digital ports . . .
 
@@ -75,7 +75,7 @@ public class hardwareFF {
 
         mtrTurret = hw.get(DcMotorEx.class, "mtrTurret");
         mtrTurret.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        mtrTurret.setDirection(DcMotorEx.Direction.FORWARD);
+        mtrTurret.setDirection(DcMotorEx.Direction.REVERSE);
 
         svoCarousel = hw.get(CRServo.class, "svoCarousel");
         svoCarousel.setDirection(CRServo.Direction.REVERSE);
@@ -85,6 +85,8 @@ public class hardwareFF {
 
         svoIntakeTilt = hw.get(Servo.class, "svoIntakeTilt");
 
+        LEDstrip = hw.get(Servo.class, "LEDstrip");
+
         leftLimit = hw.get(TouchSensor.class, "leftLimit");
         rightLimit = hw.get(TouchSensor.class, "rightLimit");
         topLimit = hw.get(TouchSensor.class, "topLimit");
@@ -93,6 +95,8 @@ public class hardwareFF {
         alliance_switch = hw.get(DigitalChannel.class, "alliance_switch");
         position_switch = hw.get(DigitalChannel.class, "position_switch");
         batteryVoltage = hw.voltageSensor.iterator().next();
+
+        LEDstrip.setPosition(0.7545);
 
         if (alliance_switch.getState() == true) {
             alliance = red;

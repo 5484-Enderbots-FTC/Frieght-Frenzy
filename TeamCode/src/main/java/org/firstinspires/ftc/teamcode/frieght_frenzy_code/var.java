@@ -10,4 +10,7 @@ public class var {
 
     //example:
     public static double toggleWait = 1; //(seconds)
+    public static double intakeInit = 0.5;
+    public static double intakeTiltMid = 0.2;
+    public static double intakeTiltCollect = 0.28;
 }

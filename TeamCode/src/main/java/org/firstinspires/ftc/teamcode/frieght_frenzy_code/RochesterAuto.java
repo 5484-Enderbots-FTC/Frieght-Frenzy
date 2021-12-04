@@ -45,6 +45,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
 
 /*
@@ -53,7 +54,7 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
  * of the vision processing to usercode.
  */
 @Autonomous
-public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
+public class RochesterAuto extends LinearOpMode
 {
     OpenCvWebcam webcam;
     ElementAnalysisPipeline pipeline;
@@ -97,7 +98,7 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
 
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
-
+        robot.svoIntakeTilt.setPosition(var.intakeInit);
         sleep(5000);
         while (!isStarted())
             {
@@ -136,13 +137,20 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
         }
         waitForStart();
         while (opModeIsActive()){
-            telemetry.addData("Alliance Element Location: ", alliance_element_location);
+            //arm go brr
+            //robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
+            //robot.svoIntakeTilt.setPosition(var.intakeTiltCollect);
+            telemetry.addData("雪花飘飘北风啸啸 Alliance Element Location: ", alliance_element_location);
             telemetry.update();
-            robot.forward(0.2,300);
-            robot.strafe(0.2,100);
-            robot.forward(0.3,100);
-            robot.carouselServo.setPosition(1);
-            robot.turn(0.2,100);
+            robot.strafe(0.5,350);
+            robot.forward(0.4,1000);
+            robot.forward(0.3,500);
+            robot.strafe(-0.2,-200);
+            robot.svoCarousel.setPower(1);
+            sleep(3000);
+            robot.svoCarousel.setPower(0);
+            //robot.turn(0.2,100);
+            break;
         }
 
 
@@ -205,8 +213,8 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
         }
         enum ObjectType
         {
-            PWR_SHOT,
-            RED_GOAL
+
+            ALLIANCE_SHIPPING_ELEMENT
         }
 
         ArrayList<AnalyzedElement> internalElementList = new ArrayList<>();
@@ -385,27 +393,13 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
                     return; // Get out of dodge
                 }
 
-                // We're going to draw line from the center of the bounding rect, to outside the bounding rect, in the
-                // direction of the side of the stone with the nubs.
-                Point displOfOrientationLinePoint2 = computeDisplacementForSecondPointOfStoneOrientationLine(rotatedRectFitToContour, rotRectAngle);
-
-                /*
-                 * If the difference in the densities of the two regions exceeds the threshold,
-                 * then we assume the stone is on its side. Otherwise, if the difference is inside
-                 * of the threshold, we assume it's upright.
-                 */
-
-
-
-                /*
-                 * Assume the stone is upright
-                 */
+                //Point displOfOrientationLinePoint2 = computeDisplacementForSecondPointOfStoneOrientationLine(rotatedRectFitToContour, rotRectAngle);
 
                 AnalyzedElement analyzedElement = new AnalyzedElement();
                 analyzedElement.angle = rotRectAngle;
                 analyzedElement.WidthHeightRatio = rotatedRectFitToContour.size.width / rotatedRectFitToContour.size.height;
-                analyzedElement.object = ObjectType.RED_GOAL;
-                drawTagText(rotatedRectFitToContour, "Blue Alliance Shipping Element", input);
+                analyzedElement.object = ObjectType.ALLIANCE_SHIPPING_ELEMENT;
+                drawTagText(rotatedRectFitToContour, "Blue Capstone Thing", input);
                 analyzedElement.rectWidth = rotatedRectFitToContour.size.width;
                 analyzedElement.rectHeight = rotatedRectFitToContour.size.height;
                 if (rotatedRectFitToContour.center.x <= DIVISION_ONE) {

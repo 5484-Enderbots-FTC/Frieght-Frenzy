@@ -15,5 +15,6 @@ public class var {
     public static double intakeTiltCollect = 0.28;
     public static double fullPower = 0.7;
     public static double stop = 0;
-
+    public static int parkStrafe = 1200;
+    public static int parkBack = -900;
 }

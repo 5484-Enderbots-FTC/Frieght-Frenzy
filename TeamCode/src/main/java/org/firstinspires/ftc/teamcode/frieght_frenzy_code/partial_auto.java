@@ -22,6 +22,7 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -53,6 +54,8 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
  * of the vision processing to usercode.
  */
 @Autonomous(name = "partial auto", group = "auto")
+@Disabled
+
 public class partial_auto extends LinearOpMode
 {
     OpenCvWebcam webcam;

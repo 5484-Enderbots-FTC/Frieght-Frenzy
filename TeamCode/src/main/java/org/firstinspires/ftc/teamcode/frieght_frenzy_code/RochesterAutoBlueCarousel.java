@@ -134,9 +134,7 @@ public class RochesterAutoBlueCarousel extends LinearOpMode
         }
         waitForStart();
         while (opModeIsActive()){
-            //arm go brr
-            //robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
-            //robot.svoIntakeTilt.setPosition(var.intakeTiltCollect);
+            robot.deinit();
             telemetry.addData("雪花飘飘北风啸啸  冰淇凌 Alliance Element Location: ", alliance_element_location);
             telemetry.update();
             robot.strafe(0.5,350);

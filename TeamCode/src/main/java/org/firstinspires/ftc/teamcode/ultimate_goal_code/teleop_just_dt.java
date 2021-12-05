@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.ultimate_goal_code;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -7,6 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
 
 @TeleOp(name = "teleop just dt", group = "teleop")
+@Disabled
+
 public class teleop_just_dt extends LinearOpMode {
     //tell the code what motors and sensors you want to use (or just import the hardware teehee)
     public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR;

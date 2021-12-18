@@ -19,7 +19,7 @@ public class var {
     public static double intakeTiltCollect = 0.28;
     public static double intakeTiltHigh = 0.35;
     public static double fullPower = 1;
-    public static double lessPower = 0.7;
+    public static double lessPower = 0.4;
 
     //auto parking encoder counts
     public static double stop = 0;

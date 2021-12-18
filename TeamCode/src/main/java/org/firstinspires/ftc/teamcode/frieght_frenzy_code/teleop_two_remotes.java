@@ -20,6 +20,7 @@ public class teleop_two_remotes extends LinearOpMode {
     //this boolean keeps track of whether or not the toggle is on or off
     boolean babyMode = false;
     boolean carouselSpinning = false;
+    boolean intakeOn = false;
 
     State currentState;
 
@@ -113,9 +114,16 @@ public class teleop_two_remotes extends LinearOpMode {
                         robot.movearm(0.7,var.thirdLvl);
                         currentState = State.SET;
                     }
+                    else if(robot.bottomLimit.isPressed() && gamepad2.left_stick_y > 0){
+                        robot.mtrArm.setPower(0);
+                    }
+                    else if(robot.bottomLimit.isPressed() && gamepad2.left_stick_y < 0){
+                        robot.mtrArm.setPower(gamepad2.left_stick_y);
+                    }
                     else{
                         robot.mtrArm.setPower(gamepad2.left_stick_y);
                     }
+
                     break;
                 case SET:
                         robot.mtrArm.setPower(0.7);
@@ -139,7 +147,7 @@ public class teleop_two_remotes extends LinearOpMode {
 
             //turret spin to da right
             if(robot.rightLimit.isPressed()){
-                robot.mtrTurret.setPower(-0.3);
+                robot.mtrTurret.setPower(gamepad2.right_stick_x*0.3);
                 telemetry.addLine("REEE");
             }else {
                 robot.mtrTurret.setPower(gamepad2.right_stick_x);
@@ -162,21 +170,31 @@ public class teleop_two_remotes extends LinearOpMode {
                 robot.svoIntakeTilt.setPosition(var.intakeTiltCollect);
             }
 
+            /**
+             * Intake Controls
+             */
+
             //run intake
             if(gamepad2.a){
                 robot.svoIntake.setPower(var.lessPower);
+                intakeOn = false;
             }
             //reverse intake
             if(gamepad2.b){
-                robot.svoIntake.setPower(-0.4);
+                robot.svoIntake.setPower(-var.lessPower);
+                intakeOn = false;
             }
             //stop intake
             if(gamepad2.x){
                 robot.svoIntake.setPower(var.stop);
+                intakeOn = false;
             }
-            if(gamepad2.y){
+            if(robot.bottomLimit.isPressed() && !intakeOn){
+                intakeOn = true;
                 robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.svoIntake.setPower(var.lessPower);
+                robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
             }
 
 
@@ -206,6 +224,7 @@ public class teleop_two_remotes extends LinearOpMode {
             telemetry.addData("bottom limit status", robot.bottomLimit.isPressed());
             telemetry.addData("right limit status", robot.rightLimit.isPressed());
             telemetry.addData("left limit status", robot.leftLimit.isPressed());
+            telemetry.addData("left stick value: ", gamepad2.left_stick_y);
 
 
             telemetry.update();

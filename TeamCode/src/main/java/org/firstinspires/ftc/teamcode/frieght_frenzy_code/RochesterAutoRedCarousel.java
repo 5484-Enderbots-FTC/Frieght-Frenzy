@@ -186,6 +186,7 @@ public class RochesterAutoRedCarousel extends LinearOpMode
             //park w/o placing
             robot.strafe(0.3,1075);
             break;
+            //hi
         }
 
 

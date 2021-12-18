@@ -134,7 +134,7 @@ public class RochesterAutoRedWarehouse extends LinearOpMode
         }
         waitForStart();
         while (opModeIsActive()){
-            robot.deinit();
+            //robot.deinit();
             telemetry.addData("Alliance Element Location: ", alliance_element_location);
             telemetry.update();
             robot.forward(-0.4,-1000);

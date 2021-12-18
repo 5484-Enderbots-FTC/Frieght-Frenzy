@@ -22,6 +22,7 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -45,7 +46,6 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
 
 /*
@@ -53,8 +53,10 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
  * of multiple stones, switching the viewport output, and communicating the results
  * of the vision processing to usercode.
  */
-@Autonomous
-public class RochesterAutoRedCarousel extends LinearOpMode
+@Autonomous(name = "partial auto", group = "auto")
+@Disabled
+
+public class partial_auto extends LinearOpMode
 {
     OpenCvWebcam webcam;
     ElementAnalysisPipeline pipeline;
@@ -98,57 +100,58 @@ public class RochesterAutoRedCarousel extends LinearOpMode
 
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
-        robot.svoIntakeTilt.setPosition(var.intakeInit);
+
         sleep(5000);
         while (!isStarted())
+        {
+            // Don't burn an insane amount of CPU cycles in this sample because
+            // we're not doing anything else
+
+            // Figure out which stones the pipeline detected, and print them to telemetry
+            ArrayList<ElementAnalysisPipeline.AnalyzedElement> elements = pipeline.getDetectedElements();
+            sleep(250);
+
+            if(elements.isEmpty())
             {
-                // Don't burn an insane amount of CPU cycles in this sample because
-                // we're not doing anything else
-
-                // Figure out which stones the pipeline detected, and print them to telemetry
-                ArrayList<ElementAnalysisPipeline.AnalyzedElement> elements = pipeline.getDetectedElements();
-                sleep(250);
-
-                if(elements.isEmpty())
+                telemetry.addLine("No objects detected");
+            }
+            else
+            {
+                for(ElementAnalysisPipeline.AnalyzedElement element : elements)
                 {
-                    telemetry.addLine("No objects detected");
-                }
-                else
-                {
-                    for(ElementAnalysisPipeline.AnalyzedElement element : elements)
-                    {
-                        telemetry.addLine(String.format("%s: Width=%f, Height=%f, Angle=%f", element.object.toString(), element.rectWidth, element.rectHeight, element.angle));
-                        telemetry.addLine("Ratio of W/H: " + element.rectWidth/element.rectHeight);
-                        telemetry.addLine("Section: " + element.section);
-                        if (element.section == ElementAnalysisPipeline.Section.LEFT){
-                            alliance_element_location = 1;
-                        }
-                        else if (element.section == ElementAnalysisPipeline.Section.MID){
-                            alliance_element_location = 2;
-                        }
-                        else if (element.section == ElementAnalysisPipeline.Section.RIGHT){
-                            alliance_element_location = 3;
-                        }
-
+                    telemetry.addLine(String.format("%s: Width=%f, Height=%f, Angle=%f", element.object.toString(), element.rectWidth, element.rectHeight, element.angle));
+                    telemetry.addLine("Ratio of W/H: " + element.rectWidth/element.rectHeight);
+                    telemetry.addLine("Section: " + element.section);
+                    if (element.section == ElementAnalysisPipeline.Section.LEFT){
+                        alliance_element_location = 1;
                     }
+                    else if (element.section == ElementAnalysisPipeline.Section.MID){
+                        alliance_element_location = 2;
+                    }
+                    else if (element.section == ElementAnalysisPipeline.Section.RIGHT){
+                        alliance_element_location = 3;
+                    }
+
                 }
+            }
 
             telemetry.update();
         }
         waitForStart();
         while (opModeIsActive()){
-            robot.deinit();
-            telemetry.addData("雪花飘飘北风啸啸 Alliance Element Location: ", alliance_element_location);
+            telemetry.addData("Alliance Element Location: ", alliance_element_location);
+            if(robot.alliance_switch.getState() == true) {
+                telemetry.addLine("red alliance");
+            }
+            else {
+                telemetry.addLine("blue alliance");
+            }
             telemetry.update();
-            robot.strafe(0.5,350);
-            robot.forward(0.4,1000);
-            robot.forward(0.3,500);
-            robot.strafe(-0.1,-200);
-            robot.svoCarousel.setPower(1);
-            sleep(3000);
-            robot.svoCarousel.setPower(0);
-            robot.strafe(0.3,1050);
-            break;
+            //robot.forward(0.2,300);
+            //robot.strafe(0.2,100);
+            //robot.forward(0.3,100);
+            //robot.carouselServo.setPosition(1);
+            //robot.turn(0.2,100);
         }
 
 
@@ -211,8 +214,8 @@ public class RochesterAutoRedCarousel extends LinearOpMode
         }
         enum ObjectType
         {
-
-            ALLIANCE_SHIPPING_ELEMENT
+            PWR_SHOT,
+            RED_GOAL
         }
 
         ArrayList<AnalyzedElement> internalElementList = new ArrayList<>();
@@ -391,13 +394,27 @@ public class RochesterAutoRedCarousel extends LinearOpMode
                     return; // Get out of dodge
                 }
 
-                //Point displOfOrientationLinePoint2 = computeDisplacementForSecondPointOfStoneOrientationLine(rotatedRectFitToContour, rotRectAngle);
+                // We're going to draw line from the center of the bounding rect, to outside the bounding rect, in the
+                // direction of the side of the stone with the nubs.
+                Point displOfOrientationLinePoint2 = computeDisplacementForSecondPointOfStoneOrientationLine(rotatedRectFitToContour, rotRectAngle);
+
+                /*
+                 * If the difference in the densities of the two regions exceeds the threshold,
+                 * then we assume the stone is on its side. Otherwise, if the difference is inside
+                 * of the threshold, we assume it's upright.
+                 */
+
+
+
+                /*
+                 * Assume the stone is upright
+                 */
 
                 AnalyzedElement analyzedElement = new AnalyzedElement();
                 analyzedElement.angle = rotRectAngle;
                 analyzedElement.WidthHeightRatio = rotatedRectFitToContour.size.width / rotatedRectFitToContour.size.height;
-                analyzedElement.object = ObjectType.ALLIANCE_SHIPPING_ELEMENT;
-                drawTagText(rotatedRectFitToContour, "Blue Capstone Thing", input);
+                analyzedElement.object = ObjectType.RED_GOAL;
+                drawTagText(rotatedRectFitToContour, "Blue Alliance Shipping Element", input);
                 analyzedElement.rectWidth = rotatedRectFitToContour.size.width;
                 analyzedElement.rectHeight = rotatedRectFitToContour.size.height;
                 if (rotatedRectFitToContour.center.x <= DIVISION_ONE) {

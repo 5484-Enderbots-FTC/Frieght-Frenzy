@@ -3,9 +3,12 @@ package org.firstinspires.ftc.teamcode.test_code;
 import com.acmerobotics.dashboard.config.Config;
 import com.noahbres.jotai.StateMachine;
 import com.noahbres.jotai.StateMachineBuilder;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
+@Disabled
+
 public class TuningController {
     public static double MOTOR_TICKS_PER_REV = 28;
     public static double MOTOR_MAX_RPM = 5400;

@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -29,19 +30,25 @@ public class hardwareFF {
     //So far this season we just have motors, so I've done the work to initialize them here:
      */
     public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR; //control hub ports , , ,
-    public DcMotorEx mtrArm, mtrTurret;
+    public DcMotorEx mtrArm, mtrTurret; //expansion hub ports ,
     public CRServo svoCarousel, svoIntake; //servo port 0, 1
-    public Servo svoIntakeTilt;
+    public Servo svoIntakeTilt, LEDstrip; //servo port
 
-    public TouchSensor leftLimit, rightLimit, topLimit, bottomLimit;
+    public TouchSensor leftLimit, rightLimit, topLimit, bottomLimit; //digital ports . . .
 
-    public DigitalChannel alliance_switch;
+    public DigitalChannel alliance_switch, position_switch;//digital port
     public VoltageSensor batteryVoltage;
     public HardwareMap hw = null;
 
     public double alliance = 0;
     public final double red = 1;
     public final double blue = -1;
+
+    public double position = 0;
+    public final double carousel = 1;
+    public final double warehouse = -1;
+
+    ElapsedTime deinitWait = new ElapsedTime();
 
     public hardwareFF() {
         //nothing goes in this- its just a way to call the program
@@ -82,19 +89,30 @@ public class hardwareFF {
 
         svoIntakeTilt = hw.get(Servo.class, "svoIntakeTilt");
 
+        LEDstrip = hw.get(Servo.class, "LEDstrip");
+
         leftLimit = hw.get(TouchSensor.class, "leftLimit");
         rightLimit = hw.get(TouchSensor.class, "rightLimit");
         topLimit = hw.get(TouchSensor.class, "topLimit");
         bottomLimit = hw.get(TouchSensor.class, "bottomLimit");
 
         alliance_switch = hw.get(DigitalChannel.class, "alliance_switch");
+        position_switch = hw.get(DigitalChannel.class, "position_switch");
         batteryVoltage = hw.voltageSensor.iterator().next();
+
+        LEDstrip.setPosition(var.rainbowo);
 
         if (alliance_switch.getState() == true) {
             alliance = red;
         }
         if (alliance_switch.getState() == false) {
             alliance = blue;
+        }
+        if (position_switch.getState() == true) {
+            position = carousel;
+        }
+        if (position_switch.getState() == false) {
+            position = warehouse;
         }
 
     }
@@ -195,5 +213,100 @@ public class hardwareFF {
     }
 
 
+    public void brake(){
+        mtrBR.setPower(0);
+        mtrBL.setPower(0);
+        mtrFR.setPower(0);
+        mtrFL.setPower(0);
+    }
+    public void reset(){
+        mtrBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+    public void forward (double power, int position){
+        reset();
+        int adjustment = 1;
+        mtrBR.setPower(power);
+        mtrBR.setTargetPosition(position*adjustment);
+        mtrBL.setPower(power);
+        mtrBL.setTargetPosition(position*adjustment);
+        mtrFR.setPower(power);
+        mtrFR.setTargetPosition(position*adjustment);
+        mtrFL.setPower(power);
+        mtrFL.setTargetPosition(position*adjustment);
+        mtrBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while(mtrFR.isBusy()){
+
+        }
+        brake();
+    }
+    public void strafe (double power, int position){
+        reset();
+        int adjustment = 1;
+        mtrBR.setPower(power);
+        mtrBR.setTargetPosition(position*adjustment);
+        mtrBL.setPower(-power);
+        mtrBL.setTargetPosition(-position*adjustment);
+        mtrFR.setPower(-power);
+        mtrFR.setTargetPosition(-position*adjustment);
+        mtrFL.setPower(power);
+        mtrFL.setTargetPosition(position*adjustment);
+        mtrBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while(mtrFR.isBusy()){
+
+        }
+        brake();
+    }
+    public void turn (double power, int position){
+        reset();
+        int adjustment = 1;
+        mtrBR.setPower(power);
+        mtrBR.setTargetPosition(position*adjustment);
+        mtrBL.setPower(-power);
+        mtrBL.setTargetPosition(position*adjustment);
+        mtrFR.setPower(power);
+        mtrFR.setTargetPosition(position*adjustment);
+        mtrFL.setPower(-power);
+        mtrFL.setTargetPosition(position*adjustment);
+        mtrBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        mtrFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while(mtrFR.isBusy()){
+
+        }
+
+        brake();
+    }
+    public void movearm (double power, int position){
+        int adjustment = 1;
+        mtrArm.setPower(-power);
+        mtrArm.setTargetPosition(-position*adjustment);
+        //mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public void deinit(){
+        mtrArm.setPower(-0.7);
+        mtrArm.setTargetPosition(-var.deinitArm);
+        mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while (mtrArm.isBusy()){
+
+        }
+        mtrArm.setPower(0);
+        deinitWait.reset();
+        svoIntakeTilt.setPosition(var.intakeTiltMid);
+        while(deinitWait.seconds()<0.25){
+
+        }
+        svoIntakeTilt.setPosition(var.intakeTiltCollect);
+    }
 
 }

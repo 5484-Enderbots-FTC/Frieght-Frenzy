@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.test_code;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -13,6 +14,8 @@ import org.firstinspires.ftc.teamcode.ultimate_goal_code.hardwareUltimateGoal;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 
 @TeleOp(name = "rev color sensor v3", group = "testing")
+@Disabled
+
 public class test_rev_color_sensor_v3 extends LinearOpMode {
     ElapsedTime runtime = new ElapsedTime();
 

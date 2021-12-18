@@ -23,7 +23,6 @@ package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -53,7 +52,7 @@ import java.util.List;
  * of the vision processing to usercode.
  */
 @Autonomous
-public class RochesterAutoBlueWarehouse extends LinearOpMode
+public class RochesterAutoBlueWarehouseOriginal extends LinearOpMode
 {
     OpenCvWebcam webcam;
     ElementAnalysisPipeline pipeline;
@@ -136,41 +135,15 @@ public class RochesterAutoBlueWarehouse extends LinearOpMode
         }
         waitForStart();
         while (opModeIsActive()){
-            robot.deinit();
+            //robot.deinit();
             telemetry.addData("Alliance Element Location: ", alliance_element_location);
             telemetry.update();
-            robot.svoIntake.setPower(0);
-            if (alliance_element_location == 1){
-                robot.movearm(0.7,var.firstLvl);
-                while (robot.mtrArm.isBusy()){
-
-                }
-            }
-            robot.svoIntake.setPower(var.lessPower);
-            if (alliance_element_location == 2){
-                robot.movearm(0.7,var.secondLvl);
-                while (robot.mtrArm.isBusy()){
-
-                }
-            }
-            if (alliance_element_location == 3){
-                robot.movearm(0.7,var.thirdLvl);
-                while (robot.mtrArm.isBusy()){
-
-                }
-            }
-            robot.svoIntake.setPower(0);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.forward(-0.4,-800);
-            robot.strafe(0.25,1200);
-            robot.svoIntake.setDirection(DcMotorSimple.Direction.REVERSE);
-            robot.svoIntake.setPower(var.lessPower);
-            sleep(3000);
-            robot.svoIntake.setPower(0);
-            robot.strafe(-0.25,-1250);
-            robot.forward(0.4,1800);
+            robot.forward(0.4,1500);
+            /*
             robot.strafe(0.4,var.parkStrafe);
             robot.forward(0.4,-1*var.parkBack);
+            da robot with drip???
+             */
             break;
         }
 

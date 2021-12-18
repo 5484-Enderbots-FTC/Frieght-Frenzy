@@ -93,6 +93,7 @@ public class teleop_two_remotes extends LinearOpMode {
             switch(currentState) {
                 case NOTHING:
                     if(gamepad2.dpad_down){
+                        robot.svoIntake.setPower(var.lessPower);
                         robot.svoIntakeTilt.setPosition(var.intakeTiltCollect);
                         robot.movearm(0.7,var.groundLvl);
                         currentState = State.SET;
@@ -113,7 +114,7 @@ public class teleop_two_remotes extends LinearOpMode {
                         currentState = State.SET;
                     }
                     else{
-                        robot.mtrArm.setPower(gamepad2.right_stick_y);
+                        robot.mtrArm.setPower(gamepad2.left_stick_y);
                     }
                     break;
                 case SET:
@@ -141,13 +142,13 @@ public class teleop_two_remotes extends LinearOpMode {
                 robot.mtrTurret.setPower(-0.3);
                 telemetry.addLine("REEE");
             }else {
-                robot.mtrTurret.setPower(gamepad2.left_stick_x);
+                robot.mtrTurret.setPower(gamepad2.right_stick_x);
             }
             //turret spin to da left
             if(robot.leftLimit.isPressed()){
-                robot.mtrTurret.setPower(gamepad2.left_stick_x*0.3);
+                robot.mtrTurret.setPower(gamepad2.right_stick_x*0.3);
             }else{
-               robot.mtrTurret.setPower(gamepad2.left_stick_x);
+               robot.mtrTurret.setPower(gamepad2.right_stick_x);
             }
 
 
@@ -167,7 +168,7 @@ public class teleop_two_remotes extends LinearOpMode {
             }
             //reverse intake
             if(gamepad2.b){
-                robot.svoIntake.setPower(-var.lessPower);
+                robot.svoIntake.setPower(-0.4);
             }
             //stop intake
             if(gamepad2.x){

@@ -24,6 +24,8 @@ package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.Core;
@@ -137,17 +139,52 @@ public class RochesterAutoRedCarousel extends LinearOpMode
         }
         waitForStart();
         while (opModeIsActive()){
+            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.deinit();
             telemetry.addData("雪花飘飘北风啸啸 Alliance Element Location: ", alliance_element_location);
             telemetry.update();
-            robot.strafe(0.5,350);
+            robot.strafe(0.5,400);
             robot.forward(0.4,1000);
             robot.forward(0.3,500);
-            robot.strafe(-0.1,-200);
+            robot.strafe(-0.05,-100);
             robot.svoCarousel.setPower(1);
             sleep(3000);
             robot.svoCarousel.setPower(0);
-            robot.strafe(0.3,1050);
+            robot.forward(-0.4,-1900);
+            robot.svoIntake.setPower(0);
+            if (alliance_element_location == 1){
+                robot.movearm(0.7,var.firstLvl);
+                while (robot.mtrArm.isBusy()){
+
+                }
+            }
+            robot.svoIntake.setPower(var.lessPower);
+            if (alliance_element_location == 2){
+                robot.movearm(0.7,var.secondLvl);
+                while (robot.mtrArm.isBusy()){
+
+                }
+            }
+            if (alliance_element_location == 3){
+                robot.svoIntakeTilt.setPosition(var.intakeTiltHigh);
+                robot.movearm(0.7,var.thirdLvl);
+                while (robot.mtrArm.isBusy()){
+
+                }
+            }
+            robot.svoIntake.setPower(0);
+            robot.strafe(0.25,800);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.svoIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+            robot.svoIntake.setPower(var.lessPower);
+            sleep(3000);
+            robot.svoIntake.setPower(0);
+            robot.strafe(-0.25,-750);
+            robot.forward(0.5,2200);
+            robot.strafe(-0.2,-200);
+            robot.strafe(-0.05,-100);
+            //park w/o placing
+            robot.strafe(0.3,1075);
             break;
         }
 

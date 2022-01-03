@@ -53,7 +53,7 @@ import java.util.List;
  * of the vision processing to usercode.
  */
 @Autonomous
-public class RochesterAutoBlueCarousel extends LinearOpMode
+public class WarehouseSideDetection extends LinearOpMode
 {
     OpenCvWebcam webcam;
     ElementAnalysisPipeline pipeline;
@@ -137,31 +137,9 @@ public class RochesterAutoBlueCarousel extends LinearOpMode
         waitForStart();
         while (opModeIsActive()){
             robot.deinit();
-            telemetry.addData("雪花飘飘北风啸啸  冰淇凌 Alliance Element Location: ", alliance_element_location);
+            telemetry.addData("Alliance Element Location: ", alliance_element_location);
             telemetry.update();
-            while (!robot.leftLimit.isPressed()){
-                robot.mtrTurret.setPower(-0.5);
-                telemetry.addData("Bottom Limit: ", robot.bottomLimit.isPressed());
-                telemetry.addData("Top Limit: ", robot.topLimit.isPressed());
-                telemetry.addData("Left Limit: ", robot.leftLimit.isPressed());
-                telemetry.addData("Right Limit: ", robot.rightLimit.isPressed());
-                telemetry.update();
-            }
-            robot.mtrTurret.setPower(0);
-            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.mtrTurret.setTargetPosition(750);
-            robot.strafe(0.5,350);
-            robot.forward(-0.4,-1000);
-            robot.forward(-0.3,-200);
-            robot.strafe(-0.005,-100);
-            robot.svoCarousel.setPower(-1);
-            sleep(3000);
-            robot.svoCarousel.setPower(0);
-            robot.forward(0.4,1900);
-            while (!robot.bottomLimit.isPressed()){
-                robot.mtrTurret.setPower(0.15);
-            }
-            robot.mtrTurret.setPower(0);
+            robot.svoIntake.setPower(0);
             if (alliance_element_location == 1){
                 robot.movearm(0.7,var.firstLvl);
                 while (robot.mtrArm.isBusy()){
@@ -181,22 +159,19 @@ public class RochesterAutoBlueCarousel extends LinearOpMode
 
                 }
             }
-            sleep(500);
             robot.svoIntake.setPower(0);
-            robot.strafe(0.25,800);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.forward(-0.4,-800);
+            robot.strafe(0.25,1200);
             robot.svoIntake.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.svoIntake.setPower(var.lessPower);
             sleep(3000);
             robot.svoIntake.setPower(0);
-            robot.strafe(-0.25,-750);
-            robot.forward(0.5,2200);
-            robot.strafe(-0.2,-200);
-            robot.strafe(-0.05,-100);
-            //park w/o placing
-            robot.strafe(0.3,1075);
+            robot.strafe(-0.25,-1250);
+            robot.forward(0.4,1800);
+            robot.strafe(0.4,var.parkStrafe);
+            robot.forward(0.4,-1*var.parkBack);
             break;
-            //robot.strafe(0.3,1050);
         }
 
 
@@ -255,11 +230,12 @@ public class RochesterAutoBlueCarousel extends LinearOpMode
         {
             LEFT,
             MID,
-            RIGHT
+            RIGHT,
+            TAPE
         }
         enum ObjectType
         {
-
+            TAPE,
             ALLIANCE_SHIPPING_ELEMENT
         }
 
@@ -401,7 +377,7 @@ public class RochesterAutoBlueCarousel extends LinearOpMode
             // Do a rect fit to the contour, and draw it on the screen
             RotatedRect rotatedRectFitToContour = Imgproc.minAreaRect(contour2f);
 
-            if (rotatedRectFitToContour.size.width > 60 && rotatedRectFitToContour.size.height > 30) {
+
                 drawRotatedRect(rotatedRectFitToContour, input);
 
                 // The angle OpenCV gives us can be ambiguous, so look at the shape of
@@ -444,20 +420,26 @@ public class RochesterAutoBlueCarousel extends LinearOpMode
                 AnalyzedElement analyzedElement = new AnalyzedElement();
                 analyzedElement.angle = rotRectAngle;
                 analyzedElement.WidthHeightRatio = rotatedRectFitToContour.size.width / rotatedRectFitToContour.size.height;
-                analyzedElement.object = ObjectType.ALLIANCE_SHIPPING_ELEMENT;
+                if (rotatedRectFitToContour.size.width > 60 && rotatedRectFitToContour.size.height > 30) {
+                    analyzedElement.object = ObjectType.ALLIANCE_SHIPPING_ELEMENT;
+                    if (rotatedRectFitToContour.center.x <= DIVISION_ONE) {
+                        analyzedElement.section = Section.LEFT;
+                    } else if (rotatedRectFitToContour.center.x > DIVISION_ONE && rotatedRectFitToContour.center.x < DIVISION_TWO) {
+                        analyzedElement.section = Section.MID;
+                    } else if (rotatedRectFitToContour.center.x >= DIVISION_TWO) {
+                        analyzedElement.section = Section.RIGHT;
+                    }
+                }
+                else{
+                    analyzedElement.object = ObjectType.TAPE;
+                    analyzedElement.section = Section.TAPE;
+                }
                 drawTagText(rotatedRectFitToContour, "Blue Capstone Thing", input);
                 analyzedElement.rectWidth = rotatedRectFitToContour.size.width;
                 analyzedElement.rectHeight = rotatedRectFitToContour.size.height;
-                if (rotatedRectFitToContour.center.x <= DIVISION_ONE) {
-                    analyzedElement.section = Section.LEFT;
-                } else if (rotatedRectFitToContour.center.x > DIVISION_ONE && rotatedRectFitToContour.center.x < DIVISION_TWO) {
-                    analyzedElement.section = Section.MID;
-                } else if (rotatedRectFitToContour.center.x >= DIVISION_TWO) {
-                    analyzedElement.section = Section.RIGHT;
-                }
                 internalElementList.add(analyzedElement);
 
-            }
+
         }
 
 

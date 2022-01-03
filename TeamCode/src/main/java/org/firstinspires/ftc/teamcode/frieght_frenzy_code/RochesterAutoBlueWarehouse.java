@@ -146,7 +146,6 @@ public class RochesterAutoBlueWarehouse extends LinearOpMode
 
                 }
             }
-            robot.svoIntake.setPower(var.lessPower);
             if (alliance_element_location == 2){
                 robot.movearm(0.7,var.secondLvl);
                 while (robot.mtrArm.isBusy()){
@@ -154,6 +153,7 @@ public class RochesterAutoBlueWarehouse extends LinearOpMode
                 }
             }
             if (alliance_element_location == 3){
+                robot.svoIntakeTilt.setPosition(var.intakeTiltHigh);
                 robot.movearm(0.7,var.thirdLvl);
                 while (robot.mtrArm.isBusy()){
 

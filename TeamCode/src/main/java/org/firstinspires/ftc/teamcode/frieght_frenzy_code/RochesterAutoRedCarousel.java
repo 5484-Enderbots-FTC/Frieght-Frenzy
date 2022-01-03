@@ -143,48 +143,102 @@ public class RochesterAutoRedCarousel extends LinearOpMode
             robot.deinit();
             telemetry.addData("雪花飘飘北风啸啸 Alliance Element Location: ", alliance_element_location);
             telemetry.update();
-            robot.strafe(0.5,400);
+            robot.strafe(0.5,450);
             robot.forward(0.4,1000);
             robot.forward(0.3,500);
-            robot.strafe(-0.05,-100);
+            //robot.strafe(-0.2,-125);
+
+            robot.mtrBR.setPower(-0.4);
+            robot.mtrBL.setPower(0.4);
+            robot.mtrFR.setPower(0.4);
+            robot.mtrFL.setPower(-0.4);
+            sleep(2000);
+            robot.brake();
+
+            //robot.strafe(-0.060,-100);
+            /*
+            robot.mtrBR.setPower(-0.1);
+            robot.mtrBL.setPower(0.1);
+            robot.mtrFR.setPower(0.1);
+            robot.mtrFL.setPower(-0.1);
+            sleep(2000);
+            robot.brake();
+`           */
+            robot.mtrBR.setPower(0.3);
+            robot.mtrBL.setPower(0.3);
+            robot.mtrFR.setPower(0.3);
+            robot.mtrFL.setPower(0.3);
+            sleep(500);
+            robot.brake();
+            //use distance sensor here instead of power strafe
             robot.svoCarousel.setPower(1);
             sleep(3000);
             robot.svoCarousel.setPower(0);
-            robot.forward(-0.4,-1900);
-            robot.svoIntake.setPower(0);
+
             if (alliance_element_location == 1){
                 robot.movearm(0.7,var.firstLvl);
+                robot.forward(-0.4,-1600);
                 while (robot.mtrArm.isBusy()){
 
                 }
             }
-            robot.svoIntake.setPower(var.lessPower);
             if (alliance_element_location == 2){
                 robot.movearm(0.7,var.secondLvl);
+                robot.forward(-0.4,-1700);
                 while (robot.mtrArm.isBusy()){
 
                 }
             }
             if (alliance_element_location == 3){
+
+                robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
                 robot.svoIntakeTilt.setPosition(var.intakeTiltHigh);
+                robot.forward(-0.4,-1900);
                 robot.movearm(0.7,var.thirdLvl);
                 while (robot.mtrArm.isBusy()){
 
                 }
             }
-            robot.svoIntake.setPower(0);
-            robot.strafe(0.25,800);
+            sleep(500);
+            robot.strafe(0.25,600);
+            //use distance sensor here instead of strafe
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.svoIntake.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.svoIntake.setPower(var.lessPower);
             sleep(3000);
             robot.svoIntake.setPower(0);
-            robot.strafe(-0.25,-750);
+            robot.strafe(-0.25,-600);
             robot.forward(0.5,2200);
-            robot.strafe(-0.2,-200);
-            robot.strafe(-0.05,-100);
-            //park w/o placing
+
+            robot.mtrBR.setPower(-0.4);
+            robot.mtrBL.setPower(0.4);
+            robot.mtrFR.setPower(0.4);
+            robot.mtrFL.setPower(-0.4);
+            sleep(2000);
+            robot.brake();
+
+
+            //robot.strafe(-0.060,-100);
+
+            /*robot.mtrBR.setPower(-0.1);
+            robot.mtrBL.setPower(0.1);
+            robot.mtrFR.setPower(0.1);
+            robot.mtrFL.setPower(-0.1);
+            sleep(2000);
+            robot.brake();
+            */
+
+            robot.mtrBR.setPower(0.3);
+            robot.mtrBL.setPower(0.3);
+            robot.mtrFR.setPower(0.3);
+            robot.mtrFL.setPower(0.3);
+            sleep(500);
+            robot.brake();
+
+            robot.movearm(0.7,var.thirdLvl);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.strafe(0.3,1075);
+            //use distance sensor here instead of the strafe
             break;
         }
 

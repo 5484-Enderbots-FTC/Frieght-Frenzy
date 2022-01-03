@@ -23,6 +23,8 @@ package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.Core;
@@ -137,15 +139,64 @@ public class RochesterAutoBlueCarousel extends LinearOpMode
             robot.deinit();
             telemetry.addData("雪花飘飘北风啸啸  冰淇凌 Alliance Element Location: ", alliance_element_location);
             telemetry.update();
+            while (!robot.leftLimit.isPressed()){
+                robot.mtrTurret.setPower(-0.5);
+                telemetry.addData("Bottom Limit: ", robot.bottomLimit.isPressed());
+                telemetry.addData("Top Limit: ", robot.topLimit.isPressed());
+                telemetry.addData("Left Limit: ", robot.leftLimit.isPressed());
+                telemetry.addData("Right Limit: ", robot.rightLimit.isPressed());
+                telemetry.update();
+            }
+            robot.mtrTurret.setPower(0);
+            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.mtrTurret.setTargetPosition(750);
             robot.strafe(0.5,350);
             robot.forward(-0.4,-1000);
             robot.forward(-0.3,-200);
-            robot.strafe(-0.1,-200);
+            robot.strafe(-0.005,-100);
             robot.svoCarousel.setPower(-1);
             sleep(3000);
             robot.svoCarousel.setPower(0);
-            robot.strafe(0.3,1050);
+            robot.forward(0.4,1900);
+            while (!robot.bottomLimit.isPressed()){
+                robot.mtrTurret.setPower(0.15);
+            }
+            robot.mtrTurret.setPower(0);
+            if (alliance_element_location == 1){
+                robot.movearm(0.7,var.firstLvl);
+                while (robot.mtrArm.isBusy()){
+
+                }
+            }
+            if (alliance_element_location == 2){
+                robot.movearm(0.7,var.secondLvl);
+                while (robot.mtrArm.isBusy()){
+
+                }
+            }
+            if (alliance_element_location == 3){
+                robot.svoIntakeTilt.setPosition(var.intakeTiltHigh);
+                robot.movearm(0.7,var.thirdLvl);
+                while (robot.mtrArm.isBusy()){
+
+                }
+            }
+            sleep(500);
+            robot.svoIntake.setPower(0);
+            robot.strafe(0.25,800);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.svoIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+            robot.svoIntake.setPower(var.lessPower);
+            sleep(3000);
+            robot.svoIntake.setPower(0);
+            robot.strafe(-0.25,-750);
+            robot.forward(0.5,2200);
+            robot.strafe(-0.2,-200);
+            robot.strafe(-0.05,-100);
+            //park w/o placing
+            robot.strafe(0.3,1075);
             break;
+            //robot.strafe(0.3,1050);
         }
 
 

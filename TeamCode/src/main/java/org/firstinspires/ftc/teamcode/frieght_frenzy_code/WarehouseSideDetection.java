@@ -22,9 +22,9 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.opencv.core.Core;
@@ -46,7 +46,6 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
 
 /*
  * This is an advanced sample showcasing detecting and determining the orientation
@@ -54,9 +53,7 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
  * of the vision processing to usercode.
  */
 @Autonomous
-@Disabled
-
-public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
+public class WarehouseSideDetection extends LinearOpMode
 {
     OpenCvWebcam webcam;
     ElementAnalysisPipeline pipeline;
@@ -100,7 +97,7 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
 
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
-
+        robot.svoIntakeTilt.setPosition(var.intakeInit);
         sleep(5000);
         while (!isStarted())
             {
@@ -139,13 +136,42 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
         }
         waitForStart();
         while (opModeIsActive()){
+            robot.deinit();
             telemetry.addData("Alliance Element Location: ", alliance_element_location);
             telemetry.update();
-            //robot.forward(0.2,300);
-            //robot.strafe(0.2,100);
-            //robot.forward(0.3,100);
-            //robot.carouselServo.setPosition(1);
-            //robot.turn(0.2,100);
+            robot.svoIntake.setPower(0);
+            if (alliance_element_location == 1){
+                robot.movearm(0.7,var.firstLvl);
+                while (robot.mtrArm.isBusy()){
+
+                }
+            }
+            if (alliance_element_location == 2){
+                robot.movearm(0.7,var.secondLvl);
+                while (robot.mtrArm.isBusy()){
+
+                }
+            }
+            if (alliance_element_location == 3){
+                robot.svoIntakeTilt.setPosition(var.intakeTiltHigh);
+                robot.movearm(0.7,var.thirdLvl);
+                while (robot.mtrArm.isBusy()){
+
+                }
+            }
+            robot.svoIntake.setPower(0);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.forward(-0.4,-800);
+            robot.strafe(0.25,1200);
+            robot.svoIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+            robot.svoIntake.setPower(var.lessPower);
+            sleep(3000);
+            robot.svoIntake.setPower(0);
+            robot.strafe(-0.25,-1250);
+            robot.forward(0.4,1800);
+            robot.strafe(0.4,var.parkStrafe);
+            robot.forward(0.4,-1*var.parkBack);
+            break;
         }
 
 
@@ -204,12 +230,13 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
         {
             LEFT,
             MID,
-            RIGHT
+            RIGHT,
+            TAPE
         }
         enum ObjectType
         {
-            PWR_SHOT,
-            RED_GOAL
+            TAPE,
+            ALLIANCE_SHIPPING_ELEMENT
         }
 
         ArrayList<AnalyzedElement> internalElementList = new ArrayList<>();
@@ -350,7 +377,7 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
             // Do a rect fit to the contour, and draw it on the screen
             RotatedRect rotatedRectFitToContour = Imgproc.minAreaRect(contour2f);
 
-            if (rotatedRectFitToContour.size.width > 60 && rotatedRectFitToContour.size.height > 30) {
+
                 drawRotatedRect(rotatedRectFitToContour, input);
 
                 // The angle OpenCV gives us can be ambiguous, so look at the shape of
@@ -388,39 +415,31 @@ public class BlueAllianceShippingElementDetectorWebcam extends LinearOpMode
                     return; // Get out of dodge
                 }
 
-                // We're going to draw line from the center of the bounding rect, to outside the bounding rect, in the
-                // direction of the side of the stone with the nubs.
-                Point displOfOrientationLinePoint2 = computeDisplacementForSecondPointOfStoneOrientationLine(rotatedRectFitToContour, rotRectAngle);
-
-                /*
-                 * If the difference in the densities of the two regions exceeds the threshold,
-                 * then we assume the stone is on its side. Otherwise, if the difference is inside
-                 * of the threshold, we assume it's upright.
-                 */
-
-
-
-                /*
-                 * Assume the stone is upright
-                 */
+                //Point displOfOrientationLinePoint2 = computeDisplacementForSecondPointOfStoneOrientationLine(rotatedRectFitToContour, rotRectAngle);
 
                 AnalyzedElement analyzedElement = new AnalyzedElement();
                 analyzedElement.angle = rotRectAngle;
                 analyzedElement.WidthHeightRatio = rotatedRectFitToContour.size.width / rotatedRectFitToContour.size.height;
-                analyzedElement.object = ObjectType.RED_GOAL;
-                drawTagText(rotatedRectFitToContour, "Blue Alliance Shipping Element", input);
+                if (rotatedRectFitToContour.size.width > 60 && rotatedRectFitToContour.size.height > 30) {
+                    analyzedElement.object = ObjectType.ALLIANCE_SHIPPING_ELEMENT;
+                    if (rotatedRectFitToContour.center.x <= DIVISION_ONE) {
+                        analyzedElement.section = Section.LEFT;
+                    } else if (rotatedRectFitToContour.center.x > DIVISION_ONE && rotatedRectFitToContour.center.x < DIVISION_TWO) {
+                        analyzedElement.section = Section.MID;
+                    } else if (rotatedRectFitToContour.center.x >= DIVISION_TWO) {
+                        analyzedElement.section = Section.RIGHT;
+                    }
+                }
+                else{
+                    analyzedElement.object = ObjectType.TAPE;
+                    analyzedElement.section = Section.TAPE;
+                }
+                drawTagText(rotatedRectFitToContour, "Blue Capstone Thing", input);
                 analyzedElement.rectWidth = rotatedRectFitToContour.size.width;
                 analyzedElement.rectHeight = rotatedRectFitToContour.size.height;
-                if (rotatedRectFitToContour.center.x <= DIVISION_ONE) {
-                    analyzedElement.section = Section.LEFT;
-                } else if (rotatedRectFitToContour.center.x > DIVISION_ONE && rotatedRectFitToContour.center.x < DIVISION_TWO) {
-                    analyzedElement.section = Section.MID;
-                } else if (rotatedRectFitToContour.center.x >= DIVISION_TWO) {
-                    analyzedElement.section = Section.RIGHT;
-                }
                 internalElementList.add(analyzedElement);
 
-            }
+
         }
 
 

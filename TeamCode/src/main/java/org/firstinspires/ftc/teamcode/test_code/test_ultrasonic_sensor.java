@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.ultimate_goal_code.var;
 
 
 @TeleOp(name = "ultrasonic babey", group = "testing")
-@Disabled
+//@Disabled
 
 public class test_ultrasonic_sensor extends LinearOpMode {
     ElapsedTime runtime = new ElapsedTime();

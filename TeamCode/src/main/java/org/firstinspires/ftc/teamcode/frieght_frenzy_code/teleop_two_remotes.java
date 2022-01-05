@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 @TeleOp(name = "teleop ff", group = "teleop")
 public class teleop_two_remotes extends LinearOpMode {
 
@@ -224,9 +226,10 @@ public class teleop_two_remotes extends LinearOpMode {
             telemetry.addData("bottom limit status", robot.bottomLimit.isPressed());
             telemetry.addData("right limit status", robot.rightLimit.isPressed());
             telemetry.addData("left limit status", robot.leftLimit.isPressed());
-            telemetry.addData("left stick value: ", gamepad2.left_stick_y);
-
-
+            telemetry.addData("front range distance: ", "%.2f cm", robot.frontRange.getDistance(DistanceUnit.CM));
+            telemetry.addData("back range distance: ", "%.2f cm", robot.backRange.getDistance(DistanceUnit.CM));
+            telemetry.addData("right distance: ", String.format("%.01f cm", robot.rightDistance.getDistance(DistanceUnit.CM)));
+            telemetry.addData("left distance: ", String.format("%.01f cm", robot.leftDistance.getDistance(DistanceUnit.CM)));
             telemetry.update();
         }
 

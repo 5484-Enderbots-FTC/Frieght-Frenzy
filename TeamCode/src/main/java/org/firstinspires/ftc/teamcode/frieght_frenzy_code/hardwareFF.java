@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -37,6 +39,10 @@ public class hardwareFF {
     public TouchSensor leftLimit, rightLimit, topLimit, bottomLimit; //digital ports . . .
 
     public DigitalChannel alliance_switch, position_switch;//digital port
+
+    public ModernRoboticsI2cRangeSensor frontRange, backRange; //front should be configured as the one under the battery holder :)
+    public DistanceSensor rightDistance, leftDistance; //right distance should be configured as the one under the battery holder too lol
+
     public VoltageSensor batteryVoltage;
     public HardwareMap hw = null;
 
@@ -98,6 +104,12 @@ public class hardwareFF {
 
         alliance_switch = hw.get(DigitalChannel.class, "alliance_switch");
         position_switch = hw.get(DigitalChannel.class, "position_switch");
+
+        frontRange = hw.get(ModernRoboticsI2cRangeSensor.class, "frontRange");
+        backRange = hw.get(ModernRoboticsI2cRangeSensor.class, "backRange");
+        rightDistance = hw.get(DistanceSensor.class, "rightDistance");
+        leftDistance = hw.get(DistanceSensor.class, "leftDistance");
+
         batteryVoltage = hw.voltageSensor.iterator().next();
 
         LEDstrip.setPosition(var.rainbowo);

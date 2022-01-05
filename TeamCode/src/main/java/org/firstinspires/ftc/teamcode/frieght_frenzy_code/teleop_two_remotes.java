@@ -208,7 +208,6 @@ public class teleop_two_remotes extends LinearOpMode {
                 telemetry.addLine("baby mode inactive");
             }
 
-
             if(robot.alliance_switch.getState() == true) {
                 telemetry.addLine("red alliance");
             }

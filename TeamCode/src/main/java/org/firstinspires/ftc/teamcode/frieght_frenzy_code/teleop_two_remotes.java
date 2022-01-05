@@ -191,12 +191,16 @@ public class teleop_two_remotes extends LinearOpMode {
                 robot.svoIntake.setPower(var.stop);
                 intakeOn = false;
             }
-            if(robot.bottomLimit.isPressed() && !intakeOn){
+            if(robot.bottomLimit.isPressed() && !intakeOn && robot.intakeLimit.isPressed()){
                 intakeOn = true;
                 robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 robot.svoIntake.setPower(var.lessPower);
                 robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
+            }
+            if(intakeOn && !robot.intakeLimit.isPressed()){
+                robot.svoIntake.setPower(var.stop);
+                intakeOn = false;
             }
 
 
@@ -225,6 +229,7 @@ public class teleop_two_remotes extends LinearOpMode {
             telemetry.addData("bottom limit status", robot.bottomLimit.isPressed());
             telemetry.addData("right limit status", robot.rightLimit.isPressed());
             telemetry.addData("left limit status", robot.leftLimit.isPressed());
+            telemetry.addData("intake limit status", robot.intakeLimit.isPressed());
             telemetry.addData("front range distance: ", "%.2f cm", robot.frontRange.getDistance(DistanceUnit.CM));
             telemetry.addData("back range distance: ", "%.2f cm", robot.backRange.getDistance(DistanceUnit.CM));
             telemetry.addData("right distance: ", String.format("%.01f cm", robot.rightDistance.getDistance(DistanceUnit.CM)));

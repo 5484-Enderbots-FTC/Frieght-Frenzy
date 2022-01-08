@@ -1,33 +1,28 @@
 package org.firstinspires.ftc.teamcode.test_code;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.ultimate_goal_code.hardwareUltimateGoal;
-import org.firstinspires.ftc.teamcode.ultimate_goal_code.var;
 
 
-@TeleOp(name = "ultrasonic babey", group = "testing")
+@TeleOp(name = "ultrasonic 2 electric boogaloo", group = "testing")
 //@Disabled
 
-public class test_ultrasonic_sensor extends LinearOpMode {
+public class ultrasonic_test_2 extends LinearOpMode {
     ElapsedTime runtime = new ElapsedTime();
     ElapsedTime timer = new ElapsedTime();
 
-    hardwareUltimateGoal robot = new hardwareUltimateGoal();
+    hardwareFF robot = new hardwareFF();
     ModernRoboticsI2cRangeSensor rangeSensor;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        //robot.init(hardwareMap);
+        robot.init(hardwareMap);
         //robot.initShooterPID(hardwareMap);
 
         /**
@@ -36,9 +31,6 @@ public class test_ultrasonic_sensor extends LinearOpMode {
          * - ultrasonic used for accurate far distances up to 255cm
          * - switches to optical distance sensor for distances accurate between 1cm and 7cm
          */
-
-        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
-
         //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         telemetry.addData("Status", "Initialized");
         telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -50,9 +42,9 @@ public class test_ultrasonic_sensor extends LinearOpMode {
 
             //robot.updateDrive(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
 
-            telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
-            telemetry.addData("raw optical", rangeSensor.rawOptical());
-            telemetry.addData("cm", "%.2f cm", rangeSensor.getDistance(DistanceUnit.CM));
+            telemetry.addData("raw ultrasonic", robot.backRange.rawUltrasonic());
+            telemetry.addData("raw optical", robot.backRange.rawOptical());
+            telemetry.addData("cm", "%.2f cm", robot.backRange.getDistance(DistanceUnit.CM));
             telemetry.update();
         }
 

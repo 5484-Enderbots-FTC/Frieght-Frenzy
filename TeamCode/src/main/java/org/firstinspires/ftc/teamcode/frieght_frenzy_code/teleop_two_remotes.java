@@ -179,7 +179,7 @@ public class teleop_two_remotes extends LinearOpMode {
             //run intake
             if(gamepad2.a){
                 robot.svoIntake.setPower(var.lessPower);
-                intakeOn = false;
+                intakeOn = true;
             }
             //reverse intake
             if(gamepad2.b){
@@ -191,17 +191,25 @@ public class teleop_two_remotes extends LinearOpMode {
                 robot.svoIntake.setPower(var.stop);
                 intakeOn = false;
             }
-            if(robot.bottomLimit.isPressed() && !intakeOn && robot.intakeLimit.isPressed()){
-                intakeOn = true;
+            if(intakeOn && !robot.intakeLimit.isPressed()){
+                intakeOn = false;
+                robot.svoIntake.setPower(var.stop);
+            }
+            /*
+            if(robot.bottomLimit.isPressed() && robot.intakeLimit.isPressed()){
+                //intakeOn = true;
                 robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 robot.svoIntake.setPower(var.lessPower);
-                robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
+                //robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
+                telemetry.addLine("it work");
             }
-            if(intakeOn && !robot.intakeLimit.isPressed()){
+            if(!robot.intakeLimit.isPressed()){
                 robot.svoIntake.setPower(var.stop);
-                intakeOn = false;
+                //intakeOn = false;
             }
+
+             */
 
 
             //we usually add some telemetry at the end to tell us useful information during testing :)
@@ -234,6 +242,7 @@ public class teleop_two_remotes extends LinearOpMode {
             telemetry.addData("back range distance: ", "%.2f cm", robot.backRange.getDistance(DistanceUnit.CM));
             telemetry.addData("right distance: ", String.format("%.01f cm", robot.rightDistance.getDistance(DistanceUnit.CM)));
             telemetry.addData("left distance: ", String.format("%.01f cm", robot.leftDistance.getDistance(DistanceUnit.CM)));
+            telemetry.addData("Intake: ", intakeOn);
             telemetry.update();
         }
 

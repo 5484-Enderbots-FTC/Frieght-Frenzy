@@ -35,7 +35,8 @@ public class var {
     //deinit arm
     public static int deinitArm = 400;
 
-
+    //strafing align
+    public static int turnDirection = 1;
 
 
 }

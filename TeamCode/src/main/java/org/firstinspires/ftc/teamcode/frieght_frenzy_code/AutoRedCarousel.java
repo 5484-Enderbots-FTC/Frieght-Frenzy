@@ -262,13 +262,19 @@ public class AutoRedCarousel extends LinearOpMode
             sleep(3000);
             robot.svoIntake.setPower(0);
             robot.strafe(-0.25,-600);
-            robot.forward(0.5,2200);
 
-            robot.mtrBR.setPower(-0.4);
-            robot.mtrBL.setPower(0.4);
-            robot.mtrFR.setPower(0.4);
-            robot.mtrFL.setPower(-0.4);
-            sleep(2000);
+            while (robot.frontRange.getDistance(DistanceUnit.CM) > 20){
+                robot.mtrBL.setPower(0.4);
+                robot.mtrBR.setPower(0.4);
+                robot.mtrFR.setPower(0.4);
+                robot.mtrFL.setPower(0.4);
+            }
+            while (robot.rightDistance.getDistance(DistanceUnit.CM) < 66){
+                robot.mtrBR.setPower(-0.4);
+                robot.mtrBL.setPower(0.45);
+                robot.mtrFR.setPower(0.45);
+                robot.mtrFL.setPower(-0.4);
+            }
             robot.brake();
 
 

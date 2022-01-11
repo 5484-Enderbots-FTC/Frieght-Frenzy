@@ -227,7 +227,10 @@ public class hardwareFF {
         brake();
     }
     public void powerTurn (double power){
-        reset();
+        mtrBL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrBR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrFL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        mtrFR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrBR.setPower(power);
         mtrBL.setPower(power);
         mtrFR.setPower(-power);

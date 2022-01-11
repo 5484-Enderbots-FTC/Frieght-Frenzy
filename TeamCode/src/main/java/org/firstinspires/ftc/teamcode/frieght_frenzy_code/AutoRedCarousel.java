@@ -23,6 +23,7 @@ package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -47,6 +48,8 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
 
 /*
  * This is an advanced sample showcasing detecting and determining the orientation
@@ -54,7 +57,7 @@ import java.util.List;
  * of the vision processing to usercode.
  */
 @Autonomous
-public class RochesterAutoRedCarousel extends LinearOpMode
+public class AutoRedCarousel extends LinearOpMode
 {
     OpenCvWebcam webcam;
     ElementAnalysisPipeline pipeline;
@@ -141,8 +144,49 @@ public class RochesterAutoRedCarousel extends LinearOpMode
             robot.deinit();
             telemetry.addData("雪花飘飘北风啸啸 Alliance Element Location: ", alliance_element_location);
             telemetry.update();
-            robot.strafe(0.5,450);
-            //robot.forward(0.4,1000);
+            while (robot.frontRange.getDistance(DistanceUnit.CM) > 20){
+                robot.mtrBL.setPower(0.4);
+                robot.mtrBR.setPower(0.4);
+                robot.mtrFR.setPower(0.4);
+                robot.mtrFL.setPower(0.4);
+            }
+            robot.forward(0.2,300);
+            //robot.strafe(-0.2,-125);
+            while (robot.rightDistance.getDistance(DistanceUnit.CM) > 28){
+                robot.mtrBR.setPower(-0.4);
+                robot.mtrBL.setPower(0.45);
+                robot.mtrFR.setPower(0.45);
+                robot.mtrFL.setPower(-0.4);
+            }
+            /*
+            robot.mtrBR.setPower(-0.2);
+            robot.mtrBL.setPower(0.2);
+            robot.mtrFR.setPower(0.2);
+            robot.mtrFL.setPower(-0.2);
+            sleep(1000);
+            robot.brake();
+            */
+
+            //robot.strafe(-0.060,-100);
+            /*
+            robot.mtrBR.setPower(-0.1);
+            robot.mtrBL.setPower(0.1);
+            robot.mtrFR.setPower(0.1);
+            robot.mtrFL.setPower(-0.1);
+            sleep(2000);
+            robot.brake();
+`
+            robot.mtrBR.setPower(0.3);
+            robot.mtrBL.setPower(0.3);
+            robot.mtrFR.setPower(0.3);
+            robot.mtrFL.setPower(0.3);
+            sleep(500);
+            robot.brake();
+            */
+            //use distance sensor here instead of power strafe
+            robot.svoCarousel.setPower(1);
+            sleep(3000);
+            robot.svoCarousel.setPower(0);
 
             robot.strafe(0.5,450);
             robot.forward(0.4,1000);
@@ -191,7 +235,7 @@ public class RochesterAutoRedCarousel extends LinearOpMode
             }
             if (alliance_element_location == 3){
 
-                //robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
+                robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
                 robot.svoIntakeTilt.setPosition(var.intakeTiltHigh);
                 robot.forward(-0.4,-1900);
                 robot.movearm(0.7,var.thirdLvl);
@@ -201,6 +245,16 @@ public class RochesterAutoRedCarousel extends LinearOpMode
             }
             sleep(500);
             robot.strafe(0.25,600);
+            if (robot.leftDistance.getDistance(DistanceUnit.CM)> robot.rightDistance.getDistance(DistanceUnit.CM)){
+                var.turnDirection = -1;
+            }
+            else if (robot.leftDistance.getDistance(DistanceUnit.CM) < robot.rightDistance.getDistance(DistanceUnit.CM)){
+                var.turnDirection = 1;
+            }
+            while (Math.abs(robot.leftDistance.getDistance(DistanceUnit.CM) - robot.rightDistance.getDistance(DistanceUnit.CM))>1.5){
+                robot.powerTurn(0.3*var.turnDirection);
+            }
+            robot.brake();
             //use distance sensor here instead of strafe
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.svoIntake.setDirection(DcMotorSimple.Direction.REVERSE);

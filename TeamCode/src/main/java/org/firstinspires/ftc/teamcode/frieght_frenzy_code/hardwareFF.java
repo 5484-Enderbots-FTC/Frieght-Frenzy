@@ -210,12 +210,12 @@ public class hardwareFF {
         int adjustment = 1;
         mtrBR.setPower(power);
         mtrBR.setTargetPosition(position*adjustment);
-        mtrBL.setPower(-power);
+        mtrBL.setPower(power);
         mtrBL.setTargetPosition(position*adjustment);
-        mtrFR.setPower(power);
-        mtrFR.setTargetPosition(position*adjustment);
+        mtrFR.setPower(-power);
+        mtrFR.setTargetPosition(-position*adjustment);
         mtrFL.setPower(-power);
-        mtrFL.setTargetPosition(position*adjustment);
+        mtrFL.setTargetPosition(-position*adjustment);
         mtrBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         mtrBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         mtrFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -226,6 +226,14 @@ public class hardwareFF {
 
         brake();
     }
+    public void powerTurn (double power){
+        reset();
+        mtrBR.setPower(power);
+        mtrBL.setPower(power);
+        mtrFR.setPower(-power);
+        mtrFL.setPower(-power);
+    }
+
     public void movearm (double power, int position){
         int adjustment = 1;
         mtrArm.setPower(-power);

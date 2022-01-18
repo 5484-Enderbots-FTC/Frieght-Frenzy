@@ -35,7 +35,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.ArrayList;
 
 @Autonomous
-public class RedCarouselAuto extends LinearOpMode
+public class AutoRedCarousel2 extends LinearOpMode
 {
     hardwareFF robot = new hardwareFF();
 
@@ -86,6 +86,8 @@ public class RedCarouselAuto extends LinearOpMode
             telemetry.update();
         }
         waitForStart();
+
+
         while (opModeIsActive()){
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.deinit();

@@ -23,6 +23,7 @@ package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -52,7 +53,7 @@ import java.util.List;
  * of the vision processing to usercode.
  */
 @Autonomous
-public class RochesterAutoBlueWarehouseOriginal extends LinearOpMode
+public class AutoRedWarehouse extends LinearOpMode
 {
     OpenCvWebcam webcam;
     ElementAnalysisPipeline pipeline;
@@ -138,12 +139,57 @@ public class RochesterAutoBlueWarehouseOriginal extends LinearOpMode
             //robot.deinit();
             telemetry.addData("Alliance Element Location: ", alliance_element_location);
             telemetry.update();
-            robot.forward(0.4,1500);
-            /*
+            robot.movearm(0.7,var.secondLvl);
+            sleep(100);
+            while (robot.mtrArm.isBusy()){
+                telemetry.addLine("Arm is moving");
+                telemetry.update();
+            }
+            telemetry.addLine("arm stopped moving");
+            telemetry.update();
+            robot.mtrArm.setPower(0);
+            while (!robot.leftLimit.isPressed()){
+                robot.mtrTurret.setPower(-0.5);
+                telemetry.addData("Bottom Limit: ", robot.bottomLimit.isPressed());
+                telemetry.addData("Top Limit: ", robot.topLimit.isPressed());
+                telemetry.addData("Left Limit: ", robot.leftLimit.isPressed());
+                telemetry.addData("Right Limit: ", robot.rightLimit.isPressed());
+                telemetry.update();
+            }
+            robot.mtrTurret.setPower(0);
+            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.mtrTurret.setTargetPosition(750);
+            robot.mtrTurret.setPower(0.25);
+            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            if (alliance_element_location == 1){
+                robot.movearm(0.7,var.firstLvl);
+                while (robot.mtrArm.isBusy()){
+
+                }
+            }
+            if (alliance_element_location == 2){
+                robot.movearm(0.7,var.secondLvl);
+                while (robot.mtrArm.isBusy()){
+
+                }
+            }
+            if (alliance_element_location == 3){
+                robot.svoIntakeTilt.setPosition(var.intakeTiltHigh);
+                robot.movearm(0.7,var.thirdLvl);
+                while (robot.mtrArm.isBusy()){
+
+                }
+            }
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.forward(0.4,800);
+            robot.strafe(0.25,1200);
+            robot.svoIntake.setDirection(DcMotorSimple.Direction.REVERSE);
+            robot.svoIntake.setPower(var.lessPower);
+            sleep(3000);
+            robot.svoIntake.setPower(0);
+            robot.forward(-0.4,-1000);
             robot.strafe(0.4,var.parkStrafe);
-            robot.forward(0.4,-1*var.parkBack);
-            da robot with drip???
-             */
+            robot.forward(-0.4,var.parkBack);
             break;
         }
 

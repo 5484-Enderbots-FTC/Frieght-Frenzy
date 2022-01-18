@@ -52,7 +52,6 @@ import java.util.List;
  */
 @TeleOp
 @Disabled
-
 public class ElementDetector extends LinearOpMode
 {
     OpenCvInternalCamera2 phoneCam;

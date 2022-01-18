@@ -23,36 +23,19 @@ package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfInt;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.MatOfPoint2f;
-import org.opencv.core.Point;
-import org.opencv.core.RotatedRect;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
 
 @Autonomous
-public class AutoRedCarousel extends LinearOpMode
+public class AutoRedCarousel2 extends LinearOpMode
 {
     hardwareFF robot = new hardwareFF();
 
@@ -72,7 +55,7 @@ public class AutoRedCarousel extends LinearOpMode
                 // Don't burn an insane amount of CPU cycles in this sample because
                 // we're not doing anything else
 
-                // Figure out which stones the pipeline detected, and print them to telemetry
+                //what did u detect
                 ArrayList<ElementAnalysisPipelineFF.AnalyzedElement> elements = robot.pipeline.getDetectedElements();
                 sleep(250);
 
@@ -110,49 +93,8 @@ public class AutoRedCarousel extends LinearOpMode
             robot.deinit();
             telemetry.addData("雪花飘飘北风啸啸 Alliance Element Location: ", alliance_element_location);
             telemetry.update();
-            while (robot.frontRange.getDistance(DistanceUnit.CM) > 20){
-                robot.mtrBL.setPower(0.4);
-                robot.mtrBR.setPower(0.4);
-                robot.mtrFR.setPower(0.4);
-                robot.mtrFL.setPower(0.4);
-            }
-            robot.forward(0.2,300);
-            //robot.strafe(-0.2,-125);
-            while (robot.rightDistance.getDistance(DistanceUnit.CM) > 28){
-                robot.mtrBR.setPower(-0.4);
-                robot.mtrBL.setPower(0.45);
-                robot.mtrFR.setPower(0.45);
-                robot.mtrFL.setPower(-0.4);
-            }
-            /*
-            robot.mtrBR.setPower(-0.2);
-            robot.mtrBL.setPower(0.2);
-            robot.mtrFR.setPower(0.2);
-            robot.mtrFL.setPower(-0.2);
-            sleep(1000);
-            robot.brake();
-            */
-
-            //robot.strafe(-0.060,-100);
-            /*
-            robot.mtrBR.setPower(-0.1);
-            robot.mtrBL.setPower(0.1);
-            robot.mtrFR.setPower(0.1);
-            robot.mtrFL.setPower(-0.1);
-            sleep(2000);
-            robot.brake();
-`
-            robot.mtrBR.setPower(0.3);
-            robot.mtrBL.setPower(0.3);
-            robot.mtrFR.setPower(0.3);
-            robot.mtrFL.setPower(0.3);
-            sleep(500);
-            robot.brake();
-            */
-            //use distance sensor here instead of power strafe
-            robot.svoCarousel.setPower(1);
-            sleep(3000);
-            robot.svoCarousel.setPower(0);
+            robot.strafe(0.5,450);
+            //robot.forward(0.4,1000);
 
             robot.strafe(0.5,450);
             robot.forward(0.4,1000);
@@ -201,7 +143,7 @@ public class AutoRedCarousel extends LinearOpMode
             }
             if (alliance_element_location == 3){
 
-                robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
+                //robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
                 robot.svoIntakeTilt.setPosition(var.intakeTiltHigh);
                 robot.forward(-0.4,-1900);
                 robot.movearm(0.7,var.thirdLvl);
@@ -211,16 +153,6 @@ public class AutoRedCarousel extends LinearOpMode
             }
             sleep(500);
             robot.strafe(0.25,600);
-            if (robot.leftDistance.getDistance(DistanceUnit.CM)> robot.rightDistance.getDistance(DistanceUnit.CM)){
-                var.turnDirection = -1;
-            }
-            else if (robot.leftDistance.getDistance(DistanceUnit.CM) < robot.rightDistance.getDistance(DistanceUnit.CM)){
-                var.turnDirection = 1;
-            }
-            while (Math.abs(robot.leftDistance.getDistance(DistanceUnit.CM) - robot.rightDistance.getDistance(DistanceUnit.CM))>1.5){
-                robot.powerTurn(0.3*var.turnDirection);
-            }
-            robot.brake();
             //use distance sensor here instead of strafe
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.svoIntake.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -228,19 +160,13 @@ public class AutoRedCarousel extends LinearOpMode
             sleep(3000);
             robot.svoIntake.setPower(0);
             robot.strafe(-0.25,-600);
+            robot.forward(0.5,2200);
 
-            while (robot.frontRange.getDistance(DistanceUnit.CM) > 20){
-                robot.mtrBL.setPower(0.4);
-                robot.mtrBR.setPower(0.4);
-                robot.mtrFR.setPower(0.4);
-                robot.mtrFL.setPower(0.4);
-            }
-            while (robot.rightDistance.getDistance(DistanceUnit.CM) < 66){
-                robot.mtrBR.setPower(-0.4);
-                robot.mtrBL.setPower(0.45);
-                robot.mtrFR.setPower(0.45);
-                robot.mtrFL.setPower(-0.4);
-            }
+            robot.mtrBR.setPower(-0.4);
+            robot.mtrBL.setPower(0.4);
+            robot.mtrFR.setPower(0.4);
+            robot.mtrFL.setPower(-0.4);
+            sleep(2000);
             robot.brake();
 
 
@@ -266,8 +192,9 @@ public class AutoRedCarousel extends LinearOpMode
             robot.strafe(0.3,1075);
             //use distance sensor here instead of the strafe
             break;
+
         }
 
-    }
 
+    }
 }

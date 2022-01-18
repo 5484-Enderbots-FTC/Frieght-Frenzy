@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
-import com.noahbres.jotai.State;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -17,12 +16,13 @@ public class teleop_two_remotes extends LinearOpMode {
     //this is the timer used to create a toggle switch:
     ElapsedTime toggleBabyTimer = new ElapsedTime();
     ElapsedTime toggleCarousel = new ElapsedTime();
-    ElapsedTime wait = new ElapsedTime();
 
     //this boolean keeps track of whether or not the toggle is on or off
     boolean babyMode = false;
     boolean carouselSpinning = false;
     boolean intakeOn = false;
+    boolean freightCollected = false;
+    boolean zeroPosSet = false;
 
     State currentState;
 
@@ -86,12 +86,24 @@ public class teleop_two_remotes extends LinearOpMode {
                 robot.svoCarousel.setPower(var.stop);
             }
             if(gamepad1.x){
-                robot.svoCarousel.setPower(-var.fullPower);
+                carouselSpinning = true;
+                if(robot.alliance_switch.getState() == true){
+                    robot.svoCarousel.setPower(-var.fullPower);
+                }
+                else{
+                    robot.svoCarousel.setPower(var.fullPower);
+                }
             }
 
             /***
              * GAMEPAD 2 CONTROLS
              */
+
+            if(robot.bottomLimit.isPressed() && !zeroPosSet){
+                robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                zeroPosSet = true;
+            }
 
             switch(currentState) {
                 case NOTHING:
@@ -146,7 +158,6 @@ public class teleop_two_remotes extends LinearOpMode {
                     break;
             }
 
-
             //turret spin to da right
             if(robot.rightLimit.isPressed()){
                 robot.mtrTurret.setPower(gamepad2.right_stick_x*0.3);
@@ -161,6 +172,9 @@ public class teleop_two_remotes extends LinearOpMode {
                robot.mtrTurret.setPower(gamepad2.right_stick_x);
             }
 
+            /**
+             * Tilt Controls
+             */
 
             //servo tilt down
             if(gamepad2.left_bumper){
@@ -175,6 +189,23 @@ public class teleop_two_remotes extends LinearOpMode {
             /**
              * Intake Controls
              */
+
+            if(!robot.intakeLimit.isPressed()){
+                freightCollected = true;
+            }else{
+                freightCollected = false;
+            }
+
+            if(!freightCollected){
+                if(robot.bottomLimit.isPressed() && !intakeOn){
+                    robot.svoIntake.setPower(var.lessPower);
+                    intakeOn = true;
+                }
+            }
+            if(freightCollected){
+                robot.svoIntake.setPower(var.stop);
+                intakeOn = false;
+            }
 
             //run intake
             if(gamepad2.a){
@@ -191,26 +222,10 @@ public class teleop_two_remotes extends LinearOpMode {
                 robot.svoIntake.setPower(var.stop);
                 intakeOn = false;
             }
-            if(intakeOn && !robot.intakeLimit.isPressed()){
-                intakeOn = false;
-                robot.svoIntake.setPower(var.stop);
-            }
-            /*
-            if(robot.bottomLimit.isPressed() && robot.intakeLimit.isPressed()){
-                //intakeOn = true;
-                robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.svoIntake.setPower(var.lessPower);
-                //robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
-                telemetry.addLine("it work");
-            }
-            if(!robot.intakeLimit.isPressed()){
-                robot.svoIntake.setPower(var.stop);
-                //intakeOn = false;
-            }
 
+            /**
+             * Telemetry yay
              */
-
 
             //we usually add some telemetry at the end to tell us useful information during testing :)
             if(babyMode){
@@ -233,7 +248,7 @@ public class teleop_two_remotes extends LinearOpMode {
                 telemetry.addLine("warehouse side");
             }
 
-            telemetry.addData("top limit status", robot.topLimit.isPressed());
+            //telemetry.addData("top limit status", robot.topLimit.isPressed());
             telemetry.addData("bottom limit status", robot.bottomLimit.isPressed());
             telemetry.addData("right limit status", robot.rightLimit.isPressed());
             telemetry.addData("left limit status", robot.leftLimit.isPressed());
@@ -242,7 +257,6 @@ public class teleop_two_remotes extends LinearOpMode {
             telemetry.addData("back range distance: ", "%.2f cm", robot.backRange.getDistance(DistanceUnit.CM));
             telemetry.addData("right distance: ", String.format("%.01f cm", robot.rightDistance.getDistance(DistanceUnit.CM)));
             telemetry.addData("left distance: ", String.format("%.01f cm", robot.leftDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("Intake: ", intakeOn);
             telemetry.update();
         }
 

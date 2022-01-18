@@ -51,11 +51,6 @@ import java.util.List;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
 
-/*
- * This is an advanced sample showcasing detecting and determining the orientation
- * of multiple stones, switching the viewport output, and communicating the results
- * of the vision processing to usercode.
- */
 @Autonomous
 public class AutoRedCarousel extends LinearOpMode
 {

@@ -47,11 +47,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/*
- * This is an advanced sample showcasing detecting and determining the orientation
- * of multiple stones, switching the viewport output, and communicating the results
- * of the vision processing to usercode.
- */
 @Autonomous
 public class AutoBlueCarousel extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
@@ -160,7 +155,5 @@ public class AutoBlueCarousel extends LinearOpMode {
             break;
             //robot.strafe(0.3,1050);
         }
-
-
     }
 }

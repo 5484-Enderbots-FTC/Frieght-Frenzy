@@ -248,7 +248,7 @@ public class AutoSwitchUsage extends LinearOpMode {
             } else if (alliance_element_location == 3) {
                 telemetry.addLine("Barcode Position: Right");
             }
-            
+
             telemetry.update();
             //robot.forward(0.2,300);
             //robot.strafe(0.2,100);

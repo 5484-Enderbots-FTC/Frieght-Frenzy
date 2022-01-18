@@ -85,14 +85,14 @@ public class DistanceSensorAlign extends LinearOpMode
         telemetry.update();
         waitForStart();
         while (opModeIsActive()){
-            if (robot.leftDistance.getDistance(DistanceUnit.CM) > 800){
+            if (robot.leftDistance.getDistance(DistanceUnit.CM) > 50){
 
             }
             else{
 
                 leftDistance = robot.leftDistance.getDistance(DistanceUnit.CM);
             }
-            if (robot.rightDistance.getDistance(DistanceUnit.CM) > 800){
+            if (robot.rightDistance.getDistance(DistanceUnit.CM) > 50){
 
             }
             else{
@@ -104,9 +104,9 @@ public class DistanceSensorAlign extends LinearOpMode
             else if (robot.leftDistance.getDistance(DistanceUnit.CM) < robot.rightDistance.getDistance(DistanceUnit.CM)){
                 turnDirection = 1;
             }
-            while (Math.abs(robot.leftDistance.getDistance(DistanceUnit.CM) - robot.rightDistance.getDistance(DistanceUnit.CM))>3){
+            while (Math.abs(robot.leftDistance.getDistance(DistanceUnit.CM) - robot.rightDistance.getDistance(DistanceUnit.CM))>2){
 
-                robot.powerTurn(0.4*turnDirection);
+                robot.powerTurn(0.5*turnDirection);
                 telemetry.addData("Left Distance: ", robot.leftDistance.getDistance(DistanceUnit.CM));
                 telemetry.addData("Right Distance: ", robot.rightDistance.getDistance(DistanceUnit.CM));
                 telemetry.update();

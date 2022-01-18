@@ -138,21 +138,35 @@ public class RochesterAutoRedCarousel extends LinearOpMode
         waitForStart();
         while (opModeIsActive()){
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.deinit();
+            //robot.deinit();
             telemetry.addData("雪花飘飘北风啸啸 Alliance Element Location: ", alliance_element_location);
             telemetry.update();
-            robot.strafe(0.5,450);
+            //robot.strafe(0.5,450);
             //robot.forward(0.4,1000);
 
             robot.strafe(0.5,450);
             robot.forward(0.4,1000);
-            //robot.strafe(-0.2,-125);
-
-            robot.mtrBR.setPower(-0.4);
+            robot.mtrBL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.mtrBR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.mtrFL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.mtrFR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.mtrBR.setPower(0.4);
             robot.mtrBL.setPower(0.4);
             robot.mtrFR.setPower(0.4);
-            robot.mtrFL.setPower(-0.4);
-            sleep(2000);
+            robot.mtrFL.setPower(0.4);
+            sleep(1300);
+
+            //robot.strafe(-0.2,-125);
+            robot.mtrBL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.mtrBR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.mtrFL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.mtrFR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            robot.mtrBR.setPower(-0.15);
+            robot.mtrBL.setPower(0.27);
+            robot.mtrFR.setPower(0.27);
+            robot.mtrFL.setPower(-0.15);
+            sleep(1500);
             robot.brake();
 
             //robot.strafe(-0.060,-100);
@@ -164,12 +178,12 @@ public class RochesterAutoRedCarousel extends LinearOpMode
             sleep(2000);
             robot.brake();
 `           */
-            robot.mtrBR.setPower(0.3);
-            robot.mtrBL.setPower(0.3);
-            robot.mtrFR.setPower(0.3);
-            robot.mtrFL.setPower(0.3);
-            sleep(500);
-            robot.brake();
+            //robot.mtrBR.setPower(0.3);
+            //robot.mtrBL.setPower(0.3);
+            //robot.mtrFR.setPower(0.3);
+            //robot.mtrFL.setPower(0.3);
+            //sleep(500);
+            //robot.brake();
             //use distance sensor here instead of power strafe
             robot.svoCarousel.setPower(1);
             sleep(3000);
@@ -177,6 +191,7 @@ public class RochesterAutoRedCarousel extends LinearOpMode
 
             if (alliance_element_location == 1){
                 robot.movearm(0.7,var.firstLvl);
+                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.forward(-0.4,-1600);
                 while (robot.mtrArm.isBusy()){
 
@@ -184,6 +199,7 @@ public class RochesterAutoRedCarousel extends LinearOpMode
             }
             if (alliance_element_location == 2){
                 robot.movearm(0.7,var.secondLvl);
+                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.forward(-0.4,-1700);
                 while (robot.mtrArm.isBusy()){
 
@@ -193,6 +209,7 @@ public class RochesterAutoRedCarousel extends LinearOpMode
 
                 //robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
                 robot.svoIntakeTilt.setPosition(var.intakeTiltHigh);
+                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.forward(-0.4,-1900);
                 robot.movearm(0.7,var.thirdLvl);
                 while (robot.mtrArm.isBusy()){
@@ -201,8 +218,8 @@ public class RochesterAutoRedCarousel extends LinearOpMode
             }
             sleep(500);
             robot.strafe(0.25,600);
+            robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
             //use distance sensor here instead of strafe
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.svoIntake.setDirection(DcMotorSimple.Direction.REVERSE);
             robot.svoIntake.setPower(var.lessPower);
             sleep(3000);

@@ -58,6 +58,8 @@ public class DistanceSensorAlign extends LinearOpMode
 {
     hardwareFF robot = new hardwareFF();
     int turnDirection = 1;
+    double leftDistance = 0;
+    double rightDistance = 0;
 
     @Override
     public void runOpMode()
@@ -74,22 +76,43 @@ public class DistanceSensorAlign extends LinearOpMode
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
         robot.svoIntakeTilt.setPosition(var.intakeInit);
-        sleep(5000);
 
-            telemetry.update();
-
+        telemetry.update();
+        telemetry.addData("Left Distance: ", robot.leftDistance.getDistance(DistanceUnit.CM));
+        telemetry.addData("Right Distance: ", robot.rightDistance.getDistance(DistanceUnit.CM));
+        leftDistance = robot.leftDistance.getDistance(DistanceUnit.CM);
+        rightDistance = robot.rightDistance.getDistance(DistanceUnit.CM);
+        telemetry.update();
         waitForStart();
         while (opModeIsActive()){
+            if (robot.leftDistance.getDistance(DistanceUnit.CM) > 800){
+
+            }
+            else{
+
+                leftDistance = robot.leftDistance.getDistance(DistanceUnit.CM);
+            }
+            if (robot.rightDistance.getDistance(DistanceUnit.CM) > 800){
+
+            }
+            else{
+                rightDistance = robot.rightDistance.getDistance(DistanceUnit.CM);
+            }
             if (robot.leftDistance.getDistance(DistanceUnit.CM)> robot.rightDistance.getDistance(DistanceUnit.CM)){
                 turnDirection = -1;
             }
             else if (robot.leftDistance.getDistance(DistanceUnit.CM) < robot.rightDistance.getDistance(DistanceUnit.CM)){
                 turnDirection = 1;
             }
-            while (Math.abs(robot.leftDistance.getDistance(DistanceUnit.CM) - robot.rightDistance.getDistance(DistanceUnit.CM))>1.5){
-                robot.powerTurn(0.3*turnDirection);
+            while (Math.abs(robot.leftDistance.getDistance(DistanceUnit.CM) - robot.rightDistance.getDistance(DistanceUnit.CM))>3){
+
+                robot.powerTurn(0.4*turnDirection);
+                telemetry.addData("Left Distance: ", robot.leftDistance.getDistance(DistanceUnit.CM));
+                telemetry.addData("Right Distance: ", robot.rightDistance.getDistance(DistanceUnit.CM));
+                telemetry.update();
             }
             robot.brake();
+
         }
     }
 }

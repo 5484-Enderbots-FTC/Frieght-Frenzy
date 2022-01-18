@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 public class hardwareFF {
     //common hardware imports are stored here so that its crazy easy to import them and make changes to ALL CODE
@@ -31,6 +32,8 @@ public class hardwareFF {
 
     //So far this season we just have motors, so I've done the work to initialize them here:
      */
+    public ElementAnalysisPipelineFF pipeline;
+
     public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR; //control hub ports , , ,
     public DcMotorEx mtrArm, mtrTurret; //expansion hub ports ,
     public CRServo svoCarousel, svoIntake; //servo port 0, 1
@@ -45,6 +48,8 @@ public class hardwareFF {
 
     public VoltageSensor batteryVoltage;
     public HardwareMap hw = null;
+
+    public OpenCvWebcam webcam;
 
     public double alliance = 0;
     public final double red = 1;
@@ -131,12 +136,30 @@ public class hardwareFF {
     }
 
     public void initWebcam (){
+// Create camera instance
+        int cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hw.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
-    }
 
-    public void initPID (){
+        // Open async and start streaming inside opened callback
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
 
-
+                pipeline = new ElementAnalysisPipelineFF();
+                webcam.setPipeline(pipeline);
+            }
+            @Override
+            public void onError(int errorCode)
+            {
+                /*
+                 * This will be called if the camera could not be opened
+                 */
+            }
+        });
     }
 
     public void updateDrive(double fwdStick, double turnStick, double strStick){

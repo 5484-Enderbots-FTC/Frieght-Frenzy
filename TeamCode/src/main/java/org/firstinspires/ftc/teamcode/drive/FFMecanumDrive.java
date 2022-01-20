@@ -21,6 +21,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -54,8 +55,10 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
  */
 @Config
 public class FFMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(0, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
+    //translational pid kp = 8
+    //heading pid kp = 9
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(8, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(9, 0, 0);
 
     public static double LATERAL_MULTIPLIER = 1;
 
@@ -120,13 +123,13 @@ public class FFMecanumDrive extends MecanumDrive {
         // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "mtrFL");
-        leftFront.setDirection(DcMotorEx.Direction.FORWARD);
+        leftFront.setDirection(DcMotorEx.Direction.REVERSE);
         leftRear = hardwareMap.get(DcMotorEx.class, "mtrBL");
-        leftRear.setDirection(DcMotorEx.Direction.FORWARD);
+        leftRear.setDirection(DcMotorEx.Direction.REVERSE);
         rightRear = hardwareMap.get(DcMotorEx.class, "mtrBR");
-        rightRear.setDirection(DcMotorEx.Direction.REVERSE);
+        rightRear.setDirection(DcMotorEx.Direction.FORWARD);
         rightFront = hardwareMap.get(DcMotorEx.class, "mtrFR");
-        rightFront.setDirection(DcMotorEx.Direction.REVERSE);
+        rightFront.setDirection(DcMotorEx.Direction.FORWARD);
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 

@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.sun.tools.javac.comp.Todo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -25,6 +26,13 @@ public class teleop_two_remotes extends LinearOpMode {
     boolean zeroPosSet = false;
 
     State currentState;
+    Status intakeState;
+
+    private enum Status{
+        IN,
+        OUT,
+        STOPPED
+    }
 
     private enum State {
         NOTHING,
@@ -40,6 +48,7 @@ public class teleop_two_remotes extends LinearOpMode {
         robot.init(hardwareMap);
         //robot.svoIntakeTilt.setPosition(0.5);
         currentState = State.NOTHING;
+        intakeState = Status.STOPPED;
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
@@ -107,27 +116,53 @@ public class teleop_two_remotes extends LinearOpMode {
 
             switch(currentState) {
                 case NOTHING:
+                    /**
+                     * Don't need this 0 position because i just slam the arm down lol
+                     */
+                    /*
                     if(gamepad2.dpad_down){
+                        //basic intake freight position
                         robot.svoIntake.setPower(var.lessPower);
                         robot.svoIntakeTilt.setPosition(var.intakeTiltCollect);
                         robot.movearm(0.7,var.groundLvl);
                         currentState = State.SET;
                     }
+                     */
+                    /**
+                     * Don't need these bc why would i ever do these other than auto
+                     */
+                    /*
                     if(gamepad2.dpad_left){
+                        //first level of shipping hub (but why would you ever do this)
                         robot.svoIntakeTilt.setPosition(var.intakeTiltCollect);
                         robot.movearm(0.7,var.firstLvl);
                         currentState = State.SET;
                     }
                     if(gamepad2.dpad_up){
+                        //second level of hub
                         robot.svoIntakeTilt.setPosition(var.intakeTiltCollect);
                         robot.movearm(0.7,var.secondLvl);
                         currentState = State.SET;
                     }
+                     */
+                    /**
+                     * Begin automated to the top of hub function
+                     */
                     if(gamepad2.dpad_right){
+                        //third level of hub
                         robot.svoIntakeTilt.setPosition(var.intakeTiltHigh);
                         robot.movearm(0.7,var.thirdLvl);
                         currentState = State.SET;
                     }
+                    //TODO: - change the current dpad control to other available buttons
+                    //      - add in shared hub functionality
+                    //      - modify the levels to be right
+                    //      - fix svoIntakeTilt to be right
+                    //      - scrap the rest that's commented out lol
+
+                    /**
+                     * Normal 'manual' function :)
+                     */
                     else if(robot.bottomLimit.isPressed() && gamepad2.left_stick_y > 0){
                         robot.mtrArm.setPower(0);
                     }
@@ -158,6 +193,8 @@ public class teleop_two_remotes extends LinearOpMode {
                     break;
             }
 
+            //TODO: rewrite the logic when we get better limits :)
+
             //turret spin to da right
             if(robot.rightLimit.isPressed()){
                 robot.mtrTurret.setPower(gamepad2.right_stick_x*0.3);
@@ -176,6 +213,7 @@ public class teleop_two_remotes extends LinearOpMode {
              * Tilt Controls
              */
 
+            //TODO: this ALL is gonna be automated for christs sake this sucks
             //servo tilt down
             if(gamepad2.left_bumper){
                 robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
@@ -197,30 +235,33 @@ public class teleop_two_remotes extends LinearOpMode {
             }
 
             if(!freightCollected){
-                if(robot.bottomLimit.isPressed() && !intakeOn){
+                if(robot.bottomLimit.isPressed() && intakeState != Status.IN){
                     robot.svoIntake.setPower(var.lessPower);
-                    intakeOn = true;
+                    intakeState = Status.IN;
                 }
+                robot.LEDstrip.setPosition(var.green);
             }
             if(freightCollected){
                 robot.svoIntake.setPower(var.stop);
-                intakeOn = false;
+                intakeState = Status.STOPPED;
+                robot.LEDstrip.setPosition(var.red);
             }
 
             //run intake
             if(gamepad2.a){
                 robot.svoIntake.setPower(var.lessPower);
-                intakeOn = true;
+                intakeState = Status.IN;
             }
             //reverse intake
             if(gamepad2.b){
+                //might turn this into an output sequence
                 robot.svoIntake.setPower(-var.lessPower);
-                intakeOn = false;
+                intakeState = Status.OUT;
             }
             //stop intake
             if(gamepad2.x){
                 robot.svoIntake.setPower(var.stop);
-                intakeOn = false;
+                intakeState = Status.STOPPED;
             }
 
             /**
@@ -259,9 +300,5 @@ public class teleop_two_remotes extends LinearOpMode {
             telemetry.addData("left distance: ", String.format("%.01f cm", robot.leftDistance.getDistance(DistanceUnit.CM)));
             telemetry.update();
         }
-
-
-
     }
-
 }

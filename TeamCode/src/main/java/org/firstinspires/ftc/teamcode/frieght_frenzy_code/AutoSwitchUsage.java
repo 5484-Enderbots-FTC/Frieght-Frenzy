@@ -63,13 +63,13 @@ public class AutoSwitchUsage extends LinearOpMode {
 
     double strafeSwapper = 1;
 
-    public enum shippingHub {
+    private enum shippingHub {
         bottom,
         middle,
         top
     }
 
-    public enum State {
+    private enum State {
         DUCK,
         DETECT_BARCODE,
         LEFT,

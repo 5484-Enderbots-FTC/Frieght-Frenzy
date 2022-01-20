@@ -29,6 +29,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
@@ -55,6 +56,7 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
 public class AutoRedCarousel extends LinearOpMode
 {
     hardwareFF robot = new hardwareFF();
+    FFMecanumDrive drive = new FFMecanumDrive(hardwareMap);
 
     @Override
     public void runOpMode()

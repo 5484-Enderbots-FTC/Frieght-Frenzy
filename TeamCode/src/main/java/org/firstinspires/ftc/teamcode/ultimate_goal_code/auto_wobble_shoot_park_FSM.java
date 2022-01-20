@@ -64,7 +64,7 @@ public class auto_wobble_shoot_park_FSM extends LinearOpMode {
         private static int RingStackIndentified = 0;
     }
 
-    public enum Zone {
+    private enum Zone {
         A,
         B,
         C
@@ -72,7 +72,7 @@ public class auto_wobble_shoot_park_FSM extends LinearOpMode {
 
     Zone targetZone = Zone.A;
 
-    public enum State {
+    private enum State {
         DETECT_RING_STACK,
         NO_RINGS,
         ONE_RING,

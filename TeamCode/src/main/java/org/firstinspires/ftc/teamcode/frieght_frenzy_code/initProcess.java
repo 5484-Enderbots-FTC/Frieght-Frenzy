@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "teleop ff", group = "teleop")
+@TeleOp(name = "init moment", group = "teleop")
 public class initProcess extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     private static double reset = 0;

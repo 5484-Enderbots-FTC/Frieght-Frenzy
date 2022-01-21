@@ -203,8 +203,7 @@ public class AutoRedCarousel extends LinearOpMode
             }
             if (alliance_element_location == 3){
 
-                robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
-                robot.svoIntakeTilt.setPosition(var.intakeTiltHigh);
+                robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 robot.forward(-0.4,-1900);
                 robot.movearm(0.7,var.thirdLvl);
                 while (robot.mtrArm.isBusy()){

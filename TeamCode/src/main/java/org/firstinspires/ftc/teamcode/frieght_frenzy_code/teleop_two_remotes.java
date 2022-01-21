@@ -129,7 +129,7 @@ public class teleop_two_remotes extends LinearOpMode {
                     }
                      */
                     /**
-                     * Don't need these bc why would i ever do these other than auto
+                      Don't need these bc why would i ever do these other than auto
                      */
                     /*
                     if(gamepad2.dpad_left){
@@ -150,7 +150,7 @@ public class teleop_two_remotes extends LinearOpMode {
                      */
                     if(gamepad2.dpad_right){
                         //third level of hub
-                        robot.svoIntakeTilt.setPosition(var.intakeTiltHigh);
+                        robot.svoIntakeTilt.setPosition(var.intakeHigh);
                         robot.movearm(0.7,var.thirdLvl);
                         currentState = State.SET;
                     }
@@ -214,15 +214,6 @@ public class teleop_two_remotes extends LinearOpMode {
              */
 
             //TODO: this ALL is gonna be automated for christs sake this sucks
-            //servo tilt down
-            if(gamepad2.left_bumper){
-                robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
-            }
-
-            //servo tilt up
-            if(gamepad2.right_bumper){
-                robot.svoIntakeTilt.setPosition(var.intakeTiltCollect);
-            }
 
             /**
              * Intake Controls
@@ -236,6 +227,7 @@ public class teleop_two_remotes extends LinearOpMode {
 
             if(!freightCollected){
                 if(robot.bottomLimit.isPressed() && intakeState != Status.IN){
+                    robot.svoIntakeTilt.setPosition(var.intakeCollect);
                     robot.svoIntake.setPower(var.lessPower);
                     intakeState = Status.IN;
                 }

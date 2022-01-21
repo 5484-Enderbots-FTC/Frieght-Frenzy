@@ -18,13 +18,10 @@ public class var {
 
     public static double toggleWait = 1; //(seconds)
 
+    public static double intakeInit = 1;
     public static double intakeCollect = 0.48;
+    public static double intakeHigh = 0;
 
-
-    public static double intakeInit = 0.5;
-    public static double intakeTiltMid = 0.2;
-    public static double intakeTiltCollect = 0.28;
-    public static double intakeTiltHigh = 0.35;
     public static double fullPower = 1;
     public static double lessPower = 0.4;
 

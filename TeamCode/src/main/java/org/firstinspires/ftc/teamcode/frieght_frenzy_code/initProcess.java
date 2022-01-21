@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class initProcess extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     private static double reset = 0;
-    private static double inc = 0.01;
+    private static double inc = 0.005;
     private double tiltNumber = 0;
     public void runOpMode() {
         robot.init(hardwareMap);

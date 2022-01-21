@@ -118,7 +118,7 @@ public class AutoBlueWarehouse extends LinearOpMode
                 }
             }
             if (alliance_element_location == 3){
-                robot.svoIntakeTilt.setPosition(var.intakeTiltHigh);
+                robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 robot.movearm(0.7,var.thirdLvl);
                 while (robot.mtrArm.isBusy()){
 

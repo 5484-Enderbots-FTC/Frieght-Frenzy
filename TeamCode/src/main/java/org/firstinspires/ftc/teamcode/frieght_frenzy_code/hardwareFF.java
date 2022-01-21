@@ -278,11 +278,11 @@ public class hardwareFF {
         }
         mtrArm.setPower(0);
         deinitWait.reset();
-        svoIntakeTilt.setPosition(var.intakeTiltMid);
+        //svoIntakeTilt.setPosition(var.intakeTiltMid);
         while (deinitWait.seconds() < 0.25) {
 
         }
-        svoIntakeTilt.setPosition(var.intakeTiltCollect);
+        //svoIntakeTilt.setPosition(var.intakeTiltCollect);
     }
 
 }

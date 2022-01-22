@@ -21,12 +21,15 @@
 
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -34,15 +37,25 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.ArrayList;
 
-@Autonomous
-public class AutoRedCarousel2 extends LinearOpMode
-{
+@Autonomous(name = "autoRedCarouselNEW")
+public class AutoRedCarousel2 extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
+    autoTrajectories traj = new autoTrajectories();
 
     @Override
-    public void runOpMode()
-    {
+    public void runOpMode() {
+        //this will init EVERYTHING on the robot
         robot.init(hardwareMap);
+        //FFMecanum must be called AFTER the robot init bc the motors need to be overridden.
+        FFMecanumDrive drive = new FFMecanumDrive(hardwareMap);
+
+        drive.setPoseEstimate(traj.startPoseRC);
+
+        Trajectory toRedCarousel = drive.trajectoryBuilder(traj.startPoseRC)
+                .splineToConstantHeading(new Vector2d(-63, 55), Math.toRadians(0))
+                .build();
+
+        /*
         robot.initWebcam();
         int alliance_element_location = 0;
 
@@ -82,51 +95,27 @@ public class AutoRedCarousel2 extends LinearOpMode
 
                     }
                 }
+                }
+         */
+        telemetry.update();
 
-            telemetry.update();
-        }
         waitForStart();
 
+        while (opModeIsActive()) {
 
-        while (opModeIsActive()){
-            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.deinit();
-            telemetry.addData("雪花飘飘北风啸啸 Alliance Element Location: ", alliance_element_location);
-            telemetry.update();
-            robot.strafe(0.5,450);
-            //robot.forward(0.4,1000);
-
-            robot.strafe(0.5,450);
-            robot.forward(0.4,1000);
-            //robot.strafe(-0.2,-125);
-
-            robot.mtrBR.setPower(-0.4);
-            robot.mtrBL.setPower(0.4);
-            robot.mtrFR.setPower(0.4);
-            robot.mtrFL.setPower(-0.4);
-            sleep(2000);
-            robot.brake();
-
-            //robot.strafe(-0.060,-100);
+            drive.followTrajectory(toRedCarousel);
+            
             /*
-            robot.mtrBR.setPower(-0.1);
-            robot.mtrBL.setPower(0.1);
-            robot.mtrFR.setPower(0.1);
-            robot.mtrFL.setPower(-0.1);
-            sleep(2000);
-            robot.brake();
-`           */
-            robot.mtrBR.setPower(0.3);
-            robot.mtrBL.setPower(0.3);
-            robot.mtrFR.setPower(0.3);
-            robot.mtrFL.setPower(0.3);
-            sleep(500);
-            robot.brake();
-            //use distance sensor here instead of power strafe
+            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.svoCarousel.setPower(1);
             sleep(3000);
             robot.svoCarousel.setPower(0);
-
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.svoIntake.setPower(-var.lessPower);
+             */
+/*
+            telemetry.addData("雪花飘飘北风啸啸 Alliance Element Location: ", alliance_element_location);
+            telemetry.update();
             if (alliance_element_location == 1){
                 robot.movearm(0.7,var.firstLvl);
                 robot.forward(-0.4,-1600);
@@ -144,53 +133,16 @@ public class AutoRedCarousel2 extends LinearOpMode
             if (alliance_element_location == 3){
 
                 //robot.svoIntakeTilt.setPosition(var.intakeTiltMid);
-                robot.svoIntakeTilt.setPosition(var.intakeTiltHigh);
+                robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 robot.forward(-0.4,-1900);
                 robot.movearm(0.7,var.thirdLvl);
                 while (robot.mtrArm.isBusy()){
 
                 }
             }
-            sleep(500);
-            robot.strafe(0.25,600);
-            //use distance sensor here instead of strafe
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.svoIntake.setDirection(DcMotorSimple.Direction.REVERSE);
-            robot.svoIntake.setPower(var.lessPower);
-            sleep(3000);
-            robot.svoIntake.setPower(0);
-            robot.strafe(-0.25,-600);
-            robot.forward(0.5,2200);
 
-            robot.mtrBR.setPower(-0.4);
-            robot.mtrBL.setPower(0.4);
-            robot.mtrFR.setPower(0.4);
-            robot.mtrFL.setPower(-0.4);
-            sleep(2000);
-            robot.brake();
+ */
 
-
-            //robot.strafe(-0.060,-100);
-
-            /*robot.mtrBR.setPower(-0.1);
-            robot.mtrBL.setPower(0.1);
-            robot.mtrFR.setPower(0.1);
-            robot.mtrFL.setPower(-0.1);
-            sleep(2000);
-            robot.brake();
-            */
-
-            robot.mtrBR.setPower(0.3);
-            robot.mtrBL.setPower(0.3);
-            robot.mtrFR.setPower(0.3);
-            robot.mtrFL.setPower(0.3);
-            sleep(500);
-            robot.brake();
-
-            robot.movearm(0.7,var.thirdLvl);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.strafe(0.3,1075);
-            //use distance sensor here instead of the strafe
             break;
 
         }

@@ -52,7 +52,7 @@ import java.util.List;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
 
-@Autonomous
+@Autonomous(name = "autoRedCarouselOLD")
 public class AutoRedCarousel extends LinearOpMode
 {
     hardwareFF robot = new hardwareFF();

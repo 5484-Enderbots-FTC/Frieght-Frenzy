@@ -38,7 +38,7 @@ public class hardwareFF {
     public CRServo svoCarousel, svoIntake; //servo port 0, 1
     public Servo svoIntakeTilt, LEDstrip; //servo port
 
-    public TouchSensor leftLimit, rightLimit, topLimit, bottomLimit, intakeLimit; //digital ports . . .
+    public TouchSensor leftLimit, rightLimit, midLimit, topLimit, bottomLimit, intakeLimit; //digital ports . . .
 
     public DigitalChannel alliance_switch, position_switch;//digital port
 
@@ -103,6 +103,7 @@ public class hardwareFF {
 
         leftLimit = hw.get(TouchSensor.class, "leftLimit");
         rightLimit = hw.get(TouchSensor.class, "rightLimit");
+        midLimit = hw.get(TouchSensor.class, "rightLimit");
         topLimit = hw.get(TouchSensor.class, "topLimit");
         bottomLimit = hw.get(TouchSensor.class, "bottomLimit");
         intakeLimit = hw.get(TouchSensor.class, "intakeLimit");

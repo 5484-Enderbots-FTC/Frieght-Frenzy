@@ -20,10 +20,12 @@ public class var {
 
     public static double intakeInit = 1;
     public static double intakeCollect = 0.48;
-    public static double intakeHigh = 0;
+    public static double intakeLow = 0.62;
+    public static double intakeMid = 0.5;
+    public static double intakeHigh = 0.16;
 
     public static double fullPower = 1;
-    public static double lessPower = 0.4;
+    public static double lessPower = 0.2;
 
     //auto parking encoder counts
     public static double stop = 0;

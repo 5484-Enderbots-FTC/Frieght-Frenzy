@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "initProcess", group = "teleop")
-public class initProcess extends LinearOpMode {
+public class initProcessTeleOp extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     private static double reset = 0;
     private static double inc = 0.005;

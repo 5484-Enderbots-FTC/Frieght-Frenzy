@@ -24,13 +24,12 @@ public class hardwareFF {
     //documents at the same time instead of doing it manually
 
     /**
-
-    * the variables here that are only used in this doc can be private but everything else like motors and servos need to be
-    * public so they can be called in the other programs.
-
-    * the methods and classes are public so you can call them and have them reference the other things in here
-
-    //So far this season we just have motors, so I've done the work to initialize them here:
+     * the variables here that are only used in this doc can be private but everything else like motors and servos need to be
+     * public so they can be called in the other programs.
+     * <p>
+     * the methods and classes are public so you can call them and have them reference the other things in here
+     * <p>
+     * //So far this season we just have motors, so I've done the work to initialize them here:
      */
     public ElementAnalysisPipelineFF pipeline;
 
@@ -39,7 +38,7 @@ public class hardwareFF {
     public CRServo svoCarousel, svoIntake; //servo port 0, 1
     public Servo svoIntakeTilt, LEDstrip; //servo port
 
-    public TouchSensor leftLimit, rightLimit, topLimit, bottomLimit, intakeLimit; //digital ports . . .
+    public TouchSensor leftLimit, rightLimit, midLimit, topLimit, bottomLimit, intakeLimit; //digital ports . . .
 
     public DigitalChannel alliance_switch, position_switch;//digital port
 
@@ -65,7 +64,7 @@ public class hardwareFF {
         //nothing goes in this- its just a way to call the program
     }
 
-    public void init(HardwareMap thisHwMap){
+    public void init(HardwareMap thisHwMap) {
         hw = thisHwMap;
 
         mtrBL = hw.get(DcMotorEx.class, "mtrBL");
@@ -104,6 +103,7 @@ public class hardwareFF {
 
         leftLimit = hw.get(TouchSensor.class, "leftLimit");
         rightLimit = hw.get(TouchSensor.class, "rightLimit");
+        midLimit = hw.get(TouchSensor.class, "rightLimit");
         topLimit = hw.get(TouchSensor.class, "topLimit");
         bottomLimit = hw.get(TouchSensor.class, "bottomLimit");
         intakeLimit = hw.get(TouchSensor.class, "intakeLimit");
@@ -135,26 +135,24 @@ public class hardwareFF {
 
     }
 
-    public void initWebcam (){
-// Create camera instance
+    public void initWebcam() {
+        // Create camera instance
         int cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hw.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
 
         // Open async and start streaming inside opened callback
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
-            public void onOpened()
-            {
+            public void onOpened() {
                 webcam.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT);
 
                 pipeline = new ElementAnalysisPipelineFF();
                 webcam.setPipeline(pipeline);
             }
+
             @Override
-            public void onError(int errorCode)
-            {
+            public void onError(int errorCode) {
                 /*
                  * This will be called if the camera could not be opened
                  */
@@ -162,94 +160,99 @@ public class hardwareFF {
         });
     }
 
-    public void updateDrive(double fwdStick, double turnStick, double strStick){
+    public void updateDrive(double fwdStick, double turnStick, double strStick) {
         mtrBL.setPower((fwdStick - turnStick + strStick));
         mtrBR.setPower((fwdStick + turnStick - strStick));
         mtrFL.setPower((fwdStick - turnStick - strStick));
         mtrFR.setPower((fwdStick + turnStick + strStick));
     }
 
-    public void updateDrive(double fwdStick, double turnStick, double strStick, boolean reversed){
+    public void updateDrive(double fwdStick, double turnStick, double strStick, boolean reversed) {
         mtrBL.setPower((-fwdStick + turnStick - strStick));
         mtrBR.setPower((-fwdStick - turnStick + strStick));
         mtrFL.setPower((-fwdStick + turnStick + strStick));
         mtrFR.setPower((-fwdStick - turnStick - strStick));
     }
 
-    public void brake(){
+    public void brake() {
         mtrBR.setPower(0);
         mtrBL.setPower(0);
         mtrFR.setPower(0);
         mtrFL.setPower(0);
     }
-    public void reset(){
+
+    public void reset() {
         mtrBR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mtrBL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mtrFR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mtrFL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
-    public void forward (double power, int position){
+
+    public void forward(double power, int position) {
         reset();
         int adjustment = 1;
         mtrBR.setPower(power);
-        mtrBR.setTargetPosition(position*adjustment);
+        mtrBR.setTargetPosition(position * adjustment);
         mtrBL.setPower(power);
-        mtrBL.setTargetPosition(position*adjustment);
+        mtrBL.setTargetPosition(position * adjustment);
         mtrFR.setPower(power);
-        mtrFR.setTargetPosition(position*adjustment);
+        mtrFR.setTargetPosition(position * adjustment);
         mtrFL.setPower(power);
-        mtrFL.setTargetPosition(position*adjustment);
+        mtrFL.setTargetPosition(position * adjustment);
         mtrBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         mtrBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         mtrFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         mtrFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while(mtrFR.isBusy()){
+        while (mtrFR.isBusy()) {
 
         }
         brake();
     }
-    public void strafe (double power, int position){
+
+    public void strafe(double power, int position) {
         reset();
         int adjustment = 1;
         mtrBR.setPower(power);
-        mtrBR.setTargetPosition(position*adjustment);
+        mtrBR.setTargetPosition(position * adjustment);
         mtrBL.setPower(-power);
-        mtrBL.setTargetPosition(-position*adjustment);
+        mtrBL.setTargetPosition(-position * adjustment);
         mtrFR.setPower(-power);
-        mtrFR.setTargetPosition(-position*adjustment);
+        mtrFR.setTargetPosition(-position * adjustment);
         mtrFL.setPower(power);
-        mtrFL.setTargetPosition(position*adjustment);
+        mtrFL.setTargetPosition(position * adjustment);
         mtrBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         mtrBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         mtrFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         mtrFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while(mtrFR.isBusy()){
+        while (mtrFR.isBusy()) {
 
         }
         brake();
     }
-    public void turn (double power, int position){
+
+    public void turn(double power, int position) {
         reset();
         int adjustment = 1;
         mtrBR.setPower(power);
-        mtrBR.setTargetPosition(position*adjustment);
+        mtrBR.setTargetPosition(position * adjustment);
         mtrBL.setPower(power);
-        mtrBL.setTargetPosition(position*adjustment);
+        mtrBL.setTargetPosition(position * adjustment);
         mtrFR.setPower(-power);
-        mtrFR.setTargetPosition(-position*adjustment);
+        mtrFR.setTargetPosition(-position * adjustment);
         mtrFL.setPower(-power);
-        mtrFL.setTargetPosition(-position*adjustment);
+        mtrFL.setTargetPosition(-position * adjustment);
         mtrBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         mtrBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         mtrFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         mtrFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while(mtrFR.isBusy()){
+        while (mtrFR.isBusy()) {
 
         }
 
         brake();
     }
-    public void powerTurn (double power){
+
+    public void powerTurn(double power) {
         mtrBL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrBR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         mtrFL.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -260,27 +263,27 @@ public class hardwareFF {
         mtrFL.setPower(-power);
     }
 
-    public void movearm (double power, int position){
+    public void movearm(double power, int position) {
         int adjustment = 1;
         mtrArm.setPower(-power);
-        mtrArm.setTargetPosition(-position*adjustment);
+        mtrArm.setTargetPosition(-position * adjustment);
         //mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    public void deinit(){
+    public void deinit() {
         mtrArm.setPower(-0.7);
         mtrArm.setTargetPosition(-var.deinitArm);
         mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (mtrArm.isBusy()){
+        while (mtrArm.isBusy()) {
 
         }
         mtrArm.setPower(0);
         deinitWait.reset();
-        svoIntakeTilt.setPosition(var.intakeTiltMid);
-        while(deinitWait.seconds()<0.25){
+        //svoIntakeTilt.setPosition(var.intakeTiltMid);
+        while (deinitWait.seconds() < 0.25) {
 
         }
-        svoIntakeTilt.setPosition(var.intakeTiltCollect);
+        //svoIntakeTilt.setPosition(var.intakeTiltCollect);
     }
 
 }

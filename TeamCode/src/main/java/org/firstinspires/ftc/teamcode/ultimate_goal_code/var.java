@@ -26,4 +26,6 @@ public class var {
     public static double timeBetweenShots = 0.37;
     public static double servoMoveTime = 0.25;
 
+    public static int RingStackIndentified = 0;
+
 }

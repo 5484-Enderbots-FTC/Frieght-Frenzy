@@ -3,11 +3,11 @@ package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "init moment", group = "teleop")
-public class initProcess extends LinearOpMode {
+@TeleOp(name = "initProcess", group = "teleop")
+public class initProcessTeleOp extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     private static double reset = 0;
-    private static double inc = 0.05;
+    private static double inc = 0.005;
     private double tiltNumber = 0;
     public void runOpMode() {
         robot.init(hardwareMap);
@@ -40,10 +40,11 @@ public class initProcess extends LinearOpMode {
              * Intake Tilting Servo ~
              */
             if(gamepad1.a){
-                tiltNumber += inc;
+                tiltNumber = tiltNumber + inc;
                 robot.svoIntakeTilt.setPosition(tiltNumber);
             }
             if(gamepad1.b){
+                tiltNumber = reset;
                 robot.svoIntakeTilt.setPosition(reset);
             }
 

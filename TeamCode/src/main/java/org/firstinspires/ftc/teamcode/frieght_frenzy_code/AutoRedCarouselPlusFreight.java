@@ -26,6 +26,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
@@ -49,12 +50,16 @@ public class AutoRedCarouselPlusFreight extends LinearOpMode {
     ElapsedTime intakeDistance = new ElapsedTime();
     double distanceTravelled = 0;
 
-    private enum intakeMove{
+    private enum intakeMove {
         NOTHING,
         NONE,
         TURRETPOS,
-        ARMPOS
+        ARMPOWER,
+        ARMPOS,
+        COLLECTPATH
+
     }
+
     intakeMove currentIntakeState = intakeMove.NOTHING;
 
     @Override
@@ -69,7 +74,7 @@ public class AutoRedCarouselPlusFreight extends LinearOpMode {
 
         Trajectory toRedCarousel = drive.trajectoryBuilder(traj.startPoseRC, true)
                 .splineToConstantHeading(new Vector2d(-63, -58), Math.toRadians(180))
-                .addTemporalMarker(0.9,0, ()->{
+                .addTemporalMarker(0.9, 0, () -> {
                     robot.svoCarousel.setPower(1);
                 })
                 .build();
@@ -97,15 +102,19 @@ public class AutoRedCarouselPlusFreight extends LinearOpMode {
 
         Trajectory toPark1 = drive.trajectoryBuilder(endDepPos)
                 .lineTo(traj.toParkPos1)
-                .addTemporalMarker(0, () -> {robot.mtrTurret.setPower(0.3);})
+                .addTemporalMarker(0, () -> {
+                    robot.mtrTurret.setPower(0.3);
+                })
                 .build();
         Trajectory toPark2 = drive.trajectoryBuilder(toPark1.end())
                 .lineTo(traj.toParkPos2)
                 .build();
         Trajectory intakeForward = drive.trajectoryBuilder(toPark2.end())
-                .forward(10,  FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                .forward(10, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .addTemporalMarker(0, () -> {robot.svoIntake.setPower(var.intakeCollect);})
+                .addTemporalMarker(0, () -> {
+                    robot.svoIntake.setPower(var.intakeCollect);
+                })
                 .build();
         //TODO: add state machine for rotating the arm back (also actually rotating the arm in the first place as well)
         Trajectory backToRedHub3 = drive.trajectoryBuilder(intakeEnd)
@@ -176,31 +185,47 @@ public class AutoRedCarouselPlusFreight extends LinearOpMode {
             //followTrajectory command as a marker maybe? or try to somehow make most of this a marker
             drive.followTrajectoryAsync(toPark1);
             currentIntakeState = intakeMove.TURRETPOS;
-            switch (currentIntakeState){
+            switch (currentIntakeState) {
                 case NOTHING:
                     break;
                 case TURRETPOS:
-                    if(drive.isBusy()){
+                    if (drive.isBusy()) {
                         if (robot.rightLimit.isPressed()) {
                             robot.mtrTurret.setPower(0);
                         }
-                    }else{
+                    } else {
                         drive.followTrajectoryAsync(toPark2);
-                        currentIntakeState = intakeMove.ARMPOS;
+                        currentIntakeState = intakeMove.ARMPOWER;
                     }
                     break;
-                case ARMPOS:
+                case ARMPOWER:
                     //TODO: Add arm movements here and other places where it's needed
+                    robot.mtrArm.setPower(-0.6);
+                    currentIntakeState = intakeMove.ARMPOS;
+                    break;
+                case ARMPOS:
+                    if(robot.bottomLimit.isPressed()){
+                        robot.mtrArm.setPower(0);
+                        robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                        robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                        currentIntakeState = intakeMove.COLLECTPATH;
+                    }else{
+                    }
+                    break;
+                case COLLECTPATH:
+                    if(!drive.isBusy()){
+                        drive.followTrajectory(intakeForward);
+                        currentIntakeState = intakeMove.NOTHING;
+                    }
                     break;
             }
             //this might be totally wrong
-            drive.followTrajectory(intakeForward);
             intakeDistance.reset();
-            while (!robot.intakeLimit.isPressed()){
-                if (robot.intakeLimit.isPressed()){
+            while (!robot.intakeLimit.isPressed()) {
+                if (robot.intakeLimit.isPressed()) {
                     robot.svoIntake.setPower(0);
-                    distanceTravelled = 10*intakeDistance.time();
-                    intakeEnd = new Pose2d(40, -67+distanceTravelled);
+                    distanceTravelled = 10 * intakeDistance.time();
+                    intakeEnd = new Pose2d(40, -67 + distanceTravelled);
                     drive.cancelFollowing();
                     break;
                 }

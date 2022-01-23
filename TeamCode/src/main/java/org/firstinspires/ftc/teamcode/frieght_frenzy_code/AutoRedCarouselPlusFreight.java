@@ -26,6 +26,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
@@ -44,6 +45,16 @@ public class AutoRedCarouselPlusFreight extends LinearOpMode {
 
     double runningOpMode = 3;
     Pose2d endDepPos;
+    Pose2d intakeEnd;
+    ElapsedTime intakeDistance = new ElapsedTime();
+    double distanceTravelled = 0;
+
+    private enum intakeMove{
+        NONE,
+        TURRETPOS,
+        ARMPOS
+    }
+    intakeMove currentIntakeState = intakeMove.NONE;
 
     @Override
     public void runOpMode() {
@@ -85,6 +96,7 @@ public class AutoRedCarouselPlusFreight extends LinearOpMode {
 
         Trajectory toPark1 = drive.trajectoryBuilder(endDepPos)
                 .lineTo(traj.toParkPos1)
+                .addTemporalMarker(0, () -> {robot.mtrTurret.setPower(0.3);})
                 .build();
         Trajectory toPark2 = drive.trajectoryBuilder(toPark1.end())
                 .lineTo(traj.toParkPos2)
@@ -93,6 +105,10 @@ public class AutoRedCarouselPlusFreight extends LinearOpMode {
                 .forward(10,  FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(0, () -> {robot.svoIntake.setPower(var.intakeCollect);})
+                .build();
+        //TODO: add state machine for rotating the arm back (also actually rotating the arm in the first place as well)
+        Trajectory backToRedHub3 = drive.trajectoryBuilder(intakeEnd)
+                .splineTo(new Vector2d(-12, -47), Math.toRadians(0))
                 .build();
 
         // Tell telemetry to update faster than the default 250ms period :)
@@ -154,12 +170,34 @@ public class AutoRedCarouselPlusFreight extends LinearOpMode {
             if (runningOpMode == 1) {
                 robot.svoIntakeTilt.setPosition(0.9);
             }
-            drive.followTrajectory(toPark1);
-            drive.followTrajectory(toPark2);
+            //might need to rearrange the followTrajectory statements cuz idk how they work with state machines
+            //if the followTrajectory commands need to run the whole way, try putting the currentIntakeState changes in the
+            //followTrajectory command as a marker maybe? or try to somehow make most of this a marker
+            robot.mtrTurret.setPower(0.3);
+            switch (currentIntakeState){
+                case NONE:
+                    drive.followTrajectory(toPark1);
+                    currentIntakeState = intakeMove.TURRETPOS;
+                    break;
+                case TURRETPOS:
+                    if (robot.rightLimit.isPressed()){
+                        robot.mtrTurret.setPower(0);
+                        drive.followTrajectory(toPark2);
+                        currentIntakeState = intakeMove.ARMPOS;
+                    }
+                    break;
+                case ARMPOS:
+                    //TODO: Add arm movements here and other places where it's needed
+                    break;
+            }
+            //this might be totally wrong
             drive.followTrajectory(intakeForward);
+            intakeDistance.reset();
             while (!robot.intakeLimit.isPressed()){
                 if (robot.intakeLimit.isPressed()){
                     robot.svoIntake.setPower(0);
+                    distanceTravelled = 10*intakeDistance.time();
+                    intakeEnd = new Pose2d(40, -67+distanceTravelled);
                     drive.cancelFollowing();
                     break;
                 }

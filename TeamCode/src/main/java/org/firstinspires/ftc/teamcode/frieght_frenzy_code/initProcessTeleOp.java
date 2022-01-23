@@ -49,6 +49,8 @@ public class initProcessTeleOp extends LinearOpMode {
             }
 
             telemetry.addData("MidLimit? ", robot.midLimit.isPressed());
+            telemetry.addData("MidLimit? ", robot.rightLimit.isPressed());
+            telemetry.addData("MidLimit? ", robot.leftLimit.isPressed());
             telemetry.addData("Servo current pos: ", robot.svoIntakeTilt.getPosition());
             telemetry.addData("Servo input number: ", tiltNumber);
             telemetry.update();

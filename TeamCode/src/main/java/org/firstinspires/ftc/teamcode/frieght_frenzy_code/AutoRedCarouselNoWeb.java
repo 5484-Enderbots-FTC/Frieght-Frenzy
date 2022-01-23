@@ -51,6 +51,7 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
 
     private enum turretState {
         NOTHING,
+        POWER,
         FINDMID
     }
 
@@ -80,21 +81,21 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
 
         Trajectory toRedHub3 = drive.trajectoryBuilder(toRedCarousel.end())
                 .splineTo(new Vector2d(-12, -47), Math.toRadians(0))
-                .addTemporalMarker(0, () -> {
+                .addTemporalMarker(0.1, () -> {
                     robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 })
                 .build();
 
         Trajectory toRedHub2 = drive.trajectoryBuilder(toRedCarousel.end())
                 .splineTo(new Vector2d(-12, -52), Math.toRadians(0))
-                .addTemporalMarker(0, () -> {
+                .addTemporalMarker(0.1, () -> {
                     robot.svoIntakeTilt.setPosition(var.intakeMid);
                 })
                 .build();
 
         Trajectory toRedHub1 = drive.trajectoryBuilder(toRedCarousel.end())
                 .splineTo(new Vector2d(-12, -47), Math.toRadians(0))
-                .addTemporalMarker(0, () -> {
+                .addTemporalMarker(0.1, () -> {
                     robot.svoIntakeTilt.setPosition(var.intakeLow);
                 })
                 .build();
@@ -102,7 +103,7 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
         Trajectory toPark1 = drive.trajectoryBuilder(endDepPos)
                 .lineTo(traj.toParkPos1)
                 .addTemporalMarker(0.5, () -> {
-                    if(runningOpMode == 1) {
+                    if (runningOpMode == 1) {
                         robot.svoIntakeTilt.setPosition(0.9);
                     }
                 })
@@ -120,19 +121,25 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             drive.followTrajectory(toRedCarousel);
-            robot.mtrTurret.setPower(-0.3);
-            currentTurretState = turretState.FINDMID;
+            currentTurretState = turretState.POWER;
             switch (currentTurretState) {
                 case NOTHING:
                     break;
+                case POWER:
+                    robot.mtrTurret.setPower(-0.3);
+                    currentTurretState = turretState.FINDMID;
+                    break;
                 case FINDMID:
-                    if (duckTimer.seconds() < duckTime && !robot.midLimit.isPressed()) {
+                    if (duckTimer.seconds() < duckTime) {
                         if (robot.midLimit.isPressed()) {
                             robot.mtrTurret.setPower(0);
                         }
-                    } else {
+                    } else if(duckTimer.seconds()>duckTime){
                         robot.svoCarousel.setPower(var.stop);
-                        currentTurretState = turretState.NOTHING;
+                        if(robot.midLimit.isPressed()){
+                            robot.mtrTurret.setPower(0);
+                            currentTurretState = turretState.NOTHING;
+                        }
                     }
                     break;
             }
@@ -146,6 +153,7 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
                 drive.followTrajectoryAsync(toRedHub1);
                 endDepPos = toRedHub1.end();
             }
+            //TODO: add the move arm encoder positions to the runningOpMode ifs above
             robot.movearm(0.7, var.thirdLvl);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 

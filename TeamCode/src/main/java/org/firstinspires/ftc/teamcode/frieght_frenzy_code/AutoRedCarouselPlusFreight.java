@@ -50,11 +50,12 @@ public class AutoRedCarouselPlusFreight extends LinearOpMode {
     double distanceTravelled = 0;
 
     private enum intakeMove{
+        NOTHING,
         NONE,
         TURRETPOS,
         ARMPOS
     }
-    intakeMove currentIntakeState = intakeMove.NONE;
+    intakeMove currentIntakeState = intakeMove.NOTHING;
 
     @Override
     public void runOpMode() {
@@ -173,16 +174,18 @@ public class AutoRedCarouselPlusFreight extends LinearOpMode {
             //might need to rearrange the followTrajectory statements cuz idk how they work with state machines
             //if the followTrajectory commands need to run the whole way, try putting the currentIntakeState changes in the
             //followTrajectory command as a marker maybe? or try to somehow make most of this a marker
-            robot.mtrTurret.setPower(0.3);
+            drive.followTrajectoryAsync(toPark1);
+            currentIntakeState = intakeMove.TURRETPOS;
             switch (currentIntakeState){
-                case NONE:
-                    drive.followTrajectory(toPark1);
-                    currentIntakeState = intakeMove.TURRETPOS;
+                case NOTHING:
                     break;
                 case TURRETPOS:
-                    if (robot.rightLimit.isPressed()){
-                        robot.mtrTurret.setPower(0);
-                        drive.followTrajectory(toPark2);
+                    if(drive.isBusy()){
+                        if (robot.rightLimit.isPressed()) {
+                            robot.mtrTurret.setPower(0);
+                        }
+                    }else{
+                        drive.followTrajectoryAsync(toPark2);
                         currentIntakeState = intakeMove.ARMPOS;
                     }
                     break;

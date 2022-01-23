@@ -35,20 +35,31 @@ import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
 public class AutoRedCarouselNoWeb extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
-    ElapsedTime duckTimer = new ElapsedTime();
 
-    boolean zeroPosSet = false;
+    ElapsedTime duckTimer = new ElapsedTime();
+    ElapsedTime dispenseTimer = new ElapsedTime();
+
     double duckTime = 2.5;
+    double dispenseTime = 1.5;
+
     double runningOpMode = 3;
 
-    turretState currentState = turretState.NOTHING;
+    Pose2d endDepPos;
 
-    private enum turretState{
+    turretState currentTurretState = turretState.NOTHING;
+    armState currentArmState = armState.NOTHING;
+
+    private enum turretState {
         NOTHING,
-        SET0
+        FINDMID
     }
 
-    Pose2d endDepPos;
+    private enum armState {
+        NOTHING,
+        RAISE,
+        DISPENSE,
+        WAIT
+    }
 
     @Override
     public void runOpMode() {
@@ -64,17 +75,6 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
                 .addTemporalMarker(0.9, 0, () -> {
                     robot.svoCarousel.setPower(1);
                     duckTimer.reset();
-                })
-                .addTemporalMarker(0, () -> {
-                    robot.movearm(0.7, var.thirdLvl);
-                    robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    if (robot.mtrArm.isBusy()) {
-
-                    } else {
-                        robot.mtrArm.setPower(0);
-                        robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                    }
-
                 })
                 .build();
 
@@ -101,6 +101,11 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
 
         Trajectory toPark1 = drive.trajectoryBuilder(endDepPos)
                 .lineTo(traj.toParkPos1)
+                .addTemporalMarker(0.5, () -> {
+                    if(runningOpMode == 1) {
+                        robot.svoIntakeTilt.setPosition(0.9);
+                    }
+                })
                 .build();
         Trajectory toPark2 = drive.trajectoryBuilder(toPark1.end())
                 .lineTo(traj.toParkPos2)
@@ -116,41 +121,67 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             drive.followTrajectory(toRedCarousel);
             robot.mtrTurret.setPower(-0.3);
-            currentState = turretState.SET0;
-            switch (currentState){
+            currentTurretState = turretState.FINDMID;
+            switch (currentTurretState) {
                 case NOTHING:
                     break;
-                case SET0:
-                    if(duckTimer.seconds() < duckTime && !robot.midLimit.isPressed()){
+                case FINDMID:
+                    if (duckTimer.seconds() < duckTime && !robot.midLimit.isPressed()) {
                         if (robot.midLimit.isPressed()) {
                             robot.mtrTurret.setPower(0);
                         }
-                    }else{
+                    } else {
                         robot.svoCarousel.setPower(var.stop);
-                        currentState = turretState.NOTHING;
+                        currentTurretState = turretState.NOTHING;
                     }
                     break;
             }
-                if (runningOpMode == 3) {
-                    drive.followTrajectory(toRedHub3);
-                    endDepPos = toRedHub3.end();
-                } else if (runningOpMode == 2) {
-                    drive.followTrajectory(toRedHub2);
-                    endDepPos = toRedHub2.end();
-                } else if (runningOpMode == 1) {
-                    drive.followTrajectory(toRedHub1);
-                    endDepPos = toRedHub1.end();
-                }
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                robot.svoIntake.setPower(-var.lessPower);
-                sleep(1500);
-                robot.svoIntake.setPower(0);
-                if (runningOpMode == 1) {
-                    robot.svoIntakeTilt.setPosition(0.9);
-                }
-                drive.followTrajectory(toPark1);
-                drive.followTrajectory(toPark2);
+            if (runningOpMode == 3) {
+                drive.followTrajectoryAsync(toRedHub3);
+                endDepPos = toRedHub3.end();
+            } else if (runningOpMode == 2) {
+                drive.followTrajectoryAsync(toRedHub2);
+                endDepPos = toRedHub2.end();
+            } else if (runningOpMode == 1) {
+                drive.followTrajectoryAsync(toRedHub1);
+                endDepPos = toRedHub1.end();
+            }
+            robot.movearm(0.7, var.thirdLvl);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+            currentArmState = armState.RAISE;
+
+            switch (currentArmState) {
+                case NOTHING:
+                    break;
+                case RAISE:
+                    if (robot.mtrArm.isBusy()) {
+
+                    } else {
+                        robot.mtrArm.setPower(0);
+                        robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                        currentArmState = armState.DISPENSE;
+                    }
+                    break;
+                case DISPENSE:
+                    if (!drive.isBusy()) {
+                        robot.svoIntake.setPower(-var.lessPower);
+                        dispenseTimer.reset();
+                        currentArmState = armState.WAIT;
+                    } else {
+                    }
+                    break;
+                case WAIT:
+                    if (dispenseTimer.seconds() > dispenseTime) {
+                        robot.svoIntake.setPower(0);
+                        currentArmState = armState.NOTHING;
+                    } else {
+                    }
+                    break;
+            }
+
+            drive.followTrajectory(toPark1);
+            drive.followTrajectory(toPark2);
             break;
         }
     }

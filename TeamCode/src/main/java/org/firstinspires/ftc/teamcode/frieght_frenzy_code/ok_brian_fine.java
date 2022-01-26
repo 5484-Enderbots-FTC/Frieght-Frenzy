@@ -16,15 +16,6 @@ public class ok_brian_fine extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        while (!isStopRequested() && opModeIsActive()) {
-            //all teleop code after start button pressed goes here
-
-            //FINE BRIAN HERES THE CONTROLS
-            robot.updateDrive(gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.left_stick_x);
-
-            telemetry.addLine("hey brian here's your freaking controls .__.");
-            telemetry.update();
-        }
     }
 
 }

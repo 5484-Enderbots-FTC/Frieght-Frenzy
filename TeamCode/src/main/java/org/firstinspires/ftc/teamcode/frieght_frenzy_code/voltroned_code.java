@@ -121,7 +121,7 @@ public class voltroned_code extends OpMode {
         telemetry.setMsTransmissionInterval(20);
 
         runtime.reset();
-        while (runtime.time()<5){
+        while (runtime.time()<10000){
             return;
         }
 
@@ -132,6 +132,9 @@ public class voltroned_code extends OpMode {
      */
     @Override
     public void init_loop() {
+        while (runtime.time()<2500){
+            return;
+        }
             // Don't burn an insane amount of CPU cycles in this sample because
             // we're not doing anything else
 
@@ -203,11 +206,11 @@ public class voltroned_code extends OpMode {
 
         craig.mtrFL.setPower((-power*adjustmentB1)+adjustmentB2);
         craig.mtrFL.setTargetPosition((distance*adjustmentA1)+adjustmentA2);
-        craig.mtrFR.setPower((power*adjustmentB1)+adjustmentB2);
+        craig.mtrFR.setPower((-power*adjustmentB1)+adjustmentB2);
         craig.mtrFR.setTargetPosition((distance*adjustmentA1)+adjustmentA2);
         craig.mtrBL.setPower((-power*adjustmentB1)+adjustmentB2);
         craig.mtrBL.setTargetPosition((distance*adjustmentA1)+adjustmentA2);
-        craig.mtrBR.setPower((power*adjustmentB1)+adjustmentB2);
+        craig.mtrBR.setPower((-power*adjustmentB1)+adjustmentB2);
         craig.mtrBR.setTargetPosition((distance*adjustmentA1)+adjustmentA2);
         while(craig.mtrFL.isBusy()) {
             //Loop body can be empty

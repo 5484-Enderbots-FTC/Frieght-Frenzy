@@ -103,19 +103,20 @@ public class AutoRedCarouselPlusFreight extends LinearOpMode {
                 .lineTo(traj.toParkPos2)
                 .build();
         Trajectory intakeForward = drive.trajectoryBuilder(toPark2.end())
-                .forward(10,  FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                .forward(20,  FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(0, () -> {robot.svoIntake.setPower(var.intakeCollect);})
                 .build();
         //TODO: add state machine for rotating the arm back (also actually rotating the arm in the first place as well)
         Trajectory backToRedHub3 = drive.trajectoryBuilder(intakeEnd)
-                .splineTo(new Vector2d(-12, -47), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-12, -47), Math.toRadians(90))
                 .build();
 
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
         robot.svoIntakeTilt.setPosition(var.intakeInit);
-        sleep(5000);
+        //if webcam breaks its cuz the init time was shortened
+        sleep(2500);
         while (!isStarted()) {
             //what did u detect
             ArrayList<ElementAnalysisPipelineFF.AnalyzedElement> elements = robot.pipeline.getDetectedElements();
@@ -194,18 +195,19 @@ public class AutoRedCarouselPlusFreight extends LinearOpMode {
                     break;
             }
             //this might be totally wrong
-            drive.followTrajectory(intakeForward);
+            drive.followTrajectoryAsync(intakeForward);
             intakeDistance.reset();
             while (!robot.intakeLimit.isPressed()){
                 if (robot.intakeLimit.isPressed()){
                     robot.svoIntake.setPower(0);
                     distanceTravelled = 10*intakeDistance.time();
-                    intakeEnd = new Pose2d(40, -67+distanceTravelled);
+                    intakeEnd = new Pose2d(40+distanceTravelled, -67,Math.toRadians(180));
                     drive.cancelFollowing();
                     break;
                 }
                 drive.update();
             }
+            drive.followTrajectory(backToRedHub3);
             break;
         }
     }

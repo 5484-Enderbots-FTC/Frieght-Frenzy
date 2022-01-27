@@ -203,11 +203,14 @@ public class teleop_two_remotes extends LinearOpMode {
                 robot.mtrTurret.setPower(gamepad2.right_stick_x);
             }
             //turret spin to da left
+            /*
             if(robot.leftLimit.isPressed()){
                 robot.mtrTurret.setPower(gamepad2.right_stick_x*0.3);
-            }else{
-               robot.mtrTurret.setPower(gamepad2.right_stick_x);
             }
+            else{
+            }
+             */
+
 
             /**
              * Tilt Controls
@@ -218,7 +221,7 @@ public class teleop_two_remotes extends LinearOpMode {
             /**
              * Intake Controls
              */
-
+/*
             if(!robot.intakeLimit.isPressed()){
                 freightCollected = true;
             }else{
@@ -239,6 +242,14 @@ public class teleop_two_remotes extends LinearOpMode {
                 robot.LEDstrip.setPosition(var.red);
             }
 
+ */
+
+            if(gamepad2.right_bumper){
+                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            }
+            if(gamepad2.left_bumper){
+                robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            }
             //run intake
             if(gamepad2.a){
                 robot.svoIntake.setPower(var.lessPower);
@@ -284,12 +295,12 @@ public class teleop_two_remotes extends LinearOpMode {
             //telemetry.addData("top limit status", robot.topLimit.isPressed());
             telemetry.addData("bottom limit status", robot.bottomLimit.isPressed());
             telemetry.addData("right limit status", robot.rightLimit.isPressed());
-            telemetry.addData("left limit status", robot.leftLimit.isPressed());
+            //telemetry.addData("left limit status", robot.leftLimit.isPressed());
             telemetry.addData("intake limit status", robot.intakeLimit.isPressed());
             telemetry.addData("front range distance: ", "%.2f cm", robot.frontRange.getDistance(DistanceUnit.CM));
             telemetry.addData("back range distance: ", "%.2f cm", robot.backRange.getDistance(DistanceUnit.CM));
             telemetry.addData("right distance: ", String.format("%.01f cm", robot.rightDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("left distance: ", String.format("%.01f cm", robot.leftDistance.getDistance(DistanceUnit.CM)));
+            //telemetry.addData("left distance: ", String.format("%.01f cm", robot.leftDistance.getDistance(DistanceUnit.CM)));
             telemetry.update();
         }
     }

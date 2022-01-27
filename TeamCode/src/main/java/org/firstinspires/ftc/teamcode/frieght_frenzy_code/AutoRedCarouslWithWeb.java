@@ -87,7 +87,7 @@ public class AutoRedCarouslWithWeb extends LinearOpMode {
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
         robot.svoIntakeTilt.setPosition(var.intakeInit);
-        sleep(4000);
+        sleep(5000);
         while (!isStarted()) {
             //what did u detect
             ArrayList<ElementAnalysisPipelineFF.AnalyzedElement> elements = robot.pipeline.getDetectedElements();

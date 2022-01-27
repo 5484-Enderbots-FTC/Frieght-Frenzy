@@ -7,27 +7,27 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class initProcessTeleOp extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     private static double reset = 0;
-    private static double init = 1;
     private static double inc = 0.005;
     private double tiltNumber = 0;
-
     public void runOpMode() {
         robot.init(hardwareMap);
-        robot.svoIntakeTilt.setPosition(init);
+        robot.svoIntakeTilt.setPosition(reset);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
 
-        while (opModeIsActive() && !isStopRequested()) {
+        while(opModeIsActive() && !isStopRequested()){
 
             /**
              * Arm Movement ~
              */
-            if (robot.bottomLimit.isPressed() && gamepad1.left_stick_y > 0) {
+            if(robot.bottomLimit.isPressed() && gamepad1.left_stick_y > 0){
                 robot.mtrArm.setPower(0);
-            } else if (robot.bottomLimit.isPressed() && gamepad1.left_stick_y < 0) {
+            }
+            else if(robot.bottomLimit.isPressed() && gamepad1.left_stick_y < 0){
                 robot.mtrArm.setPower(gamepad1.left_stick_y);
-            } else {
+            }
+            else{
                 robot.mtrArm.setPower(gamepad1.left_stick_y);
             }
 
@@ -39,11 +39,11 @@ public class initProcessTeleOp extends LinearOpMode {
             /**
              * Intake Tilting Servo ~
              */
-            if (gamepad1.a) {
+            if(gamepad1.a){
                 tiltNumber = tiltNumber + inc;
                 robot.svoIntakeTilt.setPosition(tiltNumber);
             }
-            if (gamepad1.b) {
+            if(gamepad1.b){
                 tiltNumber = reset;
                 robot.svoIntakeTilt.setPosition(reset);
             }

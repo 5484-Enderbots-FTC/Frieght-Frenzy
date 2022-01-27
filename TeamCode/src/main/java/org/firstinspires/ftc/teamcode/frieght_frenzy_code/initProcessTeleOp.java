@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "initProcess", group = "teleop")
 public class initProcessTeleOp extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
-    private static double reset = 0;
+    private static double reset = 1;
     private static double inc = 0.005;
     private double tiltNumber = 0;
     public void runOpMode() {
@@ -50,7 +50,7 @@ public class initProcessTeleOp extends LinearOpMode {
 
             telemetry.addData("MidLimit? ", robot.midLimit.isPressed());
             telemetry.addData("MidLimit? ", robot.rightLimit.isPressed());
-            telemetry.addData("MidLimit? ", robot.leftLimit.isPressed());
+            //telemetry.addData("MidLimit? ", robot.leftLimit.isPressed());
             telemetry.addData("Servo current pos: ", robot.svoIntakeTilt.getPosition());
             telemetry.addData("Servo input number: ", tiltNumber);
             telemetry.update();

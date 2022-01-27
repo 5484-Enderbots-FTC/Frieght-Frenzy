@@ -200,6 +200,7 @@ public class AutoRedCarouselPlusFreight extends LinearOpMode {
                     break;
                 case ARMPOWER:
                     //TODO: Add arm movements here and other places where it's needed
+                    // and actually, for the LOW position you'll need to lift the arm UP first because it's so low :)
                     robot.mtrArm.setPower(-0.6);
                     currentIntakeState = intakeMove.ARMPOS;
                     break;

@@ -101,9 +101,9 @@ public class hardwareFF {
 
         LEDstrip = hw.get(Servo.class, "LEDstrip");
 
-        leftLimit = hw.get(TouchSensor.class, "leftLimit");
+        //leftLimit = hw.get(TouchSensor.class, "midLimit");
         rightLimit = hw.get(TouchSensor.class, "rightLimit");
-        midLimit = hw.get(TouchSensor.class, "rightLimit");
+        midLimit = hw.get(TouchSensor.class, "leftLimit");
         topLimit = hw.get(TouchSensor.class, "topLimit");
         bottomLimit = hw.get(TouchSensor.class, "bottomLimit");
         intakeLimit = hw.get(TouchSensor.class, "intakeLimit");

@@ -153,12 +153,7 @@ public class auto_shenanigans extends LinearOpMode {
 
         }
 
-        mySound = new SoundPool(1, AudioManager.STREAM_MUSIC, 0); // PSM
-        honkID = mySound.load(hardwareMap.appContext, R.raw.honk, 1); // PSM
-        //mySound.play(honkID,1,1,1,0,1);
-        mySound1 = new SoundPool(1, AudioManager.STREAM_MUSIC, 0); // PSM
-        mallID = mySound.load(hardwareMap.appContext, R.raw.mall, 1); // PSM
-        //mySound.play(mallID,1,1,1,0,1);
+        
         robot.init(hardwareMap);
         robot.mtrArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 

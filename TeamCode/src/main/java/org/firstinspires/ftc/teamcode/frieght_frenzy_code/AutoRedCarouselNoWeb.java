@@ -109,13 +109,13 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
                 })
                 .build();
 
-<<<<<<< HEAD
+
         Trajectory toPark1 = drive.trajectoryBuilder(endDepPos)
                 .splineToConstantHeading(traj.toParkPos1, Math.toRadians(-45))
-=======
+
         Trajectory toPark1 = drive.trajectoryBuilder(toRedCarousel.end())
                 .lineTo(traj.toParkPos1)
->>>>>>> f0248bed20201be8ee7fa3f5417d3cc1760b793d
+
                 .addTemporalMarker(0.5, () -> {
                     if (runningOpMode == 1) {
                         robot.svoIntakeTilt.setPosition(0.9);

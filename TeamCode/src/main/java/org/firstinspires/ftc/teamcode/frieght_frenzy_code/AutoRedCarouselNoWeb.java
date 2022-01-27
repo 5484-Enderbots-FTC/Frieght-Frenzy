@@ -44,7 +44,7 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
 
     double runningOpMode = 3;
 
-    Pose2d endDepPos;
+    Pose2d endDepPos = new Pose2d(0,0,Math.toRadians(90));
 
     turretState currentTurretState = turretState.NOTHING;
     armState currentArmState = armState.NOTHING;
@@ -100,7 +100,7 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
                 .build();
 
         Trajectory toPark1 = drive.trajectoryBuilder(endDepPos)
-                .lineTo(traj.toParkPos1)
+                .splineToConstantHeading(traj.toParkPos1, Math.toRadians(-45))
                 .addTemporalMarker(0.5, () -> {
                     if(runningOpMode == 1) {
                         robot.svoIntakeTilt.setPosition(0.9);

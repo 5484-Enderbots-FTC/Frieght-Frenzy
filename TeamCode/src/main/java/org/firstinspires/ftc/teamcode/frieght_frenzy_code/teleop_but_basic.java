@@ -4,11 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.sun.tools.javac.comp.Todo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@TeleOp(name = "teleop ff", group = "teleop")
-public class teleop_two_remotes extends LinearOpMode {
+@TeleOp(name = "teleop but basic", group = "teleop")
+public class teleop_but_basic extends LinearOpMode {
 
     //imported hardware from "hardwareFF" public class:
     hardwareFF robot = new hardwareFF();
@@ -23,11 +24,9 @@ public class teleop_two_remotes extends LinearOpMode {
     boolean intakeOn = false;
     boolean freightCollected = false;
     boolean zeroPosSet = false;
-    boolean intakeDown = false;
 
     State currentState;
     Status intakeState;
-    ArmPosition armIs;
 
     private enum Status {
         IN,
@@ -42,11 +41,6 @@ public class teleop_two_remotes extends LinearOpMode {
         FINISH
     }
 
-    private enum ArmPosition {
-        high,
-        ground
-    }
-
 
     public void runOpMode() {
         //initialization code goes here
@@ -59,11 +53,8 @@ public class teleop_two_remotes extends LinearOpMode {
         waitForStart();
 
         while (!isStopRequested() && opModeIsActive()) {
+            //all teleop code after start button pressed goes here
 
-            if(!intakeDown){
-                robot.svoIntakeTilt.setPosition(var.intakeCollect);
-                intakeDown = true;
-            }
 
             /***
              * GAMEPAD 1 CONTROLS
@@ -122,18 +113,49 @@ public class teleop_two_remotes extends LinearOpMode {
 
             switch (currentState) {
                 case NOTHING:
-                    if (gamepad2.left_bumper) {
-                        //third level of hub
-                        robot.movearm(-0.7, var.groundLvl);
-                        armIs = ArmPosition.ground;
+                    /**
+                     * Don't need this 0 position because i just slam the arm down lol
+                     */
+                    /*
+                    if(gamepad2.dpad_down){
+                        //basic intake freight position
+                        robot.svoIntake.setPower(var.lessPower);
+                        robot.svoIntakeTilt.setPosition(var.intakeTiltCollect);
+                        robot.movearm(0.7,var.groundLvl);
                         currentState = State.SET;
                     }
-                    if (gamepad2.right_bumper) {
-                        //third level of hub
-                        robot.movearm(0.7, var.thirdLvlTeleOp);
-                        armIs = ArmPosition.high;
+                     */
+                    /**
+                     Don't need these bc why would i ever do these other than auto
+                     */
+                    /*
+                    if(gamepad2.dpad_left){
+                        //first level of shipping hub (but why would you ever do this)
+                        robot.svoIntakeTilt.setPosition(var.intakeTiltCollect);
+                        robot.movearm(0.7,var.firstLvl);
                         currentState = State.SET;
                     }
+                    if(gamepad2.dpad_up){
+                        //second level of hub
+                        robot.svoIntakeTilt.setPosition(var.intakeTiltCollect);
+                        robot.movearm(0.7,var.secondLvl);
+                        currentState = State.SET;
+                    }
+                     */
+                    /**
+                     * Begin automated to the top of hub function
+                     */
+                    if (gamepad2.dpad_right) {
+                        //third level of hub
+                        robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                        robot.movearm(0.7, var.thirdLvl);
+                        currentState = State.SET;
+                    }
+                    //TODO: - change the current dpad control to other available buttons
+                    //      - add in shared hub functionality
+                    //      - modify the levels to be right
+                    //      - fix svoIntakeTilt to be right
+                    //      - scrap the rest that's commented out lol
 
                     /**
                      * Normal 'manual' function :)
@@ -145,16 +167,11 @@ public class teleop_two_remotes extends LinearOpMode {
                     } else {
                         robot.mtrArm.setPower(gamepad2.left_stick_y);
                     }
+
                     break;
                 case SET:
                     robot.mtrArm.setPower(0.7);
                     robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    if(armIs == ArmPosition.high){
-                        robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                    }
-                    if(armIs == ArmPosition.ground){
-                        robot.svoIntakeTilt.setPosition(var.intakeCollect);
-                    }
                     currentState = State.WAIT;
                     break;
                 case WAIT:
@@ -172,7 +189,23 @@ public class teleop_two_remotes extends LinearOpMode {
             }
 
             //TODO: rewrite the logic when we get better limits :)
-            robot.mtrTurret.setPower(gamepad2.right_stick_x);
+
+            //turret spin to da right
+            if (robot.rightLimit.isPressed()) {
+                robot.mtrTurret.setPower(gamepad2.right_stick_x * 0.3);
+                telemetry.addLine("REEE");
+            } else {
+                robot.mtrTurret.setPower(gamepad2.right_stick_x);
+            }
+            //turret spin to da left
+            /*
+            if(robot.leftLimit.isPressed()){
+                robot.mtrTurret.setPower(gamepad2.right_stick_x*0.3);
+            }
+            else{
+            }
+             */
+
 
             /**
              * Tilt Controls
@@ -180,33 +213,38 @@ public class teleop_two_remotes extends LinearOpMode {
 
             //TODO: this ALL is gonna be automated for christs sake this sucks
 
-            if (gamepad2.left_bumper) {
-                robot.svoIntakeTilt.setPosition(var.intakeCollect);
-            }
             /**
              * Intake Controls
              */
-
-            if (!robot.intakeLimit.isPressed()) {
+/*
+            if(!robot.intakeLimit.isPressed()){
                 freightCollected = true;
-            } else {
+            }else{
                 freightCollected = false;
             }
 
-            if (!freightCollected) {
-                if (robot.bottomLimit.isPressed() && intakeState != Status.IN) {
+            if(!freightCollected){
+                if(robot.bottomLimit.isPressed() && intakeState != Status.IN){
                     robot.svoIntakeTilt.setPosition(var.intakeCollect);
                     robot.svoIntake.setPower(var.lessPower);
                     intakeState = Status.IN;
                 }
                 robot.LEDstrip.setPosition(var.green);
-            } else if (freightCollected && robot.bottomLimit.isPressed()) {
+            }
+            if(freightCollected){
                 robot.svoIntake.setPower(var.stop);
                 intakeState = Status.STOPPED;
                 robot.LEDstrip.setPosition(var.red);
             }
 
+ */
 
+            if (gamepad2.right_bumper) {
+                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            }
+            if (gamepad2.left_bumper) {
+                robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            }
             //run intake
             if (gamepad2.a) {
                 robot.svoIntake.setPower(var.lessPower);
@@ -246,12 +284,15 @@ public class teleop_two_remotes extends LinearOpMode {
                 telemetry.addLine("warehouse side");
             }
 
+            //telemetry.addData("top limit status", robot.topLimit.isPressed());
             telemetry.addData("bottom limit status", robot.bottomLimit.isPressed());
+            telemetry.addData("right limit status", robot.rightLimit.isPressed());
+            //telemetry.addData("left limit status", robot.leftLimit.isPressed());
             telemetry.addData("intake limit status", robot.intakeLimit.isPressed());
             telemetry.addData("front range distance: ", "%.2f cm", robot.frontRange.getDistance(DistanceUnit.CM));
             telemetry.addData("back range distance: ", "%.2f cm", robot.backRange.getDistance(DistanceUnit.CM));
             telemetry.addData("right distance: ", String.format("%.01f cm", robot.rightDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("left distance: ", String.format("%.01f cm", robot.leftDistance.getDistance(DistanceUnit.CM)));
+            //telemetry.addData("left distance: ", String.format("%.01f cm", robot.leftDistance.getDistance(DistanceUnit.CM)));
             telemetry.update();
         }
     }

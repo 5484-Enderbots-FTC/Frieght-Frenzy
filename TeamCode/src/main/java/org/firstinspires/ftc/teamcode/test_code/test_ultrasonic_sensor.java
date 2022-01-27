@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.ultimate_goal_code.hardwareUltimateGoal;
 import org.firstinspires.ftc.teamcode.ultimate_goal_code.var;
 
-
+@Disabled
 @TeleOp(name = "ultrasonic babey", group = "testing")
 //@Disabled
 

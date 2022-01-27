@@ -39,18 +39,24 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
     ElapsedTime duckTimer = new ElapsedTime();
     ElapsedTime dispenseTimer = new ElapsedTime();
 
-    double duckTime = 2.5;
+    double duckTime = 5;
     double dispenseTime = 1.5;
 
     double runningOpMode = 3;
 
+<<<<<<< HEAD
     Pose2d endDepPos = new Pose2d(0,0,Math.toRadians(90));
 
+=======
+    Pose2d endDepPos = new Pose2d(0,0,0);
+    double reverseHeading = Math.toRadians(0);
+>>>>>>> f0248bed20201be8ee7fa3f5417d3cc1760b793d
     turretState currentTurretState = turretState.NOTHING;
     armState currentArmState = armState.NOTHING;
 
     private enum turretState {
         NOTHING,
+        POWER,
         FINDMID
     }
 
@@ -72,37 +78,46 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
 
         Trajectory toRedCarousel = drive.trajectoryBuilder(traj.startPoseRC, true)
                 .splineToConstantHeading(new Vector2d(-63, -58), Math.toRadians(180))
+                /*
                 .addTemporalMarker(0.9, 0, () -> {
                     robot.svoCarousel.setPower(1);
                     duckTimer.reset();
                 })
+
+                 */
                 .build();
 
         Trajectory toRedHub3 = drive.trajectoryBuilder(toRedCarousel.end())
-                .splineTo(new Vector2d(-12, -47), Math.toRadians(0))
-                .addTemporalMarker(0, () -> {
+                .splineTo(new Vector2d(-12, -47),reverseHeading)
+                .addTemporalMarker(0.1, () -> {
                     robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 })
                 .build();
 
         Trajectory toRedHub2 = drive.trajectoryBuilder(toRedCarousel.end())
-                .splineTo(new Vector2d(-12, -52), Math.toRadians(0))
-                .addTemporalMarker(0, () -> {
+                .splineTo(new Vector2d(-12, -52),reverseHeading)
+                .addTemporalMarker(0.1, () -> {
                     robot.svoIntakeTilt.setPosition(var.intakeMid);
                 })
+
                 .build();
 
         Trajectory toRedHub1 = drive.trajectoryBuilder(toRedCarousel.end())
-                .splineTo(new Vector2d(-12, -47), Math.toRadians(0))
-                .addTemporalMarker(0, () -> {
+                .splineTo(new Vector2d(-12, -47),reverseHeading)
+                .addTemporalMarker(0.1, () -> {
                     robot.svoIntakeTilt.setPosition(var.intakeLow);
                 })
                 .build();
 
+<<<<<<< HEAD
         Trajectory toPark1 = drive.trajectoryBuilder(endDepPos)
                 .splineToConstantHeading(traj.toParkPos1, Math.toRadians(-45))
+=======
+        Trajectory toPark1 = drive.trajectoryBuilder(toRedCarousel.end())
+                .lineTo(traj.toParkPos1)
+>>>>>>> f0248bed20201be8ee7fa3f5417d3cc1760b793d
                 .addTemporalMarker(0.5, () -> {
-                    if(runningOpMode == 1) {
+                    if (runningOpMode == 1) {
                         robot.svoIntakeTilt.setPosition(0.9);
                     }
                 })
@@ -117,40 +132,67 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
 
-            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            while(!robot.midLimit.isPressed()){
+                robot.mtrTurret.setPower(-0.3);
+            }
+            robot.mtrTurret.setPower(0);
+
             drive.followTrajectory(toRedCarousel);
-            robot.mtrTurret.setPower(-0.3);
-            currentTurretState = turretState.FINDMID;
+            robot.svoCarousel.setPower(1);
+            sleep(2500);
+            robot.svoCarousel.setPower(0);
+            //duckTimer.reset();
+            /*
+            currentTurretState = turretState.POWER;
             switch (currentTurretState) {
                 case NOTHING:
                     break;
+                case POWER:
+                    robot.mtrTurret.setPower(-0.3);
+                    currentTurretState = turretState.FINDMID;
+                    break;
                 case FINDMID:
-                    if (duckTimer.seconds() < duckTime && !robot.midLimit.isPressed()) {
+                    if (duckTimer.seconds() < duckTime) {
                         if (robot.midLimit.isPressed()) {
                             robot.mtrTurret.setPower(0);
+                            telemetry.addLine("less than duck time mid pressed");
+                            telemetry.update();
                         }
-                    } else {
-                        robot.svoCarousel.setPower(var.stop);
-                        currentTurretState = turretState.NOTHING;
+                    } else if(duckTimer.seconds() > duckTime){
+                        robot.svoCarousel.setPower(0);
+                        telemetry.addLine("carousel stopped");
+                        telemetry.update();
+                        if(robot.midLimit.isPressed()){
+                            robot.mtrTurret.setPower(0);
+                            telemetry.addLine("greater than duck time mid pressed");
+                            telemetry.update();
+                            currentTurretState = turretState.NOTHING;
+                        }
                     }
                     break;
             }
-            if (runningOpMode == 3) {
-                drive.followTrajectoryAsync(toRedHub3);
-                endDepPos = toRedHub3.end();
-            } else if (runningOpMode == 2) {
-                drive.followTrajectoryAsync(toRedHub2);
-                endDepPos = toRedHub2.end();
-            } else if (runningOpMode == 1) {
-                drive.followTrajectoryAsync(toRedHub1);
-                endDepPos = toRedHub1.end();
+
+             */
+
+            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            if(runningOpMode == 3){
+                robot.movearm(0.7, var.thirdLvl);
+            }else if(runningOpMode == 2){
+                robot.movearm(0.7, var.secondLvl);
+            }else if (runningOpMode == 1){
+                robot.movearm(0.7, var.firstLvl);
             }
-            robot.movearm(0.7, var.thirdLvl);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            while(robot.mtrArm.isBusy()){
 
-            currentArmState = armState.RAISE;
+            }
+            robot.mtrArm.setPower(0);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+
+//            currentArmState = armState.RAISE;
+/*
             switch (currentArmState) {
                 case NOTHING:
                     break;
@@ -180,8 +222,34 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
                     break;
             }
 
+ */
+            /*
+            if (runningOpMode == 3) {
+                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                drive.followTrajectory(toRedHub3);
+                reverseHeading = Math.toRadians(180);
+                endDepPos = toRedHub3.end();
+            } else if (runningOpMode == 2) {
+                robot.svoIntakeTilt.setPosition(var.intakeMid);
+                drive.followTrajectory(toRedHub2);
+                endDepPos = toRedHub2.end();
+            } else if (runningOpMode == 1) {
+                robot.svoIntakeTilt.setPosition(var.intakeLow);
+                drive.followTrajectory(toRedHub1);
+                endDepPos = toRedHub1.end();
+            }
+            robot.svoIntake.setPower(-var.lessPower);
+            sleep(1500);
+            robot.svoIntake.setPower(0);
+            if (runningOpMode == 1) {
+                robot.svoIntakeTilt.setPosition(0.9);
+            }
+
+             */
+            //TODO: add the move arm encoder positions to the runningOpMode ifs above
             drive.followTrajectory(toPark1);
             drive.followTrajectory(toPark2);
+            robot.svoIntakeTilt.setPosition(var.intakeHigh);
             break;
         }
     }

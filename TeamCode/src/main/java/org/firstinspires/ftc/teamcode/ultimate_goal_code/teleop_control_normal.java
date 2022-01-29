@@ -23,6 +23,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 @TeleOp(name = "teleop normal", group = "1-teleop")
 @Disabled
+
 public class teleop_control_normal extends LinearOpMode {
     ElapsedTime runtime = new ElapsedTime();
     ElapsedTime timer = new ElapsedTime();

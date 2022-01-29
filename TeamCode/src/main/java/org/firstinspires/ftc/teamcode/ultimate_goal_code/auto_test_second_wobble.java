@@ -78,11 +78,11 @@ public class auto_test_second_wobble extends LinearOpMode {
 
     boolean wobbleLifted = false;
 
-    public static class var {
+    private static class var {
         private static int RingStackIndentified = 0;
     }
 
-    public enum Zone {
+    private enum Zone {
         A,
         B,
         C
@@ -90,7 +90,7 @@ public class auto_test_second_wobble extends LinearOpMode {
 
     Zone targetZone = Zone.A;
 
-    public enum State {
+    private enum State {
         LIFT_UP,
         STOP
     }

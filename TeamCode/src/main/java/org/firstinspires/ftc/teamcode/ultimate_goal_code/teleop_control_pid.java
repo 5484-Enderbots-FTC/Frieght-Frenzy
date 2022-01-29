@@ -9,8 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-
 @TeleOp(name = "teleop PID", group = "teleop")
 public class teleop_control_pid extends LinearOpMode {
     ElapsedTime runtime = new ElapsedTime();

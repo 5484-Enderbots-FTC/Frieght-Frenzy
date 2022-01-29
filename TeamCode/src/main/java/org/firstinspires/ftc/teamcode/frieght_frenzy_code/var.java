@@ -20,7 +20,7 @@ public class var {
 
     public static double intakeInit = 1;
     public static double intakeCollect = 0.39;
-    public static double intakeLow = 0.62;
+    public static double intakeLow = 0.4;
     public static double intakeMid = 0.5;
     public static double intakeHigh = 0.16;
 
@@ -34,7 +34,7 @@ public class var {
 
     //teleop encoder counts from ground as 0
     public static int groundLvl = 0;
-    public static int firstLvl = 1050;
+    public static int firstLvl = 800;
     public static int secondLvl = 2400;
     public static int thirdLvl = 3850;
     public static int thirdLvlTeleOp = 4100;

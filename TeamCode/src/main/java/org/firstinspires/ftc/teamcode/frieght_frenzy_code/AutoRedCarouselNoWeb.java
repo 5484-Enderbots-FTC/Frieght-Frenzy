@@ -42,9 +42,9 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
     double duckTime = 5;
     double dispenseTime = 1.5;
 
-    double runningOpMode = 3;
+    double runningOpMode = 1;
 
-    Pose2d endDepPos = new Pose2d(0,0,0);
+    Vector2d endDepPos = new Vector2d(0,0);
     double reverseHeading = Math.toRadians(0);
     turretState currentTurretState = turretState.NOTHING;
     armState currentArmState = armState.NOTHING;
@@ -83,39 +83,30 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
                 .build();
 
         Trajectory toRedHub3 = drive.trajectoryBuilder(toRedCarousel.end())
-                .splineTo(new Vector2d(-12, -47),reverseHeading)
-                .addTemporalMarker(0.1, () -> {
-                    robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                })
+                .splineTo(new Vector2d(-12, -47), Math.toRadians(0))
                 .build();
 
         Trajectory toRedHub2 = drive.trajectoryBuilder(toRedCarousel.end())
-                .splineTo(new Vector2d(-12, -52),reverseHeading)
-                .addTemporalMarker(0.1, () -> {
-                    robot.svoIntakeTilt.setPosition(var.intakeMid);
-                })
-
+                .splineTo(new Vector2d(-12, -52), Math.toRadians(0))
                 .build();
 
         Trajectory toRedHub1 = drive.trajectoryBuilder(toRedCarousel.end())
-                .splineTo(new Vector2d(-12, -47),reverseHeading)
-                .addTemporalMarker(0.1, () -> {
-                    robot.svoIntakeTilt.setPosition(var.intakeLow);
-                })
+                .splineTo(new Vector2d(-12, -50), Math.toRadians(0))
                 .build();
 
-        Trajectory toPark1 = drive.trajectoryBuilder(toRedCarousel.end())
+        Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end())
                 .lineTo(traj.toParkPos1)
-                .addTemporalMarker(0.5, () -> {
-                    if (runningOpMode == 1) {
-                        robot.svoIntakeTilt.setPosition(0.9);
-                    }
-                })
                 .build();
-        Trajectory toPark2 = drive.trajectoryBuilder(toPark1.end())
+        Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end())
+                .lineTo(traj.toParkPos1)
+                .build();
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end())
+                .lineTo(traj.toParkPos1)
+                .build();
+
+        Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
                 .lineTo(traj.toParkPos2)
                 .build();
-
 
         telemetry.addLine("Initialized");
         telemetry.update();
@@ -180,6 +171,21 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
             robot.mtrArm.setPower(0);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+            if(runningOpMode == 3){
+                drive.followTrajectory(toRedHub3);
+                spitOutBlock();
+                drive.followTrajectory(toPark1_3);
+            }
+            else if(runningOpMode == 2){
+                drive.followTrajectory(toRedHub2);
+                spitOutBlock();
+                drive.followTrajectory(toPark1_2);
+            }else if(runningOpMode == 1){
+                drive.followTrajectory(toRedHub1);
+                spitOutBlock();
+                drive.followTrajectory(toPark1_1);
+            }
+
 
 //            currentArmState = armState.RAISE;
 /*
@@ -237,10 +243,25 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
 
              */
             //TODO: add the move arm encoder positions to the runningOpMode ifs above
-            drive.followTrajectory(toPark1);
-            drive.followTrajectory(toPark2);
             robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            drive.followTrajectory(toPark2);
+
             break;
         }
+    }
+    public void spitOutBlock (){
+        if (runningOpMode ==3 ){
+            robot.svoIntakeTilt.setPosition(var.intakeHigh);
+        }
+        else if (runningOpMode == 2){
+            robot.svoIntakeTilt.setPosition(var.intakeMid);
+        }
+        else if (runningOpMode  == 1){
+            robot.svoIntakeTilt.setPosition(var.intakeLow);
+        }
+        sleep(1000);
+        robot.svoIntake.setPower(-var.lessPower);
+        sleep(1500);
+        robot.svoIntake.setPower(0);
     }
 }

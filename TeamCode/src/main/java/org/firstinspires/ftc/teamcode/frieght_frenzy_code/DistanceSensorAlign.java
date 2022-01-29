@@ -22,6 +22,7 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -54,6 +55,7 @@ import java.util.List;
  * of the vision processing to usercode.
  */
 @Autonomous
+@Disabled
 public class DistanceSensorAlign extends LinearOpMode
 {
     hardwareFF robot = new hardwareFF();

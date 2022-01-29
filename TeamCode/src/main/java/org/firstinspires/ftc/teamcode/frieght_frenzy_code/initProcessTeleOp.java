@@ -6,7 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "initProcess", group = "teleop")
 public class initProcessTeleOp extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
-    private static double reset = 0;
+    private static double reset = 1;
+    private static double low = 0;
     private static double inc = 0.005;
     private double tiltNumber = 0;
     public void runOpMode() {
@@ -44,7 +45,7 @@ public class initProcessTeleOp extends LinearOpMode {
                 robot.svoIntakeTilt.setPosition(tiltNumber);
             }
             if(gamepad1.b){
-                tiltNumber = reset;
+                tiltNumber = low;
                 robot.svoIntakeTilt.setPosition(reset);
             }
 

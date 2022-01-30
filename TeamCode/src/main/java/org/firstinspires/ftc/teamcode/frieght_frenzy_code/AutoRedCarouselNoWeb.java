@@ -39,12 +39,11 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
     ElapsedTime duckTimer = new ElapsedTime();
     ElapsedTime dispenseTimer = new ElapsedTime();
 
-    double duckTime = 5;
     double dispenseTime = 1.5;
 
     double runningOpMode = 1;
 
-    Vector2d endDepPos = new Vector2d(0,0);
+    Vector2d endDepPos = new Vector2d(0, 0);
     double reverseHeading = Math.toRadians(0);
     turretState currentTurretState = turretState.NOTHING;
     armState currentArmState = armState.NOTHING;
@@ -73,13 +72,10 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
 
         Trajectory toRedCarousel = drive.trajectoryBuilder(traj.startPoseRC, true)
                 .splineToConstantHeading(new Vector2d(-63, -58), Math.toRadians(180))
-                /*
                 .addTemporalMarker(0.9, 0, () -> {
                     robot.svoCarousel.setPower(1);
                     duckTimer.reset();
                 })
-
-                 */
                 .build();
 
         Trajectory toRedHub3 = drive.trajectoryBuilder(toRedCarousel.end())
@@ -112,154 +108,61 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
         telemetry.update();
         waitForStart();
         while (opModeIsActive()) {
-
-            while(!robot.midLimit.isPressed()){
-                robot.mtrTurret.setPower(-0.3);
+            /**
+             * move turret after start & head to carousel B)
+             */
+            while (!robot.midLimit.isPressed()) {
+                robot.mtrTurret.setPower(-0.4);
             }
             robot.mtrTurret.setPower(0);
-
             drive.followTrajectory(toRedCarousel);
-            robot.svoCarousel.setPower(1);
-            sleep(2500);
-            robot.svoCarousel.setPower(0);
-            //duckTimer.reset();
-            /*
-            currentTurretState = turretState.POWER;
-            switch (currentTurretState) {
-                case NOTHING:
-                    break;
-                case POWER:
-                    robot.mtrTurret.setPower(-0.3);
-                    currentTurretState = turretState.FINDMID;
-                    break;
-                case FINDMID:
-                    if (duckTimer.seconds() < duckTime) {
-                        if (robot.midLimit.isPressed()) {
-                            robot.mtrTurret.setPower(0);
-                            telemetry.addLine("less than duck time mid pressed");
-                            telemetry.update();
-                        }
-                    } else if(duckTimer.seconds() > duckTime){
-                        robot.svoCarousel.setPower(0);
-                        telemetry.addLine("carousel stopped");
-                        telemetry.update();
-                        if(robot.midLimit.isPressed()){
-                            robot.mtrTurret.setPower(0);
-                            telemetry.addLine("greater than duck time mid pressed");
-                            telemetry.update();
-                            currentTurretState = turretState.NOTHING;
-                        }
-                    }
-                    break;
-            }
 
+            /**
+             * spin carousel & move arm at the same time :)
              */
-
-            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            if(runningOpMode == 3){
-                robot.movearm(0.7, var.thirdLvl);
-            }else if(runningOpMode == 2){
-                robot.movearm(0.7, var.secondLvl);
-            }else if (runningOpMode == 1){
-                robot.movearm(0.7, var.firstLvl);
+            robot.svoCarousel.setPower(1);
+            robot.armToPosition(runningOpMode);
+            duckTimer.reset();
+            while(duckTimer.seconds() <= var.duckTime && robot.mtrArm.isBusy()){
+                telemetry.addData("is servo running? ", robot.svoCarousel.getPower());
+                telemetry.update();
             }
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while(robot.mtrArm.isBusy()){
-
-            }
+            robot.svoCarousel.setPower(0);
             robot.mtrArm.setPower(0);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-            if(runningOpMode == 3){
+            /**
+             * drive to red hub & spit out block then park :3
+             */
+            if (runningOpMode == 3) {
+                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            } else if (runningOpMode == 2) {
+                robot.svoIntakeTilt.setPosition(var.intakeMid);
+            } else if (runningOpMode == 1) {
+                robot.svoIntakeTilt.setPosition(var.intakeLow);
+            }
+            if (runningOpMode == 3) {
                 drive.followTrajectory(toRedHub3);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_3);
-            }
-            else if(runningOpMode == 2){
+            } else if (runningOpMode == 2) {
                 drive.followTrajectory(toRedHub2);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_2);
-            }else if(runningOpMode == 1){
+            } else if (runningOpMode == 1) {
                 drive.followTrajectory(toRedHub1);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
             }
 
-
-//            currentArmState = armState.RAISE;
-/*
-            switch (currentArmState) {
-                case NOTHING:
-                    break;
-                case RAISE:
-                    if (robot.mtrArm.isBusy()) {
-
-                    } else {
-                        robot.mtrArm.setPower(0);
-                        robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                        currentArmState = armState.DISPENSE;
-                    }
-                    break;
-                case DISPENSE:
-                    if (!drive.isBusy()) {
-                        robot.svoIntake.setPower(-var.lessPower);
-                        dispenseTimer.reset();
-                        currentArmState = armState.WAIT;
-                    } else {
-                    }
-                    break;
-                case WAIT:
-                    if (dispenseTimer.seconds() > dispenseTime) {
-                        robot.svoIntake.setPower(0);
-                        currentArmState = armState.NOTHING;
-                    } else {
-                    }
-                    break;
-            }
-
- */
-            /*
-            if (runningOpMode == 3) {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                drive.followTrajectory(toRedHub3);
-                reverseHeading = Math.toRadians(180);
-                endDepPos = toRedHub3.end();
-            } else if (runningOpMode == 2) {
-                robot.svoIntakeTilt.setPosition(var.intakeMid);
-                drive.followTrajectory(toRedHub2);
-                endDepPos = toRedHub2.end();
-            } else if (runningOpMode == 1) {
-                robot.svoIntakeTilt.setPosition(var.intakeLow);
-                drive.followTrajectory(toRedHub1);
-                endDepPos = toRedHub1.end();
-            }
-            robot.svoIntake.setPower(-var.lessPower);
-            sleep(1500);
-            robot.svoIntake.setPower(0);
-            if (runningOpMode == 1) {
-                robot.svoIntakeTilt.setPosition(0.9);
-            }
-
-             */
-            //TODO: add the move arm encoder positions to the runningOpMode ifs above
             robot.svoIntakeTilt.setPosition(var.intakeHigh);
             drive.followTrajectory(toPark2);
 
             break;
         }
     }
-    public void spitOutBlock (){
-        if (runningOpMode ==3 ){
-            robot.svoIntakeTilt.setPosition(var.intakeHigh);
-        }
-        else if (runningOpMode == 2){
-            robot.svoIntakeTilt.setPosition(var.intakeMid);
-        }
-        else if (runningOpMode  == 1){
-            robot.svoIntakeTilt.setPosition(var.intakeLow);
-        }
-        sleep(1000);
+
+    public void spitOutBlock() {
         robot.svoIntake.setPower(-var.lessPower);
         sleep(1500);
         robot.svoIntake.setPower(0);

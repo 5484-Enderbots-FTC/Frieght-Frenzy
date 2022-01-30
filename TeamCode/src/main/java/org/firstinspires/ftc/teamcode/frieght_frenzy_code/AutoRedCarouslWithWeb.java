@@ -27,6 +27,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
 
@@ -37,6 +38,7 @@ public class AutoRedCarouslWithWeb extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
 
+    ElapsedTime duckTimer = new ElapsedTime();
     double runningOpMode;
     Pose2d endDepPos;
 
@@ -123,48 +125,55 @@ public class AutoRedCarouslWithWeb extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
-            while(!robot.midLimit.isPressed()){
-                robot.mtrTurret.setPower(-0.3);
+            /**
+             * move turret after start & head to carousel B)
+             */
+            while (!robot.midLimit.isPressed()) {
+                robot.mtrTurret.setPower(-0.4);
             }
             robot.mtrTurret.setPower(0);
-
             drive.followTrajectory(toRedCarousel);
+
+            /**
+             * spin carousel & move arm at the same time :)
+             */
             robot.svoCarousel.setPower(1);
-            sleep(2500);
+            robot.armToPosition(runningOpMode);
+            duckTimer.reset();
+            while(duckTimer.seconds() <= var.duckTime && robot.mtrArm.isBusy()){
+                telemetry.addData("is servo running? ", robot.svoCarousel.getPower());
+                telemetry.update();
+            }
             robot.svoCarousel.setPower(0);
-
-            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            if(runningOpMode == 3){
-                robot.movearm(0.7, var.thirdLvl);
-            }else if(runningOpMode == 2){
-                robot.movearm(0.7, var.secondLvl);
-            }else if (runningOpMode == 1){
-                robot.movearm(0.7, var.firstLvl);
-            }
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while(robot.mtrArm.isBusy()){
-
-            }
             robot.mtrArm.setPower(0);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-            if(runningOpMode == 3){
+            /**
+             * drive to red hub & spit out block then park :3
+             */
+            if (runningOpMode ==3 ){
+                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            }
+            else if (runningOpMode == 2){
+                robot.svoIntakeTilt.setPosition(var.intakeMid);
+            }
+            else if (runningOpMode  == 1){
+                robot.svoIntakeTilt.setPosition(var.intakeLow);
+            }
+            if (runningOpMode == 3) {
                 drive.followTrajectory(toRedHub3);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_3);
-            }
-            else if(runningOpMode == 2){
+            } else if (runningOpMode == 2) {
                 drive.followTrajectory(toRedHub2);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_2);
-            }else if(runningOpMode == 1){
+            } else if (runningOpMode == 1) {
                 drive.followTrajectory(toRedHub1);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
             }
 
-            //TODO: add the move arm encoder positions to the runningOpMode ifs above
             robot.svoIntakeTilt.setPosition(var.intakeHigh);
             drive.followTrajectory(toPark2);
 
@@ -172,16 +181,6 @@ public class AutoRedCarouslWithWeb extends LinearOpMode {
         }
     }
     public void spitOutBlock (){
-        if (runningOpMode ==3 ){
-            robot.svoIntakeTilt.setPosition(var.intakeHigh);
-        }
-        else if (runningOpMode == 2){
-            robot.svoIntakeTilt.setPosition(var.intakeMid);
-        }
-        else if (runningOpMode  == 1){
-            robot.svoIntakeTilt.setPosition(var.intakeLow);
-        }
-        sleep(1000);
         robot.svoIntake.setPower(-var.lessPower);
         sleep(1500);
         robot.svoIntake.setPower(0);

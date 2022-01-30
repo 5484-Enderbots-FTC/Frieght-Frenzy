@@ -213,7 +213,6 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
             robot.mtrTurret.setPower(0);
             runningOpMode = 3;
             if (runningOpMode == 3) {
-                telemetry.addLine("Running mode 3");
                 telemetry.update();
                 drive.followTrajectoryAsync(toRedHub3);
                 endDepPos = toRedHub3.end();

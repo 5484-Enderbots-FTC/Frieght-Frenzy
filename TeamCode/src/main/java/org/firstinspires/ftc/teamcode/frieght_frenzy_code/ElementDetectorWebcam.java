@@ -46,7 +46,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-@Disabled
+
 @TeleOp
 public class ElementDetectorWebcam extends LinearOpMode
 {

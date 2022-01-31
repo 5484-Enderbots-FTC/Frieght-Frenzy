@@ -47,6 +47,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 @Disabled
 @Autonomous
 public class AutoBlueWarehouse extends LinearOpMode

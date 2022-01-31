@@ -101,7 +101,10 @@ public class hardwareFF {
 
         LEDstrip = hw.get(Servo.class, "LEDstrip");
 
+        //leftLimit = hw.get(TouchSensor.class, "leftLimit");
+        //rightLimit = hw.get(TouchSensor.class, "rightLimit");
         midLimit = hw.get(TouchSensor.class, "midLimit");
+        //topLimit = hw.get(TouchSensor.class, "topLimit");
         bottomLimit = hw.get(TouchSensor.class, "bottomLimit");
         intakeLimit = hw.get(TouchSensor.class, "intakeLimit");
 
@@ -110,10 +113,8 @@ public class hardwareFF {
 
         frontRange = hw.get(ModernRoboticsI2cRangeSensor.class, "frontRange");
         backRange = hw.get(ModernRoboticsI2cRangeSensor.class, "backRange");
-        /*
         rightDistance = hw.get(DistanceSensor.class, "rightDistance");
         leftDistance = hw.get(DistanceSensor.class, "leftDistance");
-         */
 
         batteryVoltage = hw.voltageSensor.iterator().next();
 
@@ -268,6 +269,12 @@ public class hardwareFF {
         mtrArm.setTargetPosition(-position * adjustment);
         //mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+    public void moveturret(double power, int position) {
+        int adjustment = 1;
+        mtrTurret.setPower(power);
+        mtrTurret.setTargetPosition(position * adjustment);
+        //mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
 
     public void deinit() {
         mtrArm.setPower(-0.7);
@@ -278,21 +285,11 @@ public class hardwareFF {
         }
         mtrArm.setPower(0);
         deinitWait.reset();
+        //svoIntakeTilt.setPosition(var.intakeTiltMid);
         while (deinitWait.seconds() < 0.25) {
 
         }
-    }
-    public void armToPosition (double runningOpMode){
-        mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        if (runningOpMode == 3) {
-            movearm(0.7, var.thirdLvl);
-        } else if (runningOpMode == 2) {
-            movearm(0.7, var.secondLvl);
-        } else if (runningOpMode == 1) {
-            movearm(0.7, var.firstLvl);
-        }
-        mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //svoIntakeTilt.setPosition(var.intakeTiltCollect);
     }
 
 }

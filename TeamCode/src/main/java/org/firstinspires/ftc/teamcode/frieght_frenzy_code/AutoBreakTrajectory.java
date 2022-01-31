@@ -108,8 +108,6 @@ public class AutoBreakTrajectory extends LinearOpMode {
          */
         robot.svoIntake.setPower(1);
         drive.followTrajectoryAsync(traj2);
-        drive.update();
-        sleep(100);
         while (robot.intakeLimit.isPressed()) {
             telemetry.addLine("consuming");
             telemetry.update();

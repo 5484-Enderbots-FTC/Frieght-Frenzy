@@ -55,19 +55,26 @@ public class testTurretEncoder extends LinearOpMode {
                 drive.updatePoseEstimate();
             }
             robot.mtrTurret.setPower(0);
-            while (robot.mtrArm.isBusy() | drive.isBusy()) {
+            while (robot.mtrArm.isBusy()) {
                 telemetry.addLine("weeeee arm finish");
                 telemetry.addData("pose estimate: ", drive.getPoseEstimate());
+                drive.update();
+                drive.updatePoseEstimate();
+            }
+            robot.mtrArm.setPower(0);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            while(drive.isBusy()){
                 telemetry.addLine("drive is busy");
+                telemetry.addData("pose estimate: ", drive.getPoseEstimate());
                 telemetry.update();
                 drive.update();
                 drive.updatePoseEstimate();
-                if (robot.mtrArm.getCurrentPosition() >= -var.thirdLvl){
-                    robot.mtrArm.setPower(0);
-                    robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                }
             }
-            drive.waitForIdle();
+            Trajectory trajFinish = drive.trajectoryBuilder(drive.getPoseEstimate())
+                    .lineToConstantHeading(new Vector2d(35, 0))
+                    .build();
+
+            drive.followTrajectory(trajFinish);
 
             /*
             robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

@@ -21,7 +21,6 @@
 
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -29,53 +28,38 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
 
-@Autonomous(name = "autoRedCarousel no webcam")
-public class AutoRedCarouselNoWeb extends LinearOpMode {
+@Autonomous(name = "autoRedCarousel no webcam w freight")
+public class AutoRedCarouselNoWebWFreight extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
 
     ElapsedTime duckTimer = new ElapsedTime();
-    ElapsedTime dispenseTimer = new ElapsedTime();
 
-    double dispenseTime = 1.5;
-
-    double runningOpMode = 1;
-
-    Vector2d endDepPos = new Vector2d(0, 0);
-    double reverseHeading = Math.toRadians(0);
-    turretState currentTurretState = turretState.NOTHING;
-    armState currentArmState = armState.NOTHING;
-
-    private enum turretState {
-        NOTHING,
-        POWER,
-        FINDMID
-    }
-
-    private enum armState {
-        NOTHING,
-        RAISE,
-        DISPENSE,
-        WAIT
-    }
+    double runningOpMode = 3;
 
     @Override
     public void runOpMode() {
-        //this will init EVERYTHING on the robot
         robot.init(hardwareMap);
-        //FFMecanum must be called AFTER the robot init bc just the motors need to be overridden.
-        FFMecanumDrive drive = new FFMecanumDrive(hardwareMap);
+        /**
+         * This uses the cancelable drive 0.0
+         */
+        FFMecanumDriveCancelable drive = new FFMecanumDriveCancelable(hardwareMap);
 
         drive.setPoseEstimate(traj.startPoseRC);
 
         Trajectory toRedCarousel = drive.trajectoryBuilder(traj.startPoseRC, true)
                 .splineToConstantHeading(new Vector2d(-63, -58), Math.toRadians(180))
+                /*
                 .addTemporalMarker(0.9, 0, () -> {
                     robot.svoCarousel.setPower(1);
                     duckTimer.reset();
                 })
+
+                 */
                 .build();
 
         Trajectory toRedHub3 = drive.trajectoryBuilder(toRedCarousel.end())
@@ -91,17 +75,28 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end())
-                .lineTo(traj.toParkPos1)
+                .lineTo(traj.toParkRedPos1)
                 .build();
         Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end())
-                .lineTo(traj.toParkPos1)
+                .lineTo(traj.toParkRedPos1)
                 .build();
         Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end())
-                .lineTo(traj.toParkPos1)
+                .lineTo(traj.toParkRedPos1)
                 .build();
 
         Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
-                .lineTo(traj.toParkPos2)
+                .lineTo(traj.toParkRedPos2)
+                .build();
+
+        Trajectory intakeForward = drive.trajectoryBuilder(toPark2.end())
+                .forward(20,  FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .addTemporalMarker(0, () -> {robot.svoIntake.setPower(var.intakeCollect);})
+                .build();
+
+        //TODO: change the starting pose to be changeable??
+        Trajectory backToRedHub3 = drive.trajectoryBuilder(intakeForward.end())
+                .splineToConstantHeading(new Vector2d(-12, -47), Math.toRadians(90))
                 .build();
 
         telemetry.addLine("Initialized");
@@ -155,9 +150,15 @@ public class AutoRedCarouselNoWeb extends LinearOpMode {
                 drive.followTrajectory(toPark1_1);
             }
 
+            //TODO: utilize left/right limits to start moving the turret perhaps while it's in the park1 trajectory
+            //      then move the arm down until it hits bottom limit
+            //      THEN go grab more freight
             robot.svoIntakeTilt.setPosition(var.intakeHigh);
             drive.followTrajectory(toPark2);
 
+            /**
+             * Extra freight time??
+             */
             break;
         }
     }

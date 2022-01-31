@@ -96,11 +96,11 @@ public class AutoRedCarouselPlusFreight extends LinearOpMode {
                 .build();
 
         Trajectory toPark1 = drive.trajectoryBuilder(endDepPos)
-                .lineTo(traj.toParkPos1)
+                .lineTo(traj.toParkRedPos1)
                 .addTemporalMarker(0, () -> {robot.mtrTurret.setPower(0.3);})
                 .build();
         Trajectory toPark2 = drive.trajectoryBuilder(toPark1.end())
-                .lineTo(traj.toParkPos2)
+                .lineTo(traj.toParkRedPos2)
                 .build();
         Trajectory intakeForward = drive.trajectoryBuilder(toPark2.end())
                 .forward(20,  FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),

@@ -34,7 +34,7 @@ import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
 import java.util.ArrayList;
 
 @Autonomous(name = "autoRedCarousel w/ webcam")
-public class AutoRedCarouslWithWeb extends LinearOpMode {
+public class AutoRedCarouselWithWeb extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
 
@@ -78,17 +78,17 @@ public class AutoRedCarouslWithWeb extends LinearOpMode {
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end())
-                .lineTo(traj.toParkPos1)
+                .lineTo(traj.toParkRedPos1)
                 .build();
         Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end())
-                .lineTo(traj.toParkPos1)
+                .lineTo(traj.toParkRedPos1)
                 .build();
         Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end())
-                .lineTo(traj.toParkPos1)
+                .lineTo(traj.toParkRedPos1)
                 .build();
 
         Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
-                .lineTo(traj.toParkPos2)
+                .lineTo(traj.toParkRedPos2)
                 .build();
 
         // Tell telemetry to update faster than the default 250ms period :)

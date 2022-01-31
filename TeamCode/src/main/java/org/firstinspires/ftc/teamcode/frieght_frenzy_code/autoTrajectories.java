@@ -10,11 +10,13 @@ import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
 public class autoTrajectories {
 
     Pose2d startPoseRC = new Pose2d(-31, -65.75);
-    Pose2d startPoseRW = new Pose2d(10, 10);
-    Pose2d startPoseBC = new Pose2d(10, 10);
-    Pose2d startPoseBW = new Pose2d(10, 10);
+    Pose2d startPoseRW = new Pose2d(14, -65.75);
+    Pose2d startPoseBC = new Pose2d(-42, 65.75);
+    Pose2d startPoseBW = new Pose2d(5, 65.75);
 
-    Vector2d toParkPos1 = new Vector2d(12, -67);
-    Vector2d toParkPos2 = new Vector2d(40, -67);
+    Vector2d toParkRedPos1 = new Vector2d(12, -67);
+    Vector2d toParkRedPos2 = new Vector2d(40, -67);
+    Vector2d toParkBluePos1 = new Vector2d(12, 67);
+    Vector2d toParkBluePos2 = new Vector2d(40, 67);
 
 }

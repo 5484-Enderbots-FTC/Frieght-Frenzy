@@ -269,6 +269,12 @@ public class hardwareFF {
         mtrArm.setTargetPosition(-position * adjustment);
         //mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+    public void moveturret(double power, int position) {
+        int adjustment = 1;
+        mtrTurret.setPower(power);
+        mtrTurret.setTargetPosition(position * adjustment);
+        //mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
 
     public void deinit() {
         mtrArm.setPower(-0.7);

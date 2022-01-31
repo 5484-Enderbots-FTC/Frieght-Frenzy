@@ -117,49 +117,20 @@ public class teleop_two_remotes extends LinearOpMode {
             switch(currentState) {
                 case NOTHING:
                     /**
-                     * Don't need this 0 position because i just slam the arm down lol
+                     * Begin automated to the top of hub function
                      */
-                    /*
-                    if(gamepad2.dpad_down){
-                        //basic intake freight position
-                        robot.svoIntake.setPower(var.lessPower);
-                        robot.svoIntakeTilt.setPosition(var.intakeTiltCollect);
+                    if(gamepad2.left_bumper && zeroPosSet){
+                        //third level of hub
+                        robot.svoIntakeTilt.setPosition(var.intakeCollect);
                         robot.movearm(0.7,var.groundLvl);
                         currentState = State.SET;
                     }
-                     */
-                    /**
-                      Don't need these bc why would i ever do these other than auto
-                     */
-                    /*
-                    if(gamepad2.dpad_left){
-                        //first level of shipping hub (but why would you ever do this)
-                        robot.svoIntakeTilt.setPosition(var.intakeTiltCollect);
-                        robot.movearm(0.7,var.firstLvl);
-                        currentState = State.SET;
-                    }
-                    if(gamepad2.dpad_up){
-                        //second level of hub
-                        robot.svoIntakeTilt.setPosition(var.intakeTiltCollect);
-                        robot.movearm(0.7,var.secondLvl);
-                        currentState = State.SET;
-                    }
-                     */
-                    /**
-                     * Begin automated to the top of hub function
-                     */
-                    if(gamepad2.dpad_right){
+                    if(gamepad2.right_bumper && zeroPosSet){
                         //third level of hub
                         robot.svoIntakeTilt.setPosition(var.intakeHigh);
                         robot.movearm(0.7,var.thirdLvl);
                         currentState = State.SET;
                     }
-                    //TODO: - change the current dpad control to other available buttons
-                    //      - add in shared hub functionality
-                    //      - modify the levels to be right
-                    //      - fix svoIntakeTilt to be right
-                    //      - scrap the rest that's commented out lol
-
                     /**
                      * Normal 'manual' function :)
                      */
@@ -175,7 +146,6 @@ public class teleop_two_remotes extends LinearOpMode {
 
                     break;
                 case SET:
-                        robot.mtrArm.setPower(0.7);
                         robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         currentState = State.WAIT;
                     break;
@@ -195,6 +165,7 @@ public class teleop_two_remotes extends LinearOpMode {
 
             //TODO: rewrite the logic when we get better limits :)
 
+            /*
             //turret spin to da right
             if(robot.rightLimit.isPressed()){
                 robot.mtrTurret.setPower(gamepad2.right_stick_x*0.3);
@@ -208,12 +179,19 @@ public class teleop_two_remotes extends LinearOpMode {
             }else{
                robot.mtrTurret.setPower(gamepad2.right_stick_x);
             }
-
+             */
+            robot.mtrTurret.setPower(gamepad2.right_stick_x);
             /**
-             * Tilt Controls
+             * tilt controls
              */
 
-            //TODO: this ALL is gonna be automated for christs sake this sucks
+            if(gamepad2.dpad_down){
+                robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            }
+            if(gamepad2.dpad_up){
+                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            }
+
 
             /**
              * Intake Controls
@@ -281,11 +259,10 @@ public class teleop_two_remotes extends LinearOpMode {
                 telemetry.addLine("warehouse side");
             }
 
-            //telemetry.addData("top limit status", robot.topLimit.isPressed());
             telemetry.addData("bottom limit status", robot.bottomLimit.isPressed());
             //telemetry.addData("right limit status", robot.rightLimit.isPressed());
             //telemetry.addData("left limit status", robot.leftLimit.isPressed());
-            //telemetry.addData("mid limit status", robot.midLimit.isPressed());
+            telemetry.addData("mid limit status", robot.midLimit.isPressed());
             telemetry.addData("intake limit status", robot.intakeLimit.isPressed());
             telemetry.addData("front range distance: ", "%.2f cm", robot.frontRange.getDistance(DistanceUnit.CM));
             telemetry.addData("back range distance: ", "%.2f cm", robot.backRange.getDistance(DistanceUnit.CM));

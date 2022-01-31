@@ -19,7 +19,7 @@ public class var {
     public static double toggleWait = 1; //(seconds)
 
     public static double intakeInit = 1;
-    public static double intakeCollect = 0.39;
+    public static double intakeCollect = 0.43;
     public static double intakeLow = 0.4;
     public static double intakeMid = 0.5;
     public static double intakeHigh = 0.16;

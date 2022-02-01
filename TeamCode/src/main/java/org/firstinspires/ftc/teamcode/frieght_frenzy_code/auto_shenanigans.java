@@ -116,6 +116,7 @@ public class auto_shenanigans extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        boolean bepis=false;
         double elementX = -10;
         double elementY = -10;
         initVuforia();
@@ -330,14 +331,16 @@ public class auto_shenanigans extends LinearOpMode {
                     else{Blockdetected=true;}
                     if(Blockdetected==true) {
                         if (elementX > 420) {
-                            robot.strafe(1, -20);
+                            robot.forward(1, 1);
                         } else if (elementX < 380) {
-                            robot.strafe(1, 20);
+                            robot.forward(1, -1);
                         }
-                        robot.forward(1, 20);
+                        else if (elementX>380&&elementX<420){
+                        bepis=true;}
+                        if(bepis==true){robot.strafe(1, -20);}
                         //do a scoopy, not doing now cause movement rework in the works
                     if(Blockdetected==false){
-                            robot.forward(1, 20);
+                            robot.strafe(1, -20);
                             //do a scoopy
                         }
                     }

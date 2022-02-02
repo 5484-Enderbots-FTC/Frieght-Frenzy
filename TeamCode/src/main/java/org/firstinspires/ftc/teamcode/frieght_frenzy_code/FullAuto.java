@@ -32,7 +32,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
-
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.autoTrajectories;
 
 import java.util.ArrayList;
 
@@ -53,8 +53,7 @@ public class FullAuto extends LinearOpMode {
         FFMecanumDriveCancelable drive = new FFMecanumDriveCancelable(hardwareMap);
 
         drive.setPoseEstimate(traj.startPoseRC);
-
-        drive.setPoseEstimate(traj.startPoseRC);
+        
 
         Trajectory toRedCarousel = drive.trajectoryBuilder(traj.startPoseRC, true)
                 .splineToConstantHeading(new Vector2d(-63, -58), Math.toRadians(180))
@@ -169,13 +168,13 @@ public class FullAuto extends LinearOpMode {
             }
 
             //TODO: add the move arm encoder positions to the runningOpMode ifs above
-        
+
             //TODO: Actually make this work instead of frankensteining the two programs together
             robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                Trajectory traj = drive.trajectoryBuilder(toPark1.end())
+            Trajectory traj = drive.trajectoryBuilder(toPark1_3.end())
                     .forward(20, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
-            Trajectory traj2 = drive.trajectoryBuilder(toPark1.end())
+            Trajectory traj2 = drive.trajectoryBuilder(toPark1_3.end())
                     .forward(20, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
 
@@ -289,10 +288,10 @@ public class FullAuto extends LinearOpMode {
             robot.mtrTurret.setPower(0);
             spitOutBlock();
             drive.followTrajectory(toPark1_3);
-            drive.followTrajectory(toPark2)
+            drive.followTrajectory(toPark2);
             break;
-            }
         }
+    }
 
     public void spitOutBlock (){
         if (runningOpMode ==3 ){

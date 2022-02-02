@@ -12,7 +12,7 @@ public class initProcessTeleOp extends LinearOpMode {
     private double tiltNumber = 0;
     public void runOpMode() {
         robot.init(hardwareMap);
-        robot.svoIntakeTilt.setPosition(reset);
+        robot.svoIntakeTilt.setPosition(var.intakeCollect);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
@@ -47,6 +47,9 @@ public class initProcessTeleOp extends LinearOpMode {
             if(gamepad1.b){
                 tiltNumber = low;
                 robot.svoIntakeTilt.setPosition(reset);
+            }
+            if(gamepad1.right_bumper){
+                robot.svoIntakeTilt.setPosition(var.intakeCollect);
             }
 
             telemetry.addData("MidLimit? ", robot.midLimit.isPressed());

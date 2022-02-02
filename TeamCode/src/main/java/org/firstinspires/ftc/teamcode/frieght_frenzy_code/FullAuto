@@ -199,8 +199,9 @@ public class FullAuto extends LinearOpMode {
             /**
              * has been consumed, now go to hub
              */
+            //TODO: make this spline correct lmao
             Trajectory goBack = drive.trajectoryBuilder(intakeEnd, true)
-                    .splineToConstantHeading(traj.toParkPos1, 180)
+                    .splineToConstantHeading(new Vector2d(-12, -47), Math.toRadians(90))
                     .build();
             drive.followTrajectory(goBack);
             //arm
@@ -263,7 +264,7 @@ public class FullAuto extends LinearOpMode {
             telemetry.update();
             robot.svoIntake.setPower(0);
             Trajectory goBack2 = drive.trajectoryBuilder(intakeEnd, true)
-                    .splineToConstantHeading(traj.toParkPos1, 180)
+                    .splineToConstantHeading(new Vector2d(-12, -47), Math.toRadians(90))
                     .build();
             drive.followTrajectory(goBack2);
             //arm

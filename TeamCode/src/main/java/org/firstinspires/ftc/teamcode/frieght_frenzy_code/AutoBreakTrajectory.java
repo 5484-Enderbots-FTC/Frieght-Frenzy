@@ -44,7 +44,7 @@ public class AutoBreakTrajectory extends LinearOpMode {
 
         // Example spline path from SplineTest.java
         Trajectory traj = drive.trajectoryBuilder(startPose)
-                .forward(20,  FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .forward(20,  FFMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(0, () -> {robot.svoIntake.setPower(var.intakeCollect);})
                 .build();
 
@@ -56,7 +56,7 @@ public class AutoBreakTrajectory extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             // 3 seconds into the opmode, we cancel the following
-            if (robot.intakeLimit.isPressed()) {
+            if (!robot.intakeLimit.isPressed()) {
                 // Cancel following
                 drive.cancelFollowing();
 

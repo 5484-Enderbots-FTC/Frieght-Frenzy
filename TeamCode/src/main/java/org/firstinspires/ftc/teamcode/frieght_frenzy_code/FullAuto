@@ -27,8 +27,12 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
+
 
 import java.util.ArrayList;
 
@@ -46,7 +50,7 @@ public class FullAuto extends LinearOpMode {
         robot.init(hardwareMap);
         robot.initWebcam();
         //FFMecanum must be called AFTER the robot init bc just the motors need to be overridden.
-        FFMecanumDrive drive = new FFMecanumDrive(hardwareMap);
+        FFMecanumDriveCancelable drive = new FFMecanumDriveCancelable(hardwareMap);
 
         drive.setPoseEstimate(traj.startPoseRC);
 

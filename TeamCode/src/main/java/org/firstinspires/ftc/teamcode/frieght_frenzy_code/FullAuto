@@ -169,10 +169,10 @@ public class FullAuto extends LinearOpMode {
             //TODO: Actually make this work instead of frankensteining the two programs together
             robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 Trajectory traj = drive.trajectoryBuilder(toPark1.end())
-                    .lineToConstantHeading(new Vector2d(150, 0), FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .forward(20, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
             Trajectory traj2 = drive.trajectoryBuilder(toPark1.end())
-                    .lineToConstantHeading(new Vector2d(150, 0), FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .forward(20, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
 
 

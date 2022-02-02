@@ -246,6 +246,7 @@ public class FullAuto extends LinearOpMode {
              * begin consumption AGAIN
              */
             robot.svoIntake.setPower(1);
+            drive.followTrajectory(toPark1_3);
             drive.followTrajectoryAsync(traj2);
             drive.update();
             sleep(100);

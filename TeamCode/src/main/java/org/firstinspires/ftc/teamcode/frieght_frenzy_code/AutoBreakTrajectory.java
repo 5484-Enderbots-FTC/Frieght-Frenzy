@@ -34,6 +34,7 @@ public class AutoBreakTrajectory extends LinearOpMode {
         Trajectory traj = drive.trajectoryBuilder(startPose)
                 .lineToConstantHeading(new Vector2d(150, 0), FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
+
         Trajectory traj2 = drive.trajectoryBuilder(startPose2)
                 .lineToConstantHeading(new Vector2d(150, 0), FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
@@ -71,15 +72,23 @@ public class AutoBreakTrajectory extends LinearOpMode {
         robot.movearm(0.7, var.thirdLvl);
 
         robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (robot.mtrArm.isBusy()) {
-
+        while(robot.mtrArm.getCurrentPosition() >= -1000) {
+            telemetry.addData("haha", robot.mtrArm.getCurrentPosition());
+            telemetry.addData("pose estimate: ", drive.getPoseEstimate());
+            telemetry.update();
         }
-        robot.mtrArm.setPower(0);
-        robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         while (!robot.midLimit.isPressed()) {
+            telemetry.addData("pose estimate: ", drive.getPoseEstimate());
+            telemetry.update();
             robot.mtrTurret.setPower(-0.3);
         }
         robot.mtrTurret.setPower(0);
+        while (robot.mtrArm.isBusy()) {
+            telemetry.addLine("weeeee arm finish");
+            telemetry.addData("pose estimate: ", drive.getPoseEstimate());
+        }
+        robot.mtrArm.setPower(0);
+        robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         spitOutBlock();
 
         /**
@@ -106,8 +115,11 @@ public class AutoBreakTrajectory extends LinearOpMode {
         /**
          * begin consumption AGAIN
          */
-        robot.svoIntake.setPower(1);
+        robot.svoIntake.setPower(var.lessPower);
         drive.followTrajectoryAsync(traj2);
+        telemetry.addData("intake limit?", robot.intakeLimit.isPressed());
+        telemetry.update();
+        sleep(1000);
         while (robot.intakeLimit.isPressed()) {
             telemetry.addLine("consuming");
             telemetry.update();
@@ -132,15 +144,23 @@ public class AutoBreakTrajectory extends LinearOpMode {
         robot.movearm(0.7, var.thirdLvl);
 
         robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (robot.mtrArm.isBusy()) {
-
+        while(robot.mtrArm.getCurrentPosition() >= -1000){
+            telemetry.addData("haha", robot.mtrArm.getCurrentPosition());
+            telemetry.addData("pose estimate: ", drive.getPoseEstimate());
+            telemetry.update();
         }
-        robot.mtrArm.setPower(0);
-        robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         while (!robot.midLimit.isPressed()) {
+            telemetry.addData("pose estimate: ", drive.getPoseEstimate());
+            telemetry.update();
             robot.mtrTurret.setPower(-0.3);
         }
         robot.mtrTurret.setPower(0);
+        while (robot.mtrArm.isBusy()) {
+            telemetry.addLine("weeeee arm finish");
+            telemetry.addData("pose estimate: ", drive.getPoseEstimate());
+        }
+        robot.mtrArm.setPower(0);
+        robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         spitOutBlock();
     }
 

@@ -291,5 +291,17 @@ public class hardwareFF {
         }
         //svoIntakeTilt.setPosition(var.intakeTiltCollect);
     }
+    public void armToPosition (double runningOpMode){
+        mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if (runningOpMode == 3) {
+            movearm(0.7, var.thirdLvl);
+        } else if (runningOpMode == 2) {
+            movearm(0.7, var.secondLvl);
+        } else if (runningOpMode == 1) {
+            movearm(0.7, var.firstLvl);
+        }
+        mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
 
 }

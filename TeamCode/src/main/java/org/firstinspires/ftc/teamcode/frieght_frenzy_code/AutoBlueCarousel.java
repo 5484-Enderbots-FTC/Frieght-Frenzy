@@ -47,9 +47,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-@Disabled
-@Autonomous
+@Autonomous(name = "blue carousel no webcam")
 public class AutoBlueCarousel extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
 

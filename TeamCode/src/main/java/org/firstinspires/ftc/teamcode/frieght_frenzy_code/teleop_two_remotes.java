@@ -266,8 +266,6 @@ public class teleop_two_remotes extends LinearOpMode {
             telemetry.addData("intake limit status", robot.intakeLimit.isPressed());
             telemetry.addData("front range distance: ", "%.2f cm", robot.frontRange.getDistance(DistanceUnit.CM));
             telemetry.addData("back range distance: ", "%.2f cm", robot.backRange.getDistance(DistanceUnit.CM));
-            telemetry.addData("right distance: ", String.format("%.01f cm", robot.rightDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("left distance: ", String.format("%.01f cm", robot.leftDistance.getDistance(DistanceUnit.CM)));
             telemetry.update();
         }
     }

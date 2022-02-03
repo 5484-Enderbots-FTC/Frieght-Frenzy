@@ -101,10 +101,10 @@ public void runOpMode() {
             .build();
 
     Trajectory toPark1 = drive.trajectoryBuilder(endDepPos)
-            .lineTo(traj.toParkPos1)
+            .lineTo(traj.toParkRedPos1)
             .build();
     Trajectory toPark2 = drive.trajectoryBuilder(toPark1.end())
-            .lineTo(traj.toParkPos2)
+            .lineTo(traj.toParkRedPos2)
             .build();
 
 

@@ -27,7 +27,7 @@ public class armTurretMoveInTraj extends LinearOpMode {
                 .build();
 
         robot.svoIntakeTilt.setPosition(var.intakeInit);
-        
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();

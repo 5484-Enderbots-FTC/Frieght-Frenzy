@@ -40,6 +40,8 @@ public class var {
     public static int thirdLvl = 4000;
     public static int thirdLvlTeleOp = 4100;
 
+    public static double duckTime = 4;
+
     //deinit arm
     public static int deinitArm = 400;
 

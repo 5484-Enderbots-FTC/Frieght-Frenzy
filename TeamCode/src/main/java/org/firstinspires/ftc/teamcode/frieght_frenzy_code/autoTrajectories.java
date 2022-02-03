@@ -16,9 +16,9 @@ public class autoTrajectories {
 
     Vector2d toParkPos1 = new Vector2d(12, -69);
     Vector2d toParkPos2 = new Vector2d(40, -69);
-    Vector2d toParkRedPos1 = new Vector2d(12, -67);
-    Vector2d toParkRedPos2 = new Vector2d(40, -67);
-    Vector2d toParkBluePos1 = new Vector2d(12, 67);
-    Vector2d toParkBluePos2 = new Vector2d(40, 67);
+    Vector2d toParkRedPos1 = new Vector2d(12, -69);
+    Vector2d toParkRedPos2 = new Vector2d(40, -69);
+    Vector2d toParkBluePos1 = new Vector2d(12, 69);
+    Vector2d toParkBluePos2 = new Vector2d(40, 69);
 
 }

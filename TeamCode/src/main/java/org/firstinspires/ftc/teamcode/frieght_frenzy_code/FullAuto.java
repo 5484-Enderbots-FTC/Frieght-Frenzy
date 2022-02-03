@@ -53,7 +53,7 @@ public class FullAuto extends LinearOpMode {
         FFMecanumDriveCancelable drive = new FFMecanumDriveCancelable(hardwareMap);
 
         drive.setPoseEstimate(traj.startPoseRC);
-        
+
 
         Trajectory toRedCarousel = drive.trajectoryBuilder(traj.startPoseRC, true)
                 .splineToConstantHeading(new Vector2d(-63, -58), Math.toRadians(180))
@@ -171,11 +171,36 @@ public class FullAuto extends LinearOpMode {
 
             //TODO: Actually make this work instead of frankensteining the two programs together
             robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.moveturret(0.3,1480);
+            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            sleep(100);
+            while (robot.mtrTurret.isBusy()) {
+                telemetry.addLine("turret go brrrrr");
+                telemetry.update();
+            }
+            robot.mtrTurret.setPower(0);
+            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            telemetry.addLine("arm go brrrrrrrrrrrrrrrrrrrrrrrrrr");
+            telemetry.update();
+            robot.svoIntakeTilt.setPosition(var.intakeCollect+0.1);
+            while(!robot.bottomLimit.isPressed()){
+                robot.mtrArm.setPower(0.7);
+            }
+            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.movearm(0.5,150);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            while (robot.mtrArm.isBusy()){
+
+            }
+            robot.mtrArm.setPower(0);
+
+
             Trajectory traj = drive.trajectoryBuilder(toPark1_3.end())
-                    .forward(20, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .forward(50, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
             Trajectory traj2 = drive.trajectoryBuilder(toPark1_3.end())
-                    .forward(20, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                    .forward(50, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
 
 
@@ -242,6 +267,12 @@ public class FullAuto extends LinearOpMode {
             robot.svoIntakeTilt.setPosition(var.intakeCollect);
             while(!robot.bottomLimit.isPressed()){
                 robot.mtrArm.setPower(0.7);
+            }
+            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.movearm(0.5,150);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            while (robot.mtrArm.isBusy()){
+
             }
             robot.mtrArm.setPower(0);
 

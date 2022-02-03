@@ -63,7 +63,7 @@ public class AutoBreakTrajectory extends LinearOpMode {
          * has been consumed, now go to hub
          */
         Trajectory goBack = drive.trajectoryBuilder(intakeEnd, true)
-                .splineToConstantHeading(new Vector2d(0, 0), 180)
+                .splineToConstantHeading(new Vector2d(0, 0), Math.toRadians(180))
                 .build();
         drive.followTrajectory(goBack);
         //arm
@@ -135,7 +135,7 @@ public class AutoBreakTrajectory extends LinearOpMode {
         telemetry.update();
         robot.svoIntake.setPower(0);
         Trajectory goBack2 = drive.trajectoryBuilder(intakeEnd, true)
-                .splineToConstantHeading(new Vector2d(0, 0), 180)
+                .splineToConstantHeading(new Vector2d(0, 0), Math.toRadians(180))
                 .build();
         drive.followTrajectory(goBack2);
         //arm

@@ -36,7 +36,8 @@ public class var {
     public static int groundLvl = 0;
     public static int firstLvl = 800;
     public static int secondLvl = 2400;
-    public static int thirdLvl = 3850;
+    //has been changed from 3850 -> 4000
+    public static int thirdLvl = 4000;
     public static int thirdLvlTeleOp = 4100;
 
     public static double duckTime = 4;

@@ -48,5 +48,6 @@ public class var {
     //strafing align
     public static int turnDirection = 1;
 
+    public static double duckTime = 3;
 
 }

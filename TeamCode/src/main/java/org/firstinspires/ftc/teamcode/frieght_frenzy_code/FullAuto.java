@@ -52,16 +52,8 @@ public class FullAuto extends LinearOpMode {
 
         drive.setPoseEstimate(traj.startPoseRC);
 
-
         Trajectory toRedCarousel = drive.trajectoryBuilder(traj.startPoseRC, true)
                 .splineToConstantHeading(new Vector2d(-63, -58), Math.toRadians(180))
-                /*
-                .addTemporalMarker(0.9, 0, () -> {
-                    robot.svoCarousel.setPower(1);
-                    duckTimer.reset();
-                })
-
-                 */
                 .build();
 
         Trajectory toRedHub3 = drive.trajectoryBuilder(toRedCarousel.end())

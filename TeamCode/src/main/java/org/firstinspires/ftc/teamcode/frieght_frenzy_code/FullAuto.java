@@ -133,7 +133,7 @@ public class FullAuto extends LinearOpMode {
 
             drive.followTrajectory(toRedCarousel);
             robot.svoCarousel.setPower(1);
-            sleep(2500);
+            sleep(3000);
             robot.svoCarousel.setPower(0);
 
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -183,7 +183,7 @@ public class FullAuto extends LinearOpMode {
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             telemetry.addLine("arm go brrrrrrrrrrrrrrrrrrrrrrrrrr");
             telemetry.update();
-            robot.svoIntakeTilt.setPosition(var.intakeCollect+0.1);
+            robot.svoIntakeTilt.setPosition(var.intakeCollect+0.2);
             while(!robot.bottomLimit.isPressed()){
                 robot.mtrArm.setPower(0.7);
             }
@@ -252,6 +252,7 @@ public class FullAuto extends LinearOpMode {
             /**
              * send the turret back and arm down to collect again
              */
+            drive.followTrajectory(toPark1_3);
             robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.moveturret(0.3,1480);
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -280,7 +281,7 @@ public class FullAuto extends LinearOpMode {
              * begin consumption AGAIN
              */
             robot.svoIntake.setPower(1);
-            drive.followTrajectory(toPark1_3);
+
             drive.followTrajectoryAsync(traj2);
             drive.update();
             sleep(100);

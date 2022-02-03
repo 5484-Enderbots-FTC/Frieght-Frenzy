@@ -46,10 +46,8 @@ public class FullAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        //this will init EVERYTHING on the robot
         robot.init(hardwareMap);
         robot.initWebcam();
-        //FFMecanum must be called AFTER the robot init bc just the motors need to be overridden.
         FFMecanumDriveCancelable drive = new FFMecanumDriveCancelable(hardwareMap);
 
         drive.setPoseEstimate(traj.startPoseRC);

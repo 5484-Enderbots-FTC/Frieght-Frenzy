@@ -17,12 +17,12 @@ public class var {
     public static double red = 0.6695;
 
     public static double toggleWait = 1; //(seconds)
-
+    //some var has been changed (like intakeHigh from 0.16 to 0.4, intakeMid 0.4->0.42, and intakeLow 0.5->0.52)
     public static double intakeInit = 1;
-    public static double intakeCollect = 0.53;
-    public static double intakeLow = 0.4;
-    public static double intakeMid = 0.5;
-    public static double intakeHigh = 0.16;
+    public static double intakeCollect = 0.51;
+    public static double intakeLow = 0.42;
+    public static double intakeMid = 0.52;
+    public static double intakeHigh = 0.4;
 
     public static double fullPower = 1;
     public static double lessPower = 0.3;
@@ -39,8 +39,6 @@ public class var {
     //has been changed from 3850 -> 4000
     public static int thirdLvl = 4000;
     public static int thirdLvlTeleOp = 4100;
-
-    public static double duckTime = 4;
 
     //deinit arm
     public static int deinitArm = 400;

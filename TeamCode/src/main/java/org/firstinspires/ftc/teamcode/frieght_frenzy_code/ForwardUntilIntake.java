@@ -45,6 +45,8 @@ public class ForwardUntilIntake extends LinearOpMode {
     Pose2d intakeEnd;
     ElapsedTime intakeDistance = new ElapsedTime();
     double distanceTravelled = 0;
+    double maxVel = 10;
+    double acc = 0;
 
 
     @Override
@@ -58,7 +60,7 @@ public class ForwardUntilIntake extends LinearOpMode {
         drive.setPoseEstimate(traj.startPoseRC);
 
         Trajectory intakeForward = drive.trajectoryBuilder(traj.startPoseRC)
-                .forward(20,  FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                .forward(20,  FFMecanumDrive.getVelocityConstraint(maxVel, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .addTemporalMarker(0, () -> {robot.svoIntake.setPower(var.intakeCollect);})
                 .build();
@@ -69,15 +71,19 @@ public class ForwardUntilIntake extends LinearOpMode {
         while (opModeIsActive()) {
             drive.followTrajectoryAsync(intakeForward);
             intakeDistance.reset();
-            while (!robot.intakeLimit.isPressed()){
-                if (robot.intakeLimit.isPressed()){
+            while (robot.intakeLimit.isPressed()){
+                telemetry.addLine("consuming");
+                if (!robot.intakeLimit.isPressed()){
+                    telemetry.addLine("consumed");
                     robot.svoIntake.setPower(0);
-                    distanceTravelled = 10*intakeDistance.time();
+                    acc = DriveConstants.MAX_ACCEL;
+                    distanceTravelled = maxVel*intakeDistance.time();// + 0.5*acc*(Math.pow(intakeDistance.time(),2));
                     intakeEnd = new Pose2d(40+distanceTravelled, -67,Math.toRadians(180));
                     drive.cancelFollowing();
                     break;
                 }
                 drive.update();
+                telemetry.update();
             }
 
             break;

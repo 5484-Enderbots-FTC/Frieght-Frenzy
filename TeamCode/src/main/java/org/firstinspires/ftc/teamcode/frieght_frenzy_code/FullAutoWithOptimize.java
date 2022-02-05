@@ -157,31 +157,40 @@ public class FullAutoWithOptimize extends LinearOpMode {
                 drive.followTrajectory(toRedHub3);
                 spitOutBlock();
                 //drive.setPoseEstimate(traj.redHub3Exit);
-                drive.followTrajectory(toWarehouse1_3);
+                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.moveturret(0.3,1480);
+                robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                drive.followTrajectoryAsync(toWarehouse1_3);
             }
             else if(runningOpMode == 2){
                 drive.followTrajectory(toRedHub2);
                 spitOutBlock();
                 //drive.setPoseEstimate(traj.redHub2Exit);
-                drive.followTrajectory(toWarehouse1_2);
+                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.moveturret(0.3,1480);
+                robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                drive.followTrajectoryAsync(toWarehouse1_2);
             }else if(runningOpMode == 1){
                 drive.followTrajectory(toRedHub1);
                 spitOutBlock();
                 //drive.setPoseEstimate(traj.redHub1Exit);
-                drive.followTrajectory(toWarehouse1_1);
+                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.moveturret(0.3,1480);
+                robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                drive.followTrajectoryAsync(toWarehouse1_1);
             }
 
             //TODO: add the move arm encoder positions to the runningOpMode ifs above
 
             //TODO: optimization lmao
-            robot.svoIntakeTilt.setPosition(var.intakeHigh);
-            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.moveturret(0.3,1480);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            sleep(100);
+            //TODO: make arm going down into a marker (either displacement or spacial)
             while (robot.mtrTurret.isBusy()) {
                 telemetry.addLine("turret go brrrrr");
                 telemetry.update();
+                drive.update();
             }
             robot.mtrTurret.setPower(0);
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

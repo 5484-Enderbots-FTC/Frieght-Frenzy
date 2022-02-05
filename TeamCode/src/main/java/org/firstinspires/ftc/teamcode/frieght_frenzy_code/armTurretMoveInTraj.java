@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
 
-@Autonomous(name = "testTurretEncoder", group = "auto")
+@Autonomous(name = "armturretduring traj", group = "auto")
 public class armTurretMoveInTraj extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     ElapsedTime armTime = new ElapsedTime();

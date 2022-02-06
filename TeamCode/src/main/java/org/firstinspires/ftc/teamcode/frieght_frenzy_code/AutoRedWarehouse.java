@@ -260,7 +260,6 @@ public class AutoRedWarehouse extends LinearOpMode {
              * send the turret back and arm down to collect again
              */
             drive.followTrajectory(toPark1_3);
-
             drive.followTrajectory(toPark2);
             break;
         }

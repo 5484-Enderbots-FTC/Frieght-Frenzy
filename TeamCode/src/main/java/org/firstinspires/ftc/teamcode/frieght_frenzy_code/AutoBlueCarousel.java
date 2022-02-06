@@ -21,51 +21,69 @@
 
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfInt;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.MatOfPoint2f;
-import org.opencv.core.Point;
-import org.opencv.core.RotatedRect;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
-import org.openftc.easyopencv.OpenCvWebcam;
+import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-@Autonomous(name = "blue carousel no webcam")
+
+@Autonomous(name = "red carousel")
 public class AutoBlueCarousel extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
+    autoTrajectories traj = new autoTrajectories();
+
+    double runningOpMode = 3;
+    Pose2d intakeEnd;
 
     @Override
     public void runOpMode() {
         robot.init(hardwareMap);
         robot.initWebcam();
-        int alliance_element_location = 0;
+        FFMecanumDriveCancelable drive = new FFMecanumDriveCancelable(hardwareMap);
+
+        drive.setPoseEstimate(traj.startPoseBC);
+
+        Trajectory toBlueCarousel = drive.trajectoryBuilder(traj.startPoseBC, true)
+                .splineToConstantHeading(new Vector2d(-63, 58), Math.toRadians(180))
+                .build();
+
+        Trajectory toBlueHub3 = drive.trajectoryBuilder(toBlueCarousel.end())
+                .splineTo(new Vector2d(-12, 47), Math.toRadians(0))
+                .build();
+
+        Trajectory toBlueHub2 = drive.trajectoryBuilder(toBlueCarousel.end())
+                .splineTo(new Vector2d(-12, 52), Math.toRadians(0))
+                .build();
+
+        Trajectory toBlueHub1 = drive.trajectoryBuilder(toBlueCarousel.end())
+                .splineTo(new Vector2d(-12, 50), Math.toRadians(0))
+                .build();
+
+        Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end())
+                .lineTo(traj.toParkBarrierPos)
+                .build();
+        Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end())
+                .lineTo(traj.toParkBarrierPos)
+                .build();
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end())
+                .lineTo(traj.toParkBarrierPos)
+                .build();
+
+        Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
+                .lineTo(traj.toParkPos2)
+                .build();
 
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
         robot.svoIntakeTilt.setPosition(var.intakeInit);
         sleep(5000);
         while (!isStarted()) {
-            // Don't burn an insane amount of CPU cycles in this sample because
-            // we're not doing anything else
-
-            // Figure out which stones the pipeline detected, and print them to telemetry
+            //what did u detect
             ArrayList<ElementAnalysisPipelineFF.AnalyzedElement> elements = robot.pipeline.getDetectedElements();
             sleep(250);
 
@@ -76,84 +94,118 @@ public class AutoBlueCarousel extends LinearOpMode {
                     telemetry.addLine(String.format("%s: Width=%f, Height=%f, Angle=%f", element.object.toString(), element.rectWidth, element.rectHeight, element.angle));
                     telemetry.addLine("Ratio of W/H: " + element.rectWidth / element.rectHeight);
                     telemetry.addLine("Section: " + element.section);
+                    telemetry.addData("OpMode: ", runningOpMode);
                     if (element.section == ElementAnalysisPipelineFF.Section.LEFT) {
-                        alliance_element_location = 1;
+                        runningOpMode = 1;
                     } else if (element.section == ElementAnalysisPipelineFF.Section.MID) {
-                        alliance_element_location = 2;
+                        runningOpMode = 2;
                     } else if (element.section == ElementAnalysisPipelineFF.Section.RIGHT) {
-                        alliance_element_location = 3;
+                        runningOpMode = 3;
                     }
 
                 }
             }
-
             telemetry.update();
         }
+
+        telemetry.update();
+
         waitForStart();
-
-
         while (opModeIsActive()) {
-            robot.deinit();
-            telemetry.addData("雪花飘飘北风啸啸  冰淇凌 Alliance Element Location: ", alliance_element_location);
-            telemetry.update();
-            while (!robot.leftLimit.isPressed()) {
-                robot.mtrTurret.setPower(-0.5);
-                telemetry.addData("Bottom Limit: ", robot.bottomLimit.isPressed());
-                telemetry.addData("Top Limit: ", robot.topLimit.isPressed());
-                telemetry.addData("Left Limit: ", robot.leftLimit.isPressed());
-                telemetry.addData("Right Limit: ", robot.rightLimit.isPressed());
+            /**
+             * move arm and turret at same time
+             */
+            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            if (runningOpMode == 3) {
+                robot.movearm(0.7, var.thirdLvl);
+            } else if (runningOpMode == 2) {
+                robot.movearm(0.7, var.secondLvl);
+            } else if (runningOpMode == 1) {
+                robot.movearm(0.7, var.firstLvl);
+            }
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            while (!robot.midLimit.isPressed()) {
+                telemetry.addData("pose estimate: ", drive.getPoseEstimate());
                 telemetry.update();
+                robot.mtrTurret.setPower(-0.4);
+                drive.update();
+                drive.updatePoseEstimate();
             }
             robot.mtrTurret.setPower(0);
-            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.mtrTurret.setTargetPosition(750);
-            robot.strafe(0.5, 350);
-            robot.forward(-0.4, -1000);
-            robot.forward(-0.3, -200);
-            robot.strafe(-0.005, -100);
-            robot.svoCarousel.setPower(-1);
+            while (robot.mtrArm.isBusy()) {
+                telemetry.addLine("weeeee arm finish");
+                telemetry.addData("pose estimate: ", drive.getPoseEstimate());
+                drive.update();
+                drive.updatePoseEstimate();
+            }
+            robot.mtrArm.setPower(0);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            /**
+             * shmove on to carousel and spain without the a
+             */
+            drive.followTrajectory(toBlueCarousel);
+            robot.svoCarousel.setPower(1);
             sleep(3000);
             robot.svoCarousel.setPower(0);
-            robot.forward(0.4, 1900);
-            while (!robot.bottomLimit.isPressed()) {
-                robot.mtrTurret.setPower(0.15);
+
+            /**
+             * go to red hub and spit out bloque
+             * then go to wall
+             */
+            if (runningOpMode == 3) {
+                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                drive.followTrajectory(toBlueHub3);
+                spitOutBlock();
+                drive.followTrajectory(toPark1_3);
+            } else if (runningOpMode == 2) {
+                robot.svoIntakeTilt.setPosition(var.intakeMid);
+                drive.followTrajectory(toBlueHub2);
+                spitOutBlock();
+                drive.followTrajectory(toPark1_2);
+            } else if (runningOpMode == 1) {
+                robot.svoIntakeTilt.setPosition(var.intakeLow);
+                drive.followTrajectory(toBlueHub1);
+                spitOutBlock();
+                drive.followTrajectory(toPark1_1);
+                robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.movearm(0.7, var.secondLvl);
+                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                while(robot.mtrArm.isBusy()){
+
+                }
+                robot.mtrArm.setPower(0);
+            }
+
+            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+
+            /**
+             * set turret to go collect pos and arm go down
+             */
+            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.moveturret(0.3, 1480);
+            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            while (robot.mtrTurret.isBusy()) {
             }
             robot.mtrTurret.setPower(0);
-            if (alliance_element_location == 1) {
-                robot.movearm(0.7, var.firstLvl);
-                while (robot.mtrArm.isBusy()) {
-
-                }
-            }
-            if (alliance_element_location == 2) {
-                robot.movearm(0.7, var.secondLvl);
-                while (robot.mtrArm.isBusy()) {
-
-                }
-            }
-            if (alliance_element_location == 3) {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                robot.movearm(0.7, var.thirdLvl);
-                while (robot.mtrArm.isBusy()) {
-
-                }
-            }
-            sleep(500);
-            robot.svoIntake.setPower(0);
-            robot.strafe(0.25, 800);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.svoIntake.setDirection(DcMotorSimple.Direction.REVERSE);
-            robot.svoIntake.setPower(var.lessPower);
-            sleep(3000);
-            robot.svoIntake.setPower(0);
-            robot.strafe(-0.25, -750);
-            robot.forward(0.5, 2200);
-            robot.strafe(-0.2, -200);
-            robot.strafe(-0.05, -100);
-            //park w/o placing
-            robot.strafe(0.3, 1075);
+            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             break;
-            //robot.strafe(0.3,1050);
         }
+    }
+
+    public void spitOutBlock() {
+        if (runningOpMode == 3) {
+            robot.svoIntakeTilt.setPosition(var.intakeHigh);
+        } else if (runningOpMode == 2) {
+            robot.svoIntakeTilt.setPosition(var.intakeMid);
+        } else if (runningOpMode == 1) {
+            robot.svoIntakeTilt.setPosition(var.intakeLow);
+        }
+        sleep(1000);
+        robot.svoIntake.setPower(-var.lessPower);
+        sleep(1500);
+        robot.svoIntake.setPower(0);
     }
 }

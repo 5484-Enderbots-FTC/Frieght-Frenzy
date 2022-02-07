@@ -50,29 +50,29 @@ public class AutoBlueWarehouseNew extends LinearOpMode {
 
         drive.setPoseEstimate(traj.startPoseBW);
 
-        Trajectory toRedHub3 = drive.trajectoryBuilder(traj.startPoseRW)
+        Trajectory toBlueHub3 = drive.trajectoryBuilder(traj.startPoseRW)
                 .splineTo(new Vector2d(-12, 47), Math.toRadians(0))
                 .build();
 
-        Trajectory toRedHub2 = drive.trajectoryBuilder(traj.startPoseRW)
+        Trajectory toBlueHub2 = drive.trajectoryBuilder(traj.startPoseRW)
                 .splineTo(new Vector2d(-12, 52), Math.toRadians(0))
                 .build();
 
-        Trajectory toRedHub1 = drive.trajectoryBuilder(traj.startPoseRW)
+        Trajectory toBlueHub1 = drive.trajectoryBuilder(traj.startPoseRW)
                 .splineTo(new Vector2d(-12, 50), Math.toRadians(0))
                 .build();
 
-        Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end(), true)
+        Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)
                 .lineTo(traj.toParkBluePos1)
                 .build();
-        Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end(), true)
+        Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), true)
                 .lineTo(traj.toParkBluePos1)
                 .build();
-        Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end(), true)
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(), true)
                 .lineTo(traj.toParkBluePos1)
                 .build();
 
-        Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
+        Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end(), true)
                 .lineTo(traj.toParkBluePos2)
                 .build();
 
@@ -152,17 +152,17 @@ public class AutoBlueWarehouseNew extends LinearOpMode {
              */
             if (runningOpMode == 3) {
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                drive.followTrajectory(toRedHub3);
+                drive.followTrajectory(toBlueHub3);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_3);
             } else if (runningOpMode == 2) {
                 robot.svoIntakeTilt.setPosition(var.intakeMid);
-                drive.followTrajectory(toRedHub2);
+                drive.followTrajectory(toBlueHub2);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_2);
             } else if (runningOpMode == 1) {
                 robot.svoIntakeTilt.setPosition(var.intakeLow);
-                drive.followTrajectory(toRedHub1);
+                drive.followTrajectory(toBlueHub1);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
             }

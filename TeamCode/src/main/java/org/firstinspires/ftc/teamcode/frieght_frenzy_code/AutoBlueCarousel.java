@@ -65,19 +65,21 @@ public class AutoBlueCarousel extends LinearOpMode {
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end())
-                .lineTo(traj.toParkBarrierPos)
+                .lineTo(traj.toParkBarrierPosBlue)
                 .build();
         Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end())
-                .lineTo(traj.toParkBarrierPos)
+                .lineTo(traj.toParkBarrierPosBlue)
                 .build();
         Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end())
-                .lineTo(traj.toParkBarrierPos)
+                .lineTo(traj.toParkBarrierPosBlue)
                 .build();
 
+        /**
         Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
                 .lineTo(traj.toParkPos2)
                 .build();
-
+        */
+            
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
         robot.svoIntakeTilt.setPosition(var.intakeInit);

@@ -69,17 +69,17 @@ public class FullAuto extends LinearOpMode {
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end())
-                .lineTo(traj.toParkPos1)
+                .lineTo(traj.toParkRedPos1)
                 .build();
         Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end())
-                .lineTo(traj.toParkPos1)
+                .lineTo(traj.toParkRedPos1)
                 .build();
         Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end())
-                .lineTo(traj.toParkPos1)
+                .lineTo(traj.toParkRedPos1)
                 .build();
 
         Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
-                .lineTo(traj.toParkPos2)
+                .lineTo(traj.toParkRedPos2)
                 .build();
 
         Trajectory traj = drive.trajectoryBuilder(toPark1_3.end())

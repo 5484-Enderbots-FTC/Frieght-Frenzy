@@ -32,7 +32,7 @@ import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "red carousel")
+@Autonomous(name = "blue carousel")
 public class AutoBlueCarousel extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();

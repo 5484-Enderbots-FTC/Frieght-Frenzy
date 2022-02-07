@@ -48,26 +48,26 @@ public class AutoBlueCarousel extends LinearOpMode {
 
         drive.setPoseEstimate(traj.startPoseBC);
 
-        Trajectory toBlueCarousel = drive.trajectoryBuilder(traj.startPoseBC, true)
+        Trajectory toBlueCarousel = drive.trajectoryBuilder(traj.startPoseBC)
                 .splineToConstantHeading(new Vector2d(-63, 58), Math.toRadians(180))
                 .build();
 
-        Trajectory toBlueHub3 = drive.trajectoryBuilder(toBlueCarousel.end())
+        Trajectory toBlueHub3 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
                 .splineTo(new Vector2d(-12, 47), Math.toRadians(0))
                 .build();
 
-        Trajectory toBlueHub2 = drive.trajectoryBuilder(toBlueCarousel.end())
+        Trajectory toBlueHub2 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
                 .splineTo(new Vector2d(-12, 52), Math.toRadians(0))
                 .build();
 
-        Trajectory toBlueHub1 = drive.trajectoryBuilder(toBlueCarousel.end())
+        Trajectory toBlueHub1 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
                 .splineTo(new Vector2d(-12, 50), Math.toRadians(0))
                 .build();
 
-        Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end())
+        Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)
                 .lineTo(traj.toParkBarrierPosBlue)
                 .build();
-        Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end())
+        Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), true)
                 .lineTo(traj.toParkBarrierPosBlue)
                 .build();
         Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end())
@@ -187,7 +187,7 @@ public class AutoBlueCarousel extends LinearOpMode {
              * set turret to go collect pos and arm go down
              */
             robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.moveturret(0.3, 1480);
+            robot.moveturret(-0.3, -1480);
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             while (robot.mtrTurret.isBusy()) {
             }

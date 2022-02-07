@@ -62,13 +62,13 @@ public class AutoBlueWarehouseNew extends LinearOpMode {
                 .splineTo(new Vector2d(-12, 50), Math.toRadians(0))
                 .build();
 
-        Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end())
+        Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end(), true)
                 .lineTo(traj.toParkBluePos1)
                 .build();
-        Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end())
+        Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end(), true)
                 .lineTo(traj.toParkBluePos1)
                 .build();
-        Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end())
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end(), true)
                 .lineTo(traj.toParkBluePos1)
                 .build();
 
@@ -76,8 +76,8 @@ public class AutoBlueWarehouseNew extends LinearOpMode {
                 .lineTo(traj.toParkBluePos2)
                 .build();
 
-        Trajectory traj = drive.trajectoryBuilder(toPark1_3.end())
-                .forward(50, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+        Trajectory traj = drive.trajectoryBuilder(toPark1_3.end(), true)
+                .forward(-50, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
 
@@ -174,7 +174,7 @@ public class AutoBlueWarehouseNew extends LinearOpMode {
 
             //TODO: change this to be waiting for limit siwtch >:)
             robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.moveturret(0.3, 1480);
+            robot.moveturret(-0.3, -1480);
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             //TODO: fine tune this number (900) to optimize turret and arm go down
             while (robot.mtrTurret.getCurrentPosition() <= 900) {
@@ -248,7 +248,7 @@ public class AutoBlueWarehouseNew extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             //TODO: make this spline correct lmao
-            Trajectory goBack = drive.trajectoryBuilder(intakeEnd, true)
+            Trajectory goBack = drive.trajectoryBuilder(intakeEnd)
                     .splineToConstantHeading(new Vector2d(-12, -47), Math.toRadians(90))
                     .build();
 

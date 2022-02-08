@@ -55,15 +55,15 @@ public class AutoRedCarouselBackW extends LinearOpMode {
                 .build();
 
         Trajectory toRedHub3 = drive.trajectoryBuilder(toRedCarousel.end())
-                .splineTo(new Vector2d(-12, -47), Math.toRadians(0))
+                .splineTo(traj.redHub3, Math.toRadians(0))
                 .build();
 
         Trajectory toRedHub2 = drive.trajectoryBuilder(toRedCarousel.end())
-                .splineTo(new Vector2d(-12, -52), Math.toRadians(0))
+                .splineTo(traj.redHub2, Math.toRadians(0))
                 .build();
 
         Trajectory toRedHub1 = drive.trajectoryBuilder(toRedCarousel.end())
-                .splineTo(new Vector2d(-12, -48), Math.toRadians(0))
+                .splineTo(traj.redHub1, Math.toRadians(0))
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end())

@@ -53,15 +53,15 @@ public class AutoBlueCarouselBackW extends LinearOpMode {
                 .build();
 
         Trajectory toBlueHub3 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
-                .splineTo(new Vector2d(-12, 47), Math.toRadians(0))
+                .splineTo(traj.blueHub3, Math.toRadians(0))
                 .build();
 
         Trajectory toBlueHub2 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
-                .splineTo(new Vector2d(-12, 52), Math.toRadians(0))
+                .splineTo(traj.blueHub2, Math.toRadians(0))
                 .build();
 
         Trajectory toBlueHub1 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
-                .splineTo(new Vector2d(-12, 50), Math.toRadians(0))
+                .splineTo(traj.blueHub1, Math.toRadians(0))
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)

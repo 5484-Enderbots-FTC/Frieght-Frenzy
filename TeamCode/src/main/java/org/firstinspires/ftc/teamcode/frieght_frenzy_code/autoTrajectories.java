@@ -12,7 +12,7 @@ public class autoTrajectories {
     Pose2d startPoseRC = new Pose2d(-31, -65.75);
     Pose2d startPoseRW = new Pose2d(14, -67.75);
     Pose2d startPoseBC = new Pose2d(-41, 67.75);
-    Pose2d startPoseBW = new Pose2d(10, 10);
+    Pose2d startPoseBW = new Pose2d(4, -65.75);
     Pose2d redHub3Exit = new Pose2d(-12,-47,Math.toRadians(-90));
     Pose2d redHub2Exit = new Pose2d(-12,-52,Math.toRadians(-90));
     Pose2d redHub1Exit = new Pose2d(-12,-50,Math.toRadians(-90));

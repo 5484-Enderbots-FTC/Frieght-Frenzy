@@ -20,8 +20,8 @@ public class var {
     //some var has been changed (like intakeHigh from 0.16 to 0.4, intakeMid 0.4->0.42, and intakeLow 0.5->0.52)
     public static double intakeInit = 1;
     public static double intakeCollect = 0.69;
-    public static double intakeLow = 0.42;
-    public static double intakeMid = 0.52;
+    public static double intakeLow = 0.8;
+    public static double intakeMid = 0.6;
     public static double intakeHigh = 0.4;
 
     public static double fullPower = 1;
@@ -35,7 +35,7 @@ public class var {
     //teleop encoder counts from ground as 0
     public static int groundLvl = 0;
     public static int firstLvl = 800;
-    public static int secondLvl = 2400;
+    public static int secondLvl = 2750;
     //has been changed from 3850 -> 4000
     public static int thirdLvl = 4000;
     public static int thirdLvlTeleOp = 4100;

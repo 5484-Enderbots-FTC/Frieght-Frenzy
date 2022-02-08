@@ -25,5 +25,6 @@ public class autoTrajectories {
     Vector2d toParkRedPos2 = new Vector2d(40, -69);
     Vector2d toParkBluePos1 = new Vector2d(12, 69);
     Vector2d toParkBluePos2 = new Vector2d(40, 69);
-
+    Pose2d toParkRedStorage = new Pose2d(-69, -36, Math.toRadians(-90));
+    Vector2d toParkBlueStorage = new Vector2d(60, 36);
 }

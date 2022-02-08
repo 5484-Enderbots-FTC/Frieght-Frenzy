@@ -28,14 +28,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "blue warehouse")
-public class AutoBlueWarehouseNew extends LinearOpMode {
+@Autonomous(name = "blue carousel storage", group = "blue")
+public class AutoBlueCarouselStorage extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
 
@@ -48,39 +46,41 @@ public class AutoBlueWarehouseNew extends LinearOpMode {
         robot.initWebcam();
         FFMecanumDriveCancelable drive = new FFMecanumDriveCancelable(hardwareMap);
 
-        drive.setPoseEstimate(traj.startPoseBW);
+        drive.setPoseEstimate(traj.startPoseBC);
 
-        Trajectory toBlueHub3 = drive.trajectoryBuilder(traj.startPoseRW)
+        Trajectory toBlueCarousel = drive.trajectoryBuilder(traj.startPoseBC)
+                .splineToConstantHeading(new Vector2d(-63, 58), Math.toRadians(0))
+                .build();
+
+        Trajectory toBlueHub3 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
                 .splineTo(new Vector2d(-12, 47), Math.toRadians(0))
                 .build();
 
-        Trajectory toBlueHub2 = drive.trajectoryBuilder(traj.startPoseRW)
+        Trajectory toBlueHub2 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
                 .splineTo(new Vector2d(-12, 52), Math.toRadians(0))
                 .build();
 
-        Trajectory toBlueHub1 = drive.trajectoryBuilder(traj.startPoseRW)
+        Trajectory toBlueHub1 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
                 .splineTo(new Vector2d(-12, 50), Math.toRadians(0))
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)
-                .lineTo(traj.toParkBluePos1)
+                .lineTo(traj.toParkBlueStorage)
                 .build();
         Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), true)
-                .lineTo(traj.toParkBluePos1)
+                .lineTo(traj.toParkBlueStorage)
                 .build();
-        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(), true)
-                .lineTo(traj.toParkBluePos1)
-                .build();
-
-        Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end(), true)
-                .lineTo(traj.toParkBluePos2)
-                .build();
-
-        Trajectory traj = drive.trajectoryBuilder(toPark1_3.end(), true)
-                .forward(-50, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(),true)
+                .lineTo(traj.toParkBlueStorage)
                 .build();
 
 
+        /**
+        Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
+                .lineTo(traj.toParkPos2)
+                .build();
+        */
+            
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
         robot.svoIntakeTilt.setPosition(var.intakeInit);
@@ -147,6 +147,14 @@ public class AutoBlueWarehouseNew extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             /**
+             * shmove on to carousel and spain without the a
+             */
+            drive.followTrajectory(toBlueCarousel);
+            robot.svoCarousel.setPower(1);
+            sleep(3000);
+            robot.svoCarousel.setPower(0);
+
+            /**
              * go to red hub and spit out bloque
              * then go to wall
              */
@@ -165,102 +173,27 @@ public class AutoBlueWarehouseNew extends LinearOpMode {
                 drive.followTrajectory(toBlueHub1);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
+                robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.movearm(0.7, var.secondLvl);
+                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                while(robot.mtrArm.isBusy()){
+
+                }
+                robot.mtrArm.setPower(0);
             }
+
             robot.svoIntakeTilt.setPosition(var.intakeCollect);
 
             /**
              * set turret to go collect pos and arm go down
              */
-
-            //TODO: change this to be waiting for limit siwtch >:)
             robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.moveturret(-0.3, -1480);
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            //TODO: fine tune this number (900) to optimize turret and arm go down
-            while (robot.mtrTurret.getCurrentPosition() <= 900) {
-                telemetry.addLine("turret go brrrrr");
-                telemetry.update();
-            }
-            while (!robot.bottomLimit.isPressed()) {
-                robot.mtrArm.setPower(0.7);
-                telemetry.addLine("arm go brrrrrrrrrrrrrrrrrrrrrrrrrr");
-                telemetry.update();
-            }
             while (robot.mtrTurret.isBusy()) {
             }
             robot.mtrTurret.setPower(0);
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.movearm(0.5, 150);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while (robot.mtrArm.isBusy()) {
-            }
-            robot.mtrArm.setPower(0);
-
-            /**
-             * drive into warehouse for consumption
-             */
-            robot.svoIntake.setPower(var.lessPower);
-            drive.followTrajectoryAsync(traj);
-            while (robot.intakeLimit.isPressed()) {
-                telemetry.addLine("consuming");
-                telemetry.update();
-                drive.update();
-                drive.updatePoseEstimate();
-            }
-            drive.cancelFollowing();
-            intakeEnd = drive.getPoseEstimate();
-            drive.setDrivePower(new Pose2d());
-            drive.update();
-            telemetry.addLine("consumed");
-            telemetry.addData("intake end: ", intakeEnd);
-            telemetry.update();
-            robot.svoIntake.setPower(0);
-
-            /**
-             * has been consumed, now go to hub (and move arm/turret)
-             */
-
-            //TODO: update later to be during trajectory on way to hub :)
-            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.movearm(0.7, var.thirdLvl);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            while (robot.mtrArm.getCurrentPosition() >= -1000) {
-                telemetry.addData("haha", robot.mtrArm.getCurrentPosition());
-                telemetry.update();
-                //drive.update();
-            }
-            while (!robot.midLimit.isPressed()) {
-                robot.mtrTurret.setPower(-0.3);
-                //drive.update();
-            }
-            robot.mtrTurret.setPower(0);
-            while (robot.mtrArm.isBusy()) {
-                telemetry.addLine("weeeee arm finish");
-                telemetry.update();
-                //drive.update();
-            }
-            //drive.updatePoseEstimate();
-            robot.mtrArm.setPower(0);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-            //TODO: make this spline correct lmao
-            Trajectory goBack = drive.trajectoryBuilder(intakeEnd)
-                    .splineToConstantHeading(new Vector2d(-12, -47), Math.toRadians(90))
-                    .build();
-
-            drive.followTrajectory(goBack);
-
-            spitOutBlock();
-
-            /**
-             * send the turret back and arm down to collect again
-             */
-            drive.followTrajectory(toPark1_3);
-            drive.followTrajectory(toPark2);
             break;
         }
     }

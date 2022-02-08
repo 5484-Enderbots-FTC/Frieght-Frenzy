@@ -34,8 +34,8 @@ import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "red carousel")
-public class AutoRedCarousel extends LinearOpMode {
+@Autonomous(name = "red carousel back warehouse", group = "red")
+public class AutoRedCarouselBackW extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
 
@@ -63,7 +63,7 @@ public class AutoRedCarousel extends LinearOpMode {
                 .build();
 
         Trajectory toRedHub1 = drive.trajectoryBuilder(toRedCarousel.end())
-                .splineTo(new Vector2d(-12, -50), Math.toRadians(0))
+                .splineTo(new Vector2d(-12, -48), Math.toRadians(0))
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end())
@@ -171,6 +171,7 @@ public class AutoRedCarousel extends LinearOpMode {
                 robot.svoIntakeTilt.setPosition(var.intakeLow);
                 drive.followTrajectory(toRedHub1);
                 spitOutBlock();
+                robot.svoIntakeTilt.setPosition(var.intakeInit);
                 drive.followTrajectory(toPark1_1);
                 robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 robot.movearm(0.7, var.secondLvl);

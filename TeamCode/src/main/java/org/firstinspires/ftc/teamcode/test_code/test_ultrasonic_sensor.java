@@ -14,9 +14,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.ultimate_goal_code.hardwareUltimateGoal;
 import org.firstinspires.ftc.teamcode.ultimate_goal_code.var;
 
-
+@Disabled
 @TeleOp(name = "ultrasonic babey", group = "testing")
-//@Disabled
 
 public class test_ultrasonic_sensor extends LinearOpMode {
     ElapsedTime runtime = new ElapsedTime();

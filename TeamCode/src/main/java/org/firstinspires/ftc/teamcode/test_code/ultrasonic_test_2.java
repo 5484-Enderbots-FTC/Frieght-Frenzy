@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.test_code;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -11,8 +12,7 @@ import org.firstinspires.ftc.teamcode.ultimate_goal_code.hardwareUltimateGoal;
 
 
 @TeleOp(name = "ultrasonic 2 electric boogaloo", group = "testing")
-//@Disabled
-
+@Disabled
 public class ultrasonic_test_2 extends LinearOpMode {
     ElapsedTime runtime = new ElapsedTime();
     ElapsedTime timer = new ElapsedTime();

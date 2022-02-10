@@ -19,7 +19,7 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
+package org.firstinspires.ftc.teamcode.frieght_frenzy_code.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -31,11 +31,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.ElementAnalysisPipelineFF;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.autoTrajectories;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "red warehouse front warehouse", group = "red")
-public class AutoRedWarehouseFrontW extends LinearOpMode {
+@Autonomous(name = "blue warehouse back",group = "blue")
+public class AutoBlueWarehouseBackW extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
 
@@ -48,39 +52,47 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
         robot.initWebcam();
         FFMecanumDriveCancelable drive = new FFMecanumDriveCancelable(hardwareMap);
 
-        drive.setPoseEstimate(traj.startPoseRW);
+        drive.setPoseEstimate(traj.startPoseBW);
 
-        Trajectory toRedHub3 = drive.trajectoryBuilder(traj.startPoseRW)
-                .splineTo(new Vector2d(-12, -47), Math.toRadians(0))
+        Trajectory toBlueHub3 = drive.trajectoryBuilder(traj.startPoseRW)
+                .splineTo(new Vector2d(-12, 47), Math.toRadians(0))
                 .build();
 
-        Trajectory toRedHub2 = drive.trajectoryBuilder(traj.startPoseRW)
-                .splineTo(new Vector2d(-12, -52), Math.toRadians(0))
+        Trajectory toBlueHub2 = drive.trajectoryBuilder(traj.startPoseRW)
+                .splineTo(new Vector2d(-12, 52), Math.toRadians(0))
                 .build();
 
-        Trajectory toRedHub1 = drive.trajectoryBuilder(traj.startPoseRW)
-                .splineTo(new Vector2d(-12, -50), Math.toRadians(0))
+        Trajectory toBlueHub1 = drive.trajectoryBuilder(traj.startPoseRW)
+                .splineTo(new Vector2d(-12, 50), Math.toRadians(0))
                 .build();
 
-        Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end())
-                .lineTo(traj.toParkPos1)
+        Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)
+                .lineTo(traj.toParkBluePos1)
                 .build();
-        Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end())
-                .lineTo(traj.toParkPos1)
+        Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), true)
+                .lineTo(traj.toParkBluePos1)
                 .build();
-        Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end())
-                .lineTo(traj.toParkPos1)
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(), true)
+                .lineTo(traj.toParkBluePos1)
                 .build();
-
-        Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
-                .lineTo(traj.toParkPos2)
-                .build();
-
-        Trajectory traj = drive.trajectoryBuilder(toPark1_3.end())
-                .forward(50, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+//e
+        Trajectory toPark2_3 = drive.trajectoryBuilder(toBlueHub3.end())
+                .lineTo(traj.toParkBarrierPos)
                 .build();
 
+        Trajectory toPark2_2 = drive.trajectoryBuilder(toBlueHub2.end())
+                .lineTo(traj.toParkBarrierPos)
+                .build();
 
+        Trajectory toPark2_1 = drive.trajectoryBuilder(toBlueHub1.end())
+                .lineTo(traj.toParkBarrierPos)
+                .build();
+
+        Trajectory traj = drive.trajectoryBuilder(toPark1_3.end(), true)
+                .forward(-50, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .build();
+//a
+//sports
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
         robot.svoIntakeTilt.setPosition(var.intakeInit);
@@ -94,7 +106,7 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
                 telemetry.addLine("No objects detected");
             } else {
                 for (ElementAnalysisPipelineFF.AnalyzedElement element : elements) {
-                    telemetry.addLine(String.format("%s: Width=%f, Height=%f, Angle=%f", element.object.toString(), element.rectWidth, element.rectHeight, element.angle));
+                    //telemetry.addLine(String.format("%s: Width=%f, Height=%f, Angle=%f", element.object.toString(), element.rectWidth, element.rectHeight, element.angle));
                     telemetry.addLine("Ratio of W/H: " + element.rectWidth / element.rectHeight);
                     telemetry.addLine("Section: " + element.section);
                     telemetry.addData("OpMode: ", runningOpMode);
@@ -150,19 +162,24 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
              * go to red hub and spit out bloque
              * then go to wall
              */
+
+            //its in ur mom
+            //jk lamo ur thot
+            //since u read dis now you kiss my ass
+            //thetamale = the tamale
             if (runningOpMode == 3) {
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                drive.followTrajectory(toRedHub3);
+                drive.followTrajectory(toBlueHub3);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_3);
             } else if (runningOpMode == 2) {
                 robot.svoIntakeTilt.setPosition(var.intakeMid);
-                drive.followTrajectory(toRedHub2);
+                drive.followTrajectory(toBlueHub2);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_2);
             } else if (runningOpMode == 1) {
                 robot.svoIntakeTilt.setPosition(var.intakeLow);
-                drive.followTrajectory(toRedHub1);
+                drive.followTrajectory(toBlueHub1);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
             }
@@ -174,7 +191,7 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
 
             //TODO: change this to be waiting for limit siwtch >:)
             robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.moveturret(0.3, 1480);
+            robot.moveturret(-0.3, -1480);
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             //TODO: fine tune this number (900) to optimize turret and arm go down
             while (robot.mtrTurret.getCurrentPosition() <= 900) {
@@ -248,7 +265,7 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             //TODO: make this spline correct lmao
-            Trajectory goBack = drive.trajectoryBuilder(intakeEnd, true)
+            Trajectory goBack = drive.trajectoryBuilder(intakeEnd)
                     .splineToConstantHeading(new Vector2d(-12, -47), Math.toRadians(90))
                     .build();
 
@@ -257,10 +274,15 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
             spitOutBlock();
 
             /**
-                el parque
+             * send the turret back and arm down to collect again/ park
              */
-            drive.followTrajectory(toPark1_3);
-            drive.followTrajectory(toPark2);
+            if (runningOpMode == 3) {
+                drive.followTrajectory(toPark2_3);
+            } else if (runningOpMode == 2) {
+                drive.followTrajectory(toPark2_2);
+            } else if (runningOpMode == 1) {
+                drive.followTrajectory(toPark2_1);
+            }
             break;
         }
     }

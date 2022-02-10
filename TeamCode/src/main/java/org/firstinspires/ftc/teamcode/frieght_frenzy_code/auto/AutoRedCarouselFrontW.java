@@ -19,7 +19,7 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
+package org.firstinspires.ftc.teamcode.frieght_frenzy_code.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -28,12 +28,18 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.ElementAnalysisPipelineFF;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.autoTrajectories;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "blue carousel storage", group = "blue")
-public class AutoBlueCarouselStorage extends LinearOpMode {
+@Autonomous(name = "red carousel front warehouse", group = "red")
+public class AutoRedCarouselFrontW extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
 
@@ -46,41 +52,38 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
         robot.initWebcam();
         FFMecanumDriveCancelable drive = new FFMecanumDriveCancelable(hardwareMap);
 
-        drive.setPoseEstimate(traj.startPoseBC);
+        drive.setPoseEstimate(traj.startPoseRC);
 
-        Trajectory toBlueCarousel = drive.trajectoryBuilder(traj.startPoseBC)
-                .splineToConstantHeading(new Vector2d(-63, 58), Math.toRadians(0))
+        Trajectory toRedCarousel = drive.trajectoryBuilder(traj.startPoseRC, true)
+                .splineToConstantHeading(new Vector2d(-63, -58), Math.toRadians(180))
                 .build();
 
-        Trajectory toBlueHub3 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
-                .splineTo(traj.blueHub3, Math.toRadians(0))
+        Trajectory toRedHub3 = drive.trajectoryBuilder(toRedCarousel.end())
+                .splineTo(traj.redHub3, Math.toRadians(0))
                 .build();
 
-        Trajectory toBlueHub2 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
-                .splineTo(traj.blueHub2, Math.toRadians(0))
+        Trajectory toRedHub2 = drive.trajectoryBuilder(toRedCarousel.end())
+                .splineTo(traj.redHub2, Math.toRadians(0))
                 .build();
 
-        Trajectory toBlueHub1 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
-                .splineTo(traj.blueHub1, Math.toRadians(0))
+        Trajectory toRedHub1 = drive.trajectoryBuilder(toRedCarousel.end())
+                .splineTo(traj.redHub1, Math.toRadians(0))
                 .build();
 
-        Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)
-                .lineTo(traj.toParkBlueStorage)
+        Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end())
+                .lineTo(traj.toParkRedPos1)
                 .build();
-        Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), true)
-                .lineTo(traj.toParkBlueStorage)
+        Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end())
+                .lineTo(traj.toParkRedPos1)
                 .build();
-        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(),true)
-                .lineTo(traj.toParkBlueStorage)
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end())
+                .lineTo(traj.toParkRedPos1)
                 .build();
 
-
-        /**
         Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
-                .lineTo(traj.toParkPos2)
+                .lineTo(traj.toParkRedPos2)
                 .build();
-        */
-            
+
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
         robot.svoIntakeTilt.setPosition(var.intakeInit);
@@ -94,7 +97,7 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
                 telemetry.addLine("No objects detected");
             } else {
                 for (ElementAnalysisPipelineFF.AnalyzedElement element : elements) {
-                    telemetry.addLine(String.format("%s: Width=%f, Height=%f, Angle=%f", element.object.toString(), element.rectWidth, element.rectHeight, element.angle));
+                    //telemetry.addLine(String.format("%s: Width=%f, Height=%f, Angle=%f", element.object.toString(), element.rectWidth, element.rectHeight, element.angle));
                     telemetry.addLine("Ratio of W/H: " + element.rectWidth / element.rectHeight);
                     telemetry.addLine("Section: " + element.section);
                     telemetry.addData("OpMode: ", runningOpMode);
@@ -149,7 +152,7 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
             /**
              * shmove on to carousel and spain without the a
              */
-            drive.followTrajectory(toBlueCarousel);
+            drive.followTrajectory(toRedCarousel);
             robot.svoCarousel.setPower(1);
             sleep(3000);
             robot.svoCarousel.setPower(0);
@@ -160,26 +163,19 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
              */
             if (runningOpMode == 3) {
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                drive.followTrajectory(toBlueHub3);
+                drive.followTrajectory(toRedHub3);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_3);
             } else if (runningOpMode == 2) {
                 robot.svoIntakeTilt.setPosition(var.intakeMid);
-                drive.followTrajectory(toBlueHub2);
+                drive.followTrajectory(toRedHub2);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_2);
             } else if (runningOpMode == 1) {
                 robot.svoIntakeTilt.setPosition(var.intakeLow);
-                drive.followTrajectory(toBlueHub1);
+                drive.followTrajectory(toRedHub1);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
-                robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.movearm(0.7, var.secondLvl);
-                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                while(robot.mtrArm.isBusy()){
-
-                }
-                robot.mtrArm.setPower(0);
             }
 
             robot.svoIntakeTilt.setPosition(var.intakeCollect);
@@ -187,13 +183,37 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
             /**
              * set turret to go collect pos and arm go down
              */
+            //TODO: change this to be waiting for limit siwtch >:)
             robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.moveturret(-0.3, -1480);
+            robot.moveturret(0.3, 1480);
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //TODO: fine tune this number (900) to optimize turret and arm go down
+            while (robot.mtrTurret.getCurrentPosition() <= 900) {
+                telemetry.addLine("turret go brrrrr");
+                telemetry.update();
+            }
+            while (!robot.bottomLimit.isPressed()) {
+                robot.mtrArm.setPower(0.7);
+                telemetry.addLine("arm go brrrrrrrrrrrrrrrrrrrrrrrrrr");
+                telemetry.update();
+            }
             while (robot.mtrTurret.isBusy()) {
             }
             robot.mtrTurret.setPower(0);
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.movearm(0.5, 150);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            while (robot.mtrArm.isBusy()) {
+            }
+            robot.mtrArm.setPower(0);
+
+            /**
+             * el parque
+             */
+            drive.followTrajectory(toPark1_3);
+            drive.followTrajectory(toPark2);
             break;
         }
     }

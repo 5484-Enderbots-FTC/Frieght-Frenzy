@@ -20,9 +20,11 @@ public class autoTrajectories {
     Vector2d redHub3 = new Vector2d(-12,-47);
     Vector2d redHub2 = new Vector2d(-12,-52);
     Vector2d redHub1 = new Vector2d(-12,-49);
+
     Vector2d blueHub3 = new Vector2d(-12,47);
     Vector2d blueHub2 = new Vector2d(-12,52);
     Vector2d blueHub1 = new Vector2d(-12,49);
+
     Vector2d toParkPos1 = new Vector2d(12, -69);
     Vector2d toParkPos2 = new Vector2d(40, -69);
     Vector2d toParkBarrierPos = new Vector2d(50,-35);

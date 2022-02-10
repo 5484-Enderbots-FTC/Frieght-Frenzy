@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+@Disabled
 @Autonomous(name = "auto optimizing woo")
 public class autoOptimizingTest extends LinearOpMode {
     hardwareFF robot = new hardwareFF();

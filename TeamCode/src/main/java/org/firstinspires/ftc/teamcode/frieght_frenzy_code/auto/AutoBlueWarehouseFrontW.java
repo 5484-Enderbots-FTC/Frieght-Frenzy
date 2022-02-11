@@ -54,16 +54,16 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
 
         drive.setPoseEstimate(traj.startPoseBW);
 
-        Trajectory toBlueHub3 = drive.trajectoryBuilder(traj.startPoseRW)
-                .splineTo(new Vector2d(-12, 47), Math.toRadians(0))
+        Trajectory toBlueHub3 = drive.trajectoryBuilder(traj.startPoseBW)
+                .splineToConstantHeading(traj.blueHub3, Math.toRadians(180))
                 .build();
 
         Trajectory toBlueHub2 = drive.trajectoryBuilder(traj.startPoseRW)
-                .splineTo(new Vector2d(-12, 52), Math.toRadians(0))
+                .splineToConstantHeading(traj.blueHub2, Math.toRadians(180))
                 .build();
 
         Trajectory toBlueHub1 = drive.trajectoryBuilder(traj.startPoseRW)
-                .splineTo(new Vector2d(-12, 50), Math.toRadians(0))
+                .splineToConstantHeading(traj.blueHub1, Math.toRadians(180))
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)
@@ -75,14 +75,13 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
         Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(), true)
                 .lineTo(traj.toParkBluePos1)
                 .build();
-
         Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end(), true)
                 .lineTo(traj.toParkBluePos2)
                 .build();
 
-        Trajectory traj = drive.trajectoryBuilder(toPark1_3.end(), true)
+        Trajectory goCollect = drive.trajectoryBuilder(toPark1_3.end(), true)
                 .forward(-50, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .build();
+                .build(); //TODO: make sure -50 is right or if it needs to reverse
 
 
         // Tell telemetry to update faster than the default 250ms period :)
@@ -176,25 +175,20 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
              * set turret to go collect pos and arm go down
              */
 
-            //TODO: change this to be waiting for limit siwtch >:)
-            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.moveturret(-0.3, -1480);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            //TODO: fine tune this number (900) to optimize turret and arm go down
-            while (robot.mtrTurret.getCurrentPosition() <= 900) {
-                telemetry.addLine("turret go brrrrr");
+            while (!robot.backLimit.isPressed()) {
+                telemetry.addData("pose estimate: ", drive.getPoseEstimate());
                 telemetry.update();
+                robot.mtrTurret.setPower(-0.4);
+                drive.update();
+                drive.updatePoseEstimate();
             }
+            robot.mtrTurret.setPower(0);
             while (!robot.bottomLimit.isPressed()) {
                 robot.mtrArm.setPower(0.7);
                 telemetry.addLine("arm go brrrrrrrrrrrrrrrrrrrrrrrrrr");
                 telemetry.update();
             }
-            while (robot.mtrTurret.isBusy()) {
-            }
-            robot.mtrTurret.setPower(0);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
+            robot.mtrArm.setPower(0);
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.movearm(0.5, 150);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -206,7 +200,7 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
              * drive into warehouse for consumption
              */
             robot.svoIntake.setPower(var.lessPower);
-            drive.followTrajectoryAsync(traj);
+            drive.followTrajectoryAsync(goCollect);
             while (robot.intakeLimit.isPressed()) {
                 telemetry.addLine("consuming");
                 telemetry.update();
@@ -235,11 +229,9 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
             while (robot.mtrArm.getCurrentPosition() >= -1000) {
                 telemetry.addData("haha", robot.mtrArm.getCurrentPosition());
                 telemetry.update();
-                //drive.update();
             }
             while (!robot.midLimit.isPressed()) {
-                robot.mtrTurret.setPower(-0.3);
-                //drive.update();
+                robot.mtrTurret.setPower(0.3);
             }
             robot.mtrTurret.setPower(0);
             while (robot.mtrArm.isBusy()) {
@@ -253,7 +245,7 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
 
             //TODO: make this spline correct lmao
             Trajectory goBack = drive.trajectoryBuilder(intakeEnd)
-                    .splineToConstantHeading(new Vector2d(-12, -47), Math.toRadians(90))
+                    .splineToConstantHeading(traj.blueHub3, Math.toRadians(90))
                     .build();
 
             drive.followTrajectory(goBack);

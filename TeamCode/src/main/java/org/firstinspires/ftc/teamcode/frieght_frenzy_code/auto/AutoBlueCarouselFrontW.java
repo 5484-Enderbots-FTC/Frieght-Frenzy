@@ -54,7 +54,7 @@ public class AutoBlueCarouselFrontW extends LinearOpMode {
         drive.setPoseEstimate(traj.startPoseBC);
 
         Trajectory toBlueCarousel = drive.trajectoryBuilder(traj.startPoseBC)
-                .splineToConstantHeading(new Vector2d(-63, 58), Math.toRadians(180))
+                .splineToConstantHeading(traj.blueCarousel, Math.toRadians(180))
                 .build();
 
         Trajectory toBlueHub3 = drive.trajectoryBuilder(toBlueCarousel.end(), true)

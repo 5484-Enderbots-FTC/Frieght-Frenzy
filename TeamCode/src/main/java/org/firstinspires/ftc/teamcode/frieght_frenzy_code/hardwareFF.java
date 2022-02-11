@@ -121,7 +121,7 @@ public class hardwareFF {
 
         batteryVoltage = hw.voltageSensor.iterator().next();
 
-        LEDstrip.setPosition(var.rainbowo);
+        LEDstrip.setPosition(var.ocean);
 
         if (alliance_switch.getState() == true) {
             alliance = red;

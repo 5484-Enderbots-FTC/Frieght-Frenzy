@@ -55,15 +55,15 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
         drive.setPoseEstimate(traj.startPoseBW);
 
         Trajectory toBlueHub3 = drive.trajectoryBuilder(traj.startPoseRW)
-                .splineTo(new Vector2d(-12, 47), Math.toRadians(0))
+                .splineTo(traj.blueHub3, Math.toRadians(0))
                 .build();
 
         Trajectory toBlueHub2 = drive.trajectoryBuilder(traj.startPoseRW)
-                .splineTo(new Vector2d(-12, 52), Math.toRadians(0))
+                .splineTo(traj.blueHub2, Math.toRadians(0))
                 .build();
 
         Trajectory toBlueHub1 = drive.trajectoryBuilder(traj.startPoseRW)
-                .splineTo(new Vector2d(-12, 50), Math.toRadians(0))
+                .splineTo(traj.blueHub1, Math.toRadians(0))
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)

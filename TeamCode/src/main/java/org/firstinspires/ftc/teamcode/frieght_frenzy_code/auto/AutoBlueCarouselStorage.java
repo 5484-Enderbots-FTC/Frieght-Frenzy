@@ -53,29 +53,29 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
         drive.setPoseEstimate(traj.startPoseBC);
 
         Trajectory toBlueCarousel = drive.trajectoryBuilder(traj.startPoseBC)
-                .splineToConstantHeading(new Vector2d(-63, 58), Math.toRadians(0))
+                .splineToConstantHeading(traj.blueCarousel, Math.toRadians(180))
                 .build();
 
         Trajectory toBlueHub3 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
-                .splineTo(traj.blueHub3, Math.toRadians(0))
+                .splineToConstantHeading(traj.blueHub3, Math.toRadians(0))
                 .build();
 
         Trajectory toBlueHub2 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
-                .splineTo(traj.blueHub2, Math.toRadians(0))
+                .splineToConstantHeading(traj.blueHub2, Math.toRadians(0))
                 .build();
 
         Trajectory toBlueHub1 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
-                .splineTo(traj.blueHub1, Math.toRadians(0))
+                .splineToConstantHeading(traj.blueHub1, Math.toRadians(0))
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)
-                .lineTo(traj.toParkBlueStorage)
+                .lineToLinearHeading(traj.toParkBlueStorage)
                 .build();
         Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), true)
-                .lineTo(traj.toParkBlueStorage)
+                .lineToLinearHeading(traj.toParkBlueStorage)
                 .build();
         Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(),true)
-                .lineTo(traj.toParkBlueStorage)
+                .lineToLinearHeading(traj.toParkBlueStorage)
                 .build();
 
 
@@ -188,16 +188,17 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
 
             robot.svoIntakeTilt.setPosition(var.intakeCollect);
 
+
+            robot.svoIntakeTilt.setPosition(var.intakeInit);
+
             /**
              * set turret to go collect pos and arm go down
              */
-            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.moveturret(-0.3, -1480);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while (robot.mtrTurret.isBusy()) {
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            while (!robot.bottomLimit.isPressed()){
+                robot.mtrArm.setPower(0.4);
             }
-            robot.mtrTurret.setPower(0);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.mtrArm.setPower(0);
             break;
         }
     }

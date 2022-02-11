@@ -55,7 +55,7 @@ public class AutoRedCarouselBackW extends LinearOpMode {
         drive.setPoseEstimate(traj.startPoseRC);
 
         Trajectory toRedCarousel = drive.trajectoryBuilder(traj.startPoseRC, true)
-                .splineToConstantHeading(new Vector2d(-63, -58), Math.toRadians(180))
+                .splineToConstantHeading(traj.redCarousel, Math.toRadians(180))
                 .build();
 
         Trajectory toRedHub3 = drive.trajectoryBuilder(toRedCarousel.end())

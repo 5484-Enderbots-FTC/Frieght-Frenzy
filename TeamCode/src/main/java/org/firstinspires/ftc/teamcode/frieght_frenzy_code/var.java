@@ -37,7 +37,7 @@ public class var {
     public static int firstLvl = 800;
     public static int secondLvl = 2750;
     //has been changed from 3850 -> 4000
-    public static int thirdLvl = 4000;
+    public static int thirdLvl = 4100;
     public static int thirdLvlTeleOp = 4100;
 
     //deinit arm

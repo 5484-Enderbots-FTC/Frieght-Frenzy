@@ -33,7 +33,7 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.autoTrajectories;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
-@Autonomous(name = "test", group = "blue")
+@Autonomous(name = "test BCBW", group = "blue")
 public class BCBW_test extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();

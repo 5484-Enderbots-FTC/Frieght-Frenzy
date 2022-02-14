@@ -26,10 +26,9 @@ public class hardwareFF {
     /**
      * the variables here that are only used in this doc can be private but everything else like motors and servos need to be
      * public so they can be called in the other programs.
-     * <p>
+     *
      * the methods and classes are public so you can call them and have them reference the other things in here
-     * <p>
-     * //So far this season we just have motors, so I've done the work to initialize them here:
+     *
      */
     public ElementAnalysisPipelineFF pipeline;
 

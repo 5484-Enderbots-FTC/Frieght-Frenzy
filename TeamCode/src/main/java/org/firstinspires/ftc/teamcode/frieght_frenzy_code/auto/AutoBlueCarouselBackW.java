@@ -37,7 +37,7 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "blue carousel back warehouse", group = "blue")
+@Autonomous(name = "blue carousel back", group = "blue")
 public class AutoBlueCarouselBackW extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
@@ -75,22 +75,19 @@ public class AutoBlueCarouselBackW extends LinearOpMode {
         Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), true)
                 .lineTo(traj.toParkBarrierPosBlue)
                 .build();
-        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(),true)
-                .lineTo(traj.toParkBarrierPosBlue)
+        Trajectory toPark1_1half = drive.trajectoryBuilder(toBlueHub1.end(),true)
+                .lineTo(traj.toParkBarrierPosBlueHalf)
                 .build();
 
-        /**
-        Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
-                .lineTo(traj.toParkPos2)
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toPark1_1half.end(),true)
+                .lineTo(traj.toParkBarrierPosBlue)
                 .build();
-        */
             
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
         robot.svoIntakeTilt.setPosition(var.intakeInit);
         sleep(5000);
         while (!isStarted()) {
-            /*
             //what did u detect
             ArrayList<ElementAnalysisPipelineFF.AnalyzedElement> elements = robot.pipeline.getDetectedElements();
             sleep(250);
@@ -113,8 +110,6 @@ public class AutoBlueCarouselBackW extends LinearOpMode {
 
                 }
             }
-
-             */
             telemetry.update();
         }
 
@@ -157,13 +152,13 @@ public class AutoBlueCarouselBackW extends LinearOpMode {
              * shmove on to carousel and spain without the a
              */
             drive.followTrajectory(toBlueCarousel);
-            robot.svoCarousel.setPower(1);
+            robot.svoCarousel.setPower(-1);
             sleep(3000);
             robot.svoCarousel.setPower(0);
 
             /**
              * go to red hub and spit out bloque
-             * then go to wall
+             * then go to barrier
              */
             if (runningOpMode == 3) {
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
@@ -179,7 +174,8 @@ public class AutoBlueCarouselBackW extends LinearOpMode {
                 robot.svoIntakeTilt.setPosition(var.intakeLow);
                 drive.followTrajectory(toBlueHub1);
                 spitOutBlock();
-                drive.followTrajectory(toPark1_1);
+                drive.followTrajectory(toPark1_1half);
+                robot.svoIntakeTilt.setPosition(var.intakeInit);
                 robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 robot.movearm(0.7, var.secondLvl);
                 robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -187,20 +183,20 @@ public class AutoBlueCarouselBackW extends LinearOpMode {
 
                 }
                 robot.mtrArm.setPower(0);
+                robot.svoIntakeTilt.setPosition(var.intakeInit);
+                drive.followTrajectory(toPark1_1);
             }
 
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+
 
             /**
-             * set turret to go collect pos and arm go down
+             * set turret to go collect pos
              */
-            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.moveturret(-0.3, -1480);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while (robot.mtrTurret.isBusy()) {
+            while (!robot.backLimit.isPressed()) {
+                telemetry.addLine("turret go brr");
+                telemetry.update();
+                robot.mtrTurret.setPower(-0.4);
             }
-            robot.mtrTurret.setPower(0);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             break;
         }
     }

@@ -38,7 +38,7 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "red carousel back warehouse", group = "red")
+@Autonomous(name = "red carousel back", group = "red")
 public class AutoRedCarouselBackW extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
@@ -76,12 +76,13 @@ public class AutoRedCarouselBackW extends LinearOpMode {
         Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end())
                 .lineTo(traj.toParkBarrierPos)
                 .build();
-        Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end())
-                .lineTo(traj.toParkBarrierPos)
+
+        Trajectory toPark1_1half = drive.trajectoryBuilder(toRedHub1.end())
+                .lineTo(traj.toParkBarrierPosRedHalf)
                 .build();
 
-        Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
-                .lineTo(traj.toParkPos2)
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toPark1_1half.end())
+                .lineTo(traj.toParkBarrierPos)
                 .build();
 
         // Tell telemetry to update faster than the default 250ms period :)
@@ -185,8 +186,7 @@ public class AutoRedCarouselBackW extends LinearOpMode {
                 }
                 robot.mtrArm.setPower(0);
             }
-
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            robot.svoIntakeTilt.setPosition(var.intakeInit);
 
             /**
              * set turret to go collect pos and arm go down

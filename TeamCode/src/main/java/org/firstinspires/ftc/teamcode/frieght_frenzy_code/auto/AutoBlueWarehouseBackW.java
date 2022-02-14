@@ -183,29 +183,24 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
             }
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            //robot.svoIntakeTilt.setPosition(var.intakeCollect);
 
             /**
              * set turret to go collect pos and arm go down
              */
+            /*
 
-            //TODO: change this to be waiting for limit siwtch >:)
-            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.moveturret(-0.3, -1480);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            //TODO: fine tune this number (900) to optimize turret and arm go down
-            while (robot.mtrTurret.getCurrentPosition() <= 900) {
-                telemetry.addLine("turret go brrrrr");
+            while (!robot.backLimit.isPressed()) {
+                telemetry.addData("pose estimate: ", drive.getPoseEstimate());
                 telemetry.update();
+                robot.mtrTurret.setPower(-0.4);
             }
+            robot.mtrTurret.setPower(0);
             while (!robot.bottomLimit.isPressed()) {
                 robot.mtrArm.setPower(0.7);
                 telemetry.addLine("arm go brrrrrrrrrrrrrrrrrrrrrrrrrr");
                 telemetry.update();
             }
-            while (robot.mtrTurret.isBusy()) {
-            }
-            robot.mtrTurret.setPower(0);
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -218,6 +213,7 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
             /**
              * drive into warehouse for consumption
              */
+            /*
             robot.svoIntake.setPower(var.lessPower);
             drive.followTrajectoryAsync(traj);
             while (robot.intakeLimit.isPressed()) {
@@ -238,6 +234,7 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
             /**
              * has been consumed, now go to hub (and move arm/turret)
              */
+            /*
 
             //TODO: update later to be during trajectory on way to hub :)
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -248,17 +245,14 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
             while (robot.mtrArm.getCurrentPosition() >= -1000) {
                 telemetry.addData("haha", robot.mtrArm.getCurrentPosition());
                 telemetry.update();
-                //drive.update();
             }
             while (!robot.midLimit.isPressed()) {
                 robot.mtrTurret.setPower(-0.3);
-                //drive.update();
             }
             robot.mtrTurret.setPower(0);
             while (robot.mtrArm.isBusy()) {
                 telemetry.addLine("weeeee arm finish");
                 telemetry.update();
-                //drive.update();
             }
             //drive.updatePoseEstimate();
             robot.mtrArm.setPower(0);
@@ -283,6 +277,13 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
             } else if (runningOpMode == 1) {
                 drive.followTrajectory(toPark2_1);
             }
+
+            while (!robot.backLimit.isPressed()) {
+                telemetry.addLine("turret go brr");
+                telemetry.update();
+                robot.mtrTurret.setPower(-0.4);
+            }
+
             break;
         }
     }

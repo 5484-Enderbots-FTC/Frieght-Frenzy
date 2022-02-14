@@ -77,13 +77,6 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
         Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(),true)
                 .lineToLinearHeading(traj.toParkBlueStorage)
                 .build();
-
-
-        /**
-        Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
-                .lineTo(traj.toParkPos2)
-                .build();
-        */
             
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
@@ -154,13 +147,13 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
              * shmove on to carousel and spain without the a
              */
             drive.followTrajectory(toBlueCarousel);
-            robot.svoCarousel.setPower(1);
+            robot.svoCarousel.setPower(-1);
             sleep(3000);
             robot.svoCarousel.setPower(0);
 
             /**
              * go to red hub and spit out bloque
-             * then go to wall
+             * then go to storage
              */
             if (runningOpMode == 3) {
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
@@ -177,17 +170,7 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
                 drive.followTrajectory(toBlueHub1);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
-                robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.movearm(0.7, var.secondLvl);
-                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                while(robot.mtrArm.isBusy()){
-
-                }
-                robot.mtrArm.setPower(0);
             }
-
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
-
 
             robot.svoIntakeTilt.setPosition(var.intakeInit);
 

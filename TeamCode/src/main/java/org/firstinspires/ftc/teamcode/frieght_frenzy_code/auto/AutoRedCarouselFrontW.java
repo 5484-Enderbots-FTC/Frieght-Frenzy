@@ -38,7 +38,7 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "red carousel front warehouse", group = "red")
+@Autonomous(name = "red carousel front", group = "red")
 public class AutoRedCarouselFrontW extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
@@ -178,11 +178,12 @@ public class AutoRedCarouselFrontW extends LinearOpMode {
                 drive.followTrajectory(toPark1_1);
             }
 
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            robot.svoIntakeTilt.setPosition(var.intakeInit);
 
             /**
              * set turret to go collect pos and arm go down
              */
+            /*
             //TODO: change this to be waiting for limit siwtch >:)
             robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.moveturret(0.3, 1480);
@@ -209,11 +210,29 @@ public class AutoRedCarouselFrontW extends LinearOpMode {
             }
             robot.mtrArm.setPower(0);
 
+
+             */
             /**
              * el parque
              */
-            drive.followTrajectory(toPark1_3);
+            /*
+            while (!robot.frontLimit.isPressed()) {
+                telemetry.addLine("turret go brr");
+                telemetry.update();
+                robot.mtrTurret.setPower(0.4);
+            }
+
+             */
+
             drive.followTrajectory(toPark2);
+
+            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.moveturret(0.3, 1480);
+            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            while (robot.mtrTurret.isBusy()) {
+            }
+            robot.mtrTurret.setPower(0);
+            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             break;
         }
     }

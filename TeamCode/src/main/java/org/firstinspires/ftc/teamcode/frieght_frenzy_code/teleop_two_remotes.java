@@ -119,6 +119,7 @@ public class teleop_two_remotes extends LinearOpMode {
                     /**
                      * Begin automated to the top of hub function
                      */
+                    /*
                     if(gamepad2.left_bumper && zeroPosSet){
                         //third level of hub
                         robot.svoIntakeTilt.setPosition(var.intakeCollect);
@@ -131,10 +132,13 @@ public class teleop_two_remotes extends LinearOpMode {
                         robot.movearm(0.7,var.thirdLvl);
                         currentState = State.SET;
                     }
+
+                     */
                     /**
                      * Normal 'manual' function :)
                      */
-                    else if(robot.bottomLimit.isPressed() && gamepad2.left_stick_y > 0){
+                    //else
+                    if(robot.bottomLimit.isPressed() && gamepad2.left_stick_y > 0){
                         robot.mtrArm.setPower(0);
                     }
                     else if(robot.bottomLimit.isPressed() && gamepad2.left_stick_y < 0){
@@ -165,30 +169,33 @@ public class teleop_two_remotes extends LinearOpMode {
 
             //TODO: rewrite the logic when we get better limits :)
 
-            /*
+
             //turret spin to da right
-            if(robot.rightLimit.isPressed()){
+            if(robot.frontLimit.isPressed()){
                 robot.mtrTurret.setPower(gamepad2.right_stick_x*0.3);
                 telemetry.addLine("REEE");
             }else {
                 robot.mtrTurret.setPower(gamepad2.right_stick_x);
             }
             //turret spin to da left
-            if(robot.leftLimit.isPressed()){
+            if(robot.backLimit.isPressed()){
                 robot.mtrTurret.setPower(gamepad2.right_stick_x*0.3);
             }else{
                robot.mtrTurret.setPower(gamepad2.right_stick_x);
             }
-             */
+
             robot.mtrTurret.setPower(gamepad2.right_stick_x);
             /**
              * tilt controls
              */
 
-            if(gamepad2.dpad_down){
-                robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            if(gamepad2.right_bumper){
+                robot.svoIntakeTilt.setPosition(var.intakeMid);
             }
             if(gamepad2.dpad_up){
+                robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            }
+            if(gamepad2.left_bumper){
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
             }
 
@@ -212,9 +219,11 @@ public class teleop_two_remotes extends LinearOpMode {
                 robot.LEDstrip.setPosition(var.green);
             }
             if(freightCollected){
-                robot.svoIntake.setPower(var.stop);
-                intakeState = Status.STOPPED;
-                robot.LEDstrip.setPosition(var.red);
+                if(intakeState != Status.OUT) {
+                    robot.svoIntake.setPower(var.stop);
+                    intakeState = Status.STOPPED;
+                    robot.LEDstrip.setPosition(var.red);
+                }
             }
 
             //run intake
@@ -225,8 +234,8 @@ public class teleop_two_remotes extends LinearOpMode {
             //reverse intake
             if(gamepad2.b){
                 //might turn this into an output sequence
-                robot.svoIntake.setPower(-var.lessPower);
                 intakeState = Status.OUT;
+                robot.svoIntake.setPower(-var.lessPower);
             }
             //stop intake
             if(gamepad2.x){
@@ -260,8 +269,9 @@ public class teleop_two_remotes extends LinearOpMode {
             }
 
             telemetry.addData("bottom limit status", robot.bottomLimit.isPressed());
-            //telemetry.addData("right limit status", robot.rightLimit.isPressed());
-            //telemetry.addData("left limit status", robot.leftLimit.isPressed());
+            telemetry.addData("Servo current pos: ", robot.svoIntakeTilt.getPosition());
+            telemetry.addData("right limit status", robot.frontLimit.isPressed());
+            telemetry.addData("left limit status", robot.backLimit.isPressed());
             telemetry.addData("mid limit status", robot.midLimit.isPressed());
             telemetry.addData("intake limit status", robot.intakeLimit.isPressed());
             telemetry.addData("front range distance: ", "%.2f cm", robot.frontRange.getDistance(DistanceUnit.CM));

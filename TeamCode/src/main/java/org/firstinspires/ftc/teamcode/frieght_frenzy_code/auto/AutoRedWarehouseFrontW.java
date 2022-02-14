@@ -38,7 +38,7 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "red warehouse front warehouse", group = "red")
+@Autonomous(name = "red warehouse front", group = "red")
 public class AutoRedWarehouseFrontW extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
@@ -170,12 +170,12 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
             }
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            //robot.svoIntakeTilt.setPosition(var.intakeCollect);
 
             /**
              * set turret to go collect pos and arm go down
              */
-
+/*
             //TODO: change this to be waiting for limit siwtch >:)
             robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.moveturret(0.3, 1480);
@@ -205,6 +205,7 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
             /**
              * drive into warehouse for consumption
              */
+            /*
             robot.svoIntake.setPower(var.lessPower);
             drive.followTrajectoryAsync(traj);
             while (robot.intakeLimit.isPressed()) {
@@ -225,7 +226,7 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
             /**
              * has been consumed, now go to hub (and move arm/turret)
              */
-
+/*
             //TODO: update later to be during trajectory on way to hub :)
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -265,6 +266,14 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
              */
             drive.followTrajectory(toPark1_3);
             drive.followTrajectory(toPark2);
+
+            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.moveturret(0.3, 1480);
+            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            while (robot.mtrTurret.isBusy()) {
+            }
+            robot.mtrTurret.setPower(0);
+            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             break;
         }
     }

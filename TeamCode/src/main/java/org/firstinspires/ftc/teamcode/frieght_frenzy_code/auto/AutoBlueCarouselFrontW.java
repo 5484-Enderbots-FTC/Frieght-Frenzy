@@ -38,7 +38,7 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 import java.util.ArrayList;
 
 
-@Autonomous(name = "blue carousel front warehouse", group = "blue")
+@Autonomous(name = "blue carousel front", group = "blue")
 public class AutoBlueCarouselFrontW extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
@@ -83,12 +83,6 @@ public class AutoBlueCarouselFrontW extends LinearOpMode {
                 .lineTo(traj.toParkBluePos2)
                 .build();
 
-        /**
-        Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
-                .lineTo(traj.toParkPos2)
-                .build();
-        */
-            
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
         robot.svoIntakeTilt.setPosition(var.intakeInit);
@@ -158,7 +152,7 @@ public class AutoBlueCarouselFrontW extends LinearOpMode {
              * shmove on to carousel and spain without the a
              */
             drive.followTrajectory(toBlueCarousel);
-            robot.svoCarousel.setPower(1);
+            robot.svoCarousel.setPower(-1);
             sleep(3000);
             robot.svoCarousel.setPower(0);
 
@@ -195,13 +189,11 @@ public class AutoBlueCarouselFrontW extends LinearOpMode {
             /**
              * set turret to go collect pos and arm go down
              */
-            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.moveturret(-0.3, -1480);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while (robot.mtrTurret.isBusy()) {
+            while (!robot.backLimit.isPressed()) {
+                telemetry.addLine("turret go brr");
+                telemetry.update();
+                robot.mtrTurret.setPower(-0.4);
             }
-            robot.mtrTurret.setPower(0);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             drive.followTrajectory(toPark2);
 

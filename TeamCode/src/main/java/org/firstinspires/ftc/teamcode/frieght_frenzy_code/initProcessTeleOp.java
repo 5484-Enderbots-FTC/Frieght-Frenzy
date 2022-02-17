@@ -45,7 +45,7 @@ public class initProcessTeleOp extends LinearOpMode {
                 robot.svoIntakeTilt.setPosition(tiltNumber);
             }
             if(gamepad1.b){
-                tiltNumber = low;
+                tiltNumber = reset;
                 robot.svoIntakeTilt.setPosition(reset);
             }
             if(gamepad1.right_bumper){
@@ -55,7 +55,6 @@ public class initProcessTeleOp extends LinearOpMode {
             telemetry.addData("MidLimit? ", robot.midLimit.isPressed());
             telemetry.addData("Back limit? ", robot.backLimit.isPressed());
             telemetry.addData("Front limit? ", robot.frontLimit.isPressed());
-
 
             telemetry.addData("Servo current pos: ", robot.svoIntakeTilt.getPosition());
             telemetry.addData("Servo input number: ", tiltNumber);

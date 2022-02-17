@@ -68,16 +68,16 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
                 .splineToConstantHeading(traj.blueHub1, Math.toRadians(0))
                 .build();
 
-        Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)
-                .lineToLinearHeading(traj.toParkBlueStorage)
+        Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), Math.toRadians(135))
+                .splineToLinearHeading(traj.toParkBlueStorage, Math.toRadians(-90))
                 .build();
-        Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), true)
-                .lineToLinearHeading(traj.toParkBlueStorage)
+        Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), Math.toRadians(135))
+                .splineToLinearHeading(traj.toParkBlueStorage, Math.toRadians(-90))
                 .build();
-        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(),true)
-                .lineToLinearHeading(traj.toParkBlueStorage)
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(), Math.toRadians(135))
+                .splineToLinearHeading(traj.toParkBlueStorage, Math.toRadians(-90))
                 .build();
-            
+
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
         robot.svoIntakeTilt.setPosition(var.intakeInit);
@@ -178,7 +178,7 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
              * set turret to go collect pos and arm go down
              */
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            while (!robot.bottomLimit.isPressed()){
+            while (!robot.bottomLimit.isPressed()) {
                 robot.mtrArm.setPower(0.4);
             }
             robot.mtrArm.setPower(0);
@@ -195,6 +195,7 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
             robot.svoIntakeTilt.setPosition(var.intakeLow);
         }
         sleep(1000);
+
         robot.svoIntake.setPower(-var.lessPower);
         sleep(1500);
         robot.svoIntake.setPower(0);

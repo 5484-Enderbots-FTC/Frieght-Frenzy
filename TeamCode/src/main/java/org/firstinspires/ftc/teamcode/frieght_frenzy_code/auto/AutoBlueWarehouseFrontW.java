@@ -58,11 +58,11 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
                 .splineToConstantHeading(traj.blueHub3, Math.toRadians(180))
                 .build();
 
-        Trajectory toBlueHub2 = drive.trajectoryBuilder(traj.startPoseRW)
+        Trajectory toBlueHub2 = drive.trajectoryBuilder(traj.startPoseBW)
                 .splineToConstantHeading(traj.blueHub2, Math.toRadians(180))
                 .build();
 
-        Trajectory toBlueHub1 = drive.trajectoryBuilder(traj.startPoseRW)
+        Trajectory toBlueHub1 = drive.trajectoryBuilder(traj.startPoseBW)
                 .splineToConstantHeading(traj.blueHub1, Math.toRadians(180))
                 .build();
 
@@ -136,15 +136,11 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
                 telemetry.addData("pose estimate: ", drive.getPoseEstimate());
                 telemetry.update();
                 robot.mtrTurret.setPower(-0.4);
-                drive.update();
-                drive.updatePoseEstimate();
             }
             robot.mtrTurret.setPower(0);
             while (robot.mtrArm.isBusy()) {
                 telemetry.addLine("weeeee arm finish");
                 telemetry.addData("pose estimate: ", drive.getPoseEstimate());
-                drive.update();
-                drive.updatePoseEstimate();
             }
             robot.mtrArm.setPower(0);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -169,12 +165,12 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
             }
-            //robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            robot.svoIntakeTilt.setPosition(var.intakeCollect);
 
             /**
              * set turret to go collect pos and arm go down
              */
-/*
+
             while (!robot.backLimit.isPressed()) {
                 telemetry.addData("pose estimate: ", drive.getPoseEstimate());
                 telemetry.update();
@@ -199,7 +195,7 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
             /**
              * drive into warehouse for consumption
              */
-            /*
+
             robot.svoIntake.setPower(var.lessPower);
             drive.followTrajectoryAsync(goCollect);
             while (robot.intakeLimit.isPressed()) {
@@ -220,7 +216,7 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
             /**
              * has been consumed, now go to hub (and move arm/turret)
              */
-/*
+
             //TODO: update later to be during trajectory on way to hub :)
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

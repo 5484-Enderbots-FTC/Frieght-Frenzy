@@ -83,7 +83,6 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
                 .forward(-50, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build(); //TODO: make sure -50 is right or if it needs to reverse
 
-
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
         robot.svoIntakeTilt.setPosition(var.intakeInit);

@@ -67,17 +67,17 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end())
-                .lineTo(traj.toParkPos1)
+                .lineTo(traj.toParkRedPos1)
                 .build();
         Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end())
-                .lineTo(traj.toParkPos1)
+                .lineTo(traj.toParkRedPos1)
                 .build();
         Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end())
-                .lineTo(traj.toParkPos1)
+                .lineTo(traj.toParkRedPos1)
                 .build();
 
         Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
-                .lineTo(traj.toParkPos2)
+                .lineTo(traj.toParkRedPos2)
                 .build();
 
         Trajectory traj = drive.trajectoryBuilder(toPark1_3.end())
@@ -170,30 +170,38 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
             }
-            //robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            drive.followTrajectory(toPark2);
+            robot.svoIntakeTilt.setPosition(var.intakeCollect);
 
             /**
              * set turret to go collect pos and arm go down
              */
-/*
+
             //TODO: change this to be waiting for limit siwtch >:)
-            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.moveturret(0.3, 1480);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             //TODO: fine tune this number (900) to optimize turret and arm go down
-            while (robot.mtrTurret.getCurrentPosition() <= 900) {
+            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.mtrTurret.setPower(0.3);
+            while (!robot.frontLimit.isPressed() && !robot.bottomLimit.isPressed()){
                 telemetry.addLine("turret go brrrrr");
+
+                if(robot.mtrTurret.getCurrentPosition() >=900 && !robot.bottomLimit.isPressed()){
+                    robot.mtrArm.setPower(0.7);
+                    telemetry.addLine("arm go brrrrrrrrrrrrrrrrrrrrrrrrrr");
+
+                }
+                if (robot.bottomLimit.isPressed()){
+                    robot.mtrArm.setPower(0);
+                    telemetry.addLine("arm stoop");
+                }
+                if (robot.frontLimit.isPressed()){
+                    robot.mtrTurret.setPower(0);
+                    telemetry.addLine("turret stoop");
+                }
                 telemetry.update();
-            }
-            while (!robot.bottomLimit.isPressed()) {
-                robot.mtrArm.setPower(0.7);
-                telemetry.addLine("arm go brrrrrrrrrrrrrrrrrrrrrrrrrr");
-                telemetry.update();
-            }
-            while (robot.mtrTurret.isBusy()) {
             }
             robot.mtrTurret.setPower(0);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            /*            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.movearm(0.5, 150);
@@ -201,11 +209,12 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
             while (robot.mtrArm.isBusy()) {
             }
             robot.mtrArm.setPower(0);
+             */
 
             /**
              * drive into warehouse for consumption
              */
-            /*
+
             robot.svoIntake.setPower(var.lessPower);
             drive.followTrajectoryAsync(traj);
             while (robot.intakeLimit.isPressed()) {
@@ -226,7 +235,7 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
             /**
              * has been consumed, now go to hub (and move arm/turret)
              */
-/*
+
             //TODO: update later to be during trajectory on way to hub :)
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

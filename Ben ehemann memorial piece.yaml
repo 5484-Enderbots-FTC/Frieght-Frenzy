@@ -1,0 +1,21 @@
+---
+startPose:
+  x: -69.0
+  y: -36.0
+  heading: -1.5707963267948966
+startTangent: 0.0
+waypoints:
+- position:
+    x: 20.0
+    y: -65.0
+  heading: -1.5707963267948966
+  tangent: 0.0
+  interpolationType: "TANGENT"
+- position:
+    x: 50.0
+    y: -65.0
+  heading: -1.5707963267948966
+  tangent: 0.0
+  interpolationType: "TANGENT"
+resolution: 0.25
+version: 1

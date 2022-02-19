@@ -12,17 +12,17 @@ public class var {
     public static double violet = 0.7545;
     public static double rainbowo = 0.2275;
     public static double confetti = 0.2575;
-    public static double ocean = 0.3845;
+    public static double ocean = 0.2375;
     public static double green = 0.7145;
     public static double red = 0.6695;
 
     public static double toggleWait = 1; //(seconds)
 
     public static double intakeInit = 1;
-    public static double intakeCollect = 0.39;
-    public static double intakeLow = 0.62;
-    public static double intakeMid = 0.5;
-    public static double intakeHigh = 0.16;
+    public static double intakeCollect = 0.8;
+    public static double intakeLow = 0.655;
+    public static double intakeMid = 0.6;
+    public static double intakeHigh = 0.41;
 
     public static double fullPower = 1;
     public static double lessPower = 0.3;
@@ -34,9 +34,9 @@ public class var {
 
     //teleop encoder counts from ground as 0
     public static int groundLvl = 0;
-    public static int firstLvl = 1050;
-    public static int secondLvl = 2400;
-    public static int thirdLvl = 3850;
+    public static int firstLvl = 1050; //degrees: 48
+    public static int secondLvl = 2524; //degrees:
+    public static int thirdLvl = 4158;
     public static int thirdLvlTeleOp = 4100;
 
     //deinit arm
@@ -44,6 +44,7 @@ public class var {
 
     //strafing align
     public static int turnDirection = 1;
-
+    //lol i cant believe you are reading this. That is not pog!
+    public static double duckTime = 3;
 
 }

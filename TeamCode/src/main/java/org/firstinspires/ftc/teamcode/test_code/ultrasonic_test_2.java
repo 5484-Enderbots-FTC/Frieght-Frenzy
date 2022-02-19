@@ -10,10 +10,9 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.ultimate_goal_code.hardwareUltimateGoal;
 
-@Disabled
-@TeleOp(name = "ultrasonic 2 electric boogaloo", group = "testing")
-//@Disabled
 
+@TeleOp(name = "ultrasonic 2 electric boogaloo", group = "testing")
+@Disabled
 public class ultrasonic_test_2 extends LinearOpMode {
     ElapsedTime runtime = new ElapsedTime();
     ElapsedTime timer = new ElapsedTime();

@@ -54,8 +54,8 @@ import java.util.List;
  * of multiple stones, switching the viewport output, and communicating the results
  * of the vision processing to usercode.
  */
-@Disabled
 @Autonomous
+@Disabled
 public class DistanceSensorAlign extends LinearOpMode
 {
     hardwareFF robot = new hardwareFF();

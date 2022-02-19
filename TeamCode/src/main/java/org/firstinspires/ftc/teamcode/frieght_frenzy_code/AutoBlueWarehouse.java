@@ -28,6 +28,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.ElementAnalysisPipelineFF;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
@@ -47,6 +50,7 @@ import org.openftc.easyopencv.OpenCvWebcam;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 @Disabled
 @Autonomous
 public class AutoBlueWarehouse extends LinearOpMode
@@ -82,7 +86,7 @@ public class AutoBlueWarehouse extends LinearOpMode
                 {
                     for(ElementAnalysisPipelineFF.AnalyzedElement element : elements)
                     {
-                        telemetry.addLine(String.format("%s: Width=%f, Height=%f, Angle=%f", element.object.toString(), element.rectWidth, element.rectHeight, element.angle));
+                        //telemetry.addLine(String.format("%s: Width=%f, Height=%f, Angle=%f", element.object.toString(), element.rectWidth, element.rectHeight, element.angle));
                         telemetry.addLine("Ratio of W/H: " + element.rectWidth/element.rectHeight);
                         telemetry.addLine("Section: " + element.section);
                         if (element.section == ElementAnalysisPipelineFF.Section.LEFT){

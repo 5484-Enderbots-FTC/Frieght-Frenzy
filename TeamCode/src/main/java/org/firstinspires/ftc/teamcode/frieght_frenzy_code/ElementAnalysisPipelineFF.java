@@ -54,17 +54,17 @@ public class ElementAnalysisPipelineFF extends OpenCvPipeline {
     static final int DIVISION_ONE = 90;
     static final int DIVISION_TWO = 200;
 
-    static class AnalyzedElement
+    public static class AnalyzedElement
     {
-        ElementAnalysisPipelineFF.ObjectType object;
+        public ElementAnalysisPipelineFF.ObjectType object;
         double angle;
-        double rectWidth;
-        double rectHeight;
+        public double rectWidth;
+        public double rectHeight;
         double WidthHeightRatio;
-        ElementAnalysisPipelineFF.Section section;
+        public ElementAnalysisPipelineFF.Section section;
 
     }
-    enum Section
+    public enum Section
     {
         LEFT,
         MID,

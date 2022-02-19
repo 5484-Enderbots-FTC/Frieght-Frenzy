@@ -26,10 +26,9 @@ public class hardwareFF {
     /**
      * the variables here that are only used in this doc can be private but everything else like motors and servos need to be
      * public so they can be called in the other programs.
-     * <p>
+     *
      * the methods and classes are public so you can call them and have them reference the other things in here
-     * <p>
-     * //So far this season we just have motors, so I've done the work to initialize them here:
+     *
      */
     public ElementAnalysisPipelineFF pipeline;
 
@@ -38,7 +37,7 @@ public class hardwareFF {
     public CRServo svoCarousel, svoIntake; //servo port 0, 1
     public Servo svoIntakeTilt, LEDstrip; //servo port
 
-    public TouchSensor leftLimit, rightLimit, midLimit, topLimit, bottomLimit, intakeLimit; //digital ports . . .
+    public TouchSensor frontLimit,backLimit, midLimit, topLimit, bottomLimit, intakeLimit; //digital ports . . .
 
     public DigitalChannel alliance_switch, position_switch;//digital port
 
@@ -101,10 +100,15 @@ public class hardwareFF {
 
         LEDstrip = hw.get(Servo.class, "LEDstrip");
 
-        //leftLimit = hw.get(TouchSensor.class, "midLimit");
+        //leftLimit = hw.get(TouchSensor.class, "leftLimit");
+        //rightLimit = hw.get(TouchSensor.class, "rightLimit");
         midLimit = hw.get(TouchSensor.class, "midLimit");
+        //topLimit = hw.get(TouchSensor.class, "topLimit");
         bottomLimit = hw.get(TouchSensor.class, "bottomLimit");
         intakeLimit = hw.get(TouchSensor.class, "intakeLimit");
+
+        frontLimit = hw.get(TouchSensor.class, "frontLimit");
+        backLimit = hw.get(TouchSensor.class, "backLimit");
 
         alliance_switch = hw.get(DigitalChannel.class, "alliance_switch");
         position_switch = hw.get(DigitalChannel.class, "position_switch");
@@ -116,7 +120,7 @@ public class hardwareFF {
 
         batteryVoltage = hw.voltageSensor.iterator().next();
 
-        LEDstrip.setPosition(var.rainbowo);
+        LEDstrip.setPosition(var.ocean);
 
         if (alliance_switch.getState() == true) {
             alliance = red;
@@ -267,6 +271,12 @@ public class hardwareFF {
         mtrArm.setTargetPosition(-position * adjustment);
         //mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+    public void moveturret(double power, int position) {
+        int adjustment = 1;
+        mtrTurret.setPower(power);
+        mtrTurret.setTargetPosition(position * adjustment);
+        //mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
 
     public void deinit() {
         mtrArm.setPower(-0.7);
@@ -282,6 +292,18 @@ public class hardwareFF {
 
         }
         //svoIntakeTilt.setPosition(var.intakeTiltCollect);
+    }
+    public void armToPosition (double runningOpMode){
+        mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if (runningOpMode == 3) {
+            movearm(0.7, var.thirdLvl);
+        } else if (runningOpMode == 2) {
+            movearm(0.7, var.secondLvl);
+        } else if (runningOpMode == 1) {
+            movearm(0.7, var.firstLvl);
+        }
+        mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
 }

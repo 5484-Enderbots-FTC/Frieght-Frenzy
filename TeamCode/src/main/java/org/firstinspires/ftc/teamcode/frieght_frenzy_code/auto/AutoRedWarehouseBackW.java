@@ -54,16 +54,16 @@ public class AutoRedWarehouseBackW extends LinearOpMode {
 
         drive.setPoseEstimate(traj.startPoseRW);
 
-        Trajectory toRedHub3 = drive.trajectoryBuilder(traj.startPoseRW)
-                .splineToConstantHeading(traj.redHub3, Math.toRadians(0))
+        Trajectory toRedHub3 = drive.trajectoryBuilder(traj.startPoseRW,true)
+                .splineToConstantHeading(traj.redHub3, Math.toRadians(90))
                 .build();
 
-        Trajectory toRedHub2 = drive.trajectoryBuilder(traj.startPoseRW)
-                .splineToConstantHeading(traj.redHub2, Math.toRadians(0))
+        Trajectory toRedHub2 = drive.trajectoryBuilder(traj.startPoseRW, true)
+                .splineToConstantHeading(traj.redHub2, Math.toRadians(90))
                 .build();
 
-        Trajectory toRedHub1 = drive.trajectoryBuilder(traj.startPoseRW)
-                .splineToConstantHeading(traj.redHub1, Math.toRadians(0))
+        Trajectory toRedHub1 = drive.trajectoryBuilder(traj.startPoseRW, true)
+                .splineToConstantHeading(traj.redHub1, Math.toRadians(90))
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end())

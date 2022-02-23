@@ -154,6 +154,8 @@ public class AutoRedCarouselFrontW extends LinearOpMode {
              */
             drive.followTrajectory(toRedCarousel);
             robot.svoCarousel.setPower(1);
+            drive.setPoseEstimate(traj.redCarouselReset);
+            drive.updatePoseEstimate();
             sleep(3000);
             robot.svoCarousel.setPower(0);
 
@@ -226,13 +228,11 @@ public class AutoRedCarouselFrontW extends LinearOpMode {
 
             drive.followTrajectory(toPark2);
 
-            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.moveturret(0.3, 1480);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while (robot.mtrTurret.isBusy()) {
+            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            while (!robot.frontLimit.isPressed()){
+                robot.mtrTurret.setPower(0.4);
             }
             robot.mtrTurret.setPower(0);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             break;
         }
     }

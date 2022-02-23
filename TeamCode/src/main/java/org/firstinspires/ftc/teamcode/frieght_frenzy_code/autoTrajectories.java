@@ -34,10 +34,10 @@ public class autoTrajectories {
     public Vector2d toParkPos2 = new Vector2d(40, -69+2);
 
     public Vector2d toParkRedPos1 = new Vector2d(12, -69+2);
-    public Vector2d toParkRedPos2 = new Vector2d(40, -69+2);
+    public Vector2d toParkRedPos2 = new Vector2d(42, -69+2);
 
     public Vector2d toParkBluePos1 = new Vector2d(12,69-2);
-    public Vector2d toParkBluePos2 = new Vector2d(40,69-2);
+    public Vector2d toParkBluePos2 = new Vector2d(42,69-2);
 
     public Vector2d toParkBarrierPos = new Vector2d(50, -35);
     public Vector2d toParkBarrierPosBlue = new Vector2d(50, 35);

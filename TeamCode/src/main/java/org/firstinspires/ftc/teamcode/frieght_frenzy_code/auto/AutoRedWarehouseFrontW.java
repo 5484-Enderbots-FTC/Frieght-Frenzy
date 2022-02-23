@@ -219,7 +219,6 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
             /**
              * drive into warehouse for consumption
              */
-
             robot.svoIntake.setPower(var.lessPower*1.5);
             drive.followTrajectoryAsync(goCollect);
             while (robot.intakeLimit.isPressed()) {
@@ -281,13 +280,11 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
             drive.followTrajectory(toPark1_3);
             drive.followTrajectory(toPark2);
 
-            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.moveturret(0.3, 1480);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while (robot.mtrTurret.isBusy()) {
+            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            while (!robot.frontLimit.isPressed()){
+                robot.mtrTurret.setPower(0.4);
             }
             robot.mtrTurret.setPower(0);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             break;
         }
     }

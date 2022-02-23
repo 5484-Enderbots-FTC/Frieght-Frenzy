@@ -81,7 +81,7 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
                 .build();
 
         Trajectory goCollect = drive.trajectoryBuilder(toPark2.end())
-                .forward(25, FFMecanumDrive.getVelocityConstraint(4, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .forward(25, FFMecanumDrive.getVelocityConstraint(2, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
 
@@ -220,7 +220,7 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
              * drive into warehouse for consumption
              */
 
-            robot.svoIntake.setPower(var.lessPower);
+            robot.svoIntake.setPower(var.lessPower*1.5);
             drive.followTrajectoryAsync(goCollect);
             while (robot.intakeLimit.isPressed()) {
                 telemetry.addLine("consuming");
@@ -240,6 +240,10 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
             /**
              * has been consumed, now go to hub (and move arm/turret)
              */
+            Trajectory goBack = drive.trajectoryBuilder(intakeEnd, true)
+                    .splineToConstantHeading(traj.redHub3, Math.toRadians(90))
+                    .build();
+            drive.followTrajectory(goBack);
 
             //TODO: update later to be during trajectory on way to hub :)
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -267,10 +271,7 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             //TODO: make this spline correct lmao
-            Trajectory goBack = drive.trajectoryBuilder(intakeEnd, true)
-                    .splineToConstantHeading(traj.redHub3, Math.toRadians(90))
-                    .build();
-            drive.followTrajectory(goBack);
+
 
             spitOutBlock(true);
 

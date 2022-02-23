@@ -148,6 +148,7 @@ public class AutoRedCarouselStorage extends LinearOpMode {
             drive.followTrajectory(toRedCarousel);
             robot.svoCarousel.setPower(1);
             drive.setPoseEstimate(traj.redCarouselReset);
+            drive.updatePoseEstimate();
             sleep(3000);
             robot.svoCarousel.setPower(0);
 

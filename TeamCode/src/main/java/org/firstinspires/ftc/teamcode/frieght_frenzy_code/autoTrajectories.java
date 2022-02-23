@@ -16,19 +16,19 @@ public class autoTrajectories {
     public Pose2d startPoseBC = new Pose2d(-41, 65.75, Math.toRadians(180));
     public Pose2d startPoseBW = new Pose2d(10, 65.75, Math.toRadians(180));
 
-    public Vector2d redCarousel = new Vector2d(-63, -58);
-    public Vector2d blueCarousel = new Vector2d(-63, 58);
+    public Vector2d redCarousel = new Vector2d(-63, -58.25);
+    public Vector2d blueCarousel = new Vector2d(-63, 58.25);
 
-    public Pose2d redCarouselReset = new Pose2d(-61,-56,0);
-    public Pose2d blueCarouselReset = new Pose2d(-61,58,0);
+    public Pose2d redCarouselReset = new Pose2d(-63,-55,0);
+    public Pose2d blueCarouselReset = new Pose2d(-63,55,0);
 
     public Vector2d redHub3 = new Vector2d(-12, -47);
-    public Vector2d redHub2 = new Vector2d(-12, -50);
-    public Vector2d redHub1 = new Vector2d(-12, -48);
+    public Vector2d redHub2 = new Vector2d(-12, -50.5);
+    public Vector2d redHub1 = new Vector2d(-12, -48.5);
 
     public Vector2d blueHub3 = new Vector2d(-15, 47);
-    public Vector2d blueHub2 = new Vector2d(-14.5, 50);
-    public Vector2d blueHub1 = new Vector2d(-13, 48);
+    public Vector2d blueHub2 = new Vector2d(-14.5, 50.5);
+    public Vector2d blueHub1 = new Vector2d(-13, 49);
 
     public Vector2d toParkPos1 = new Vector2d(12, -69+2);
     public Vector2d toParkPos2 = new Vector2d(40, -69+2);

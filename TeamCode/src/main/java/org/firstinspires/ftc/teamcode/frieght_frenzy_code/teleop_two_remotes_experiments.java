@@ -11,7 +11,7 @@ public class teleop_two_remotes_experiments extends LinearOpMode {
     Boolean down = false;
     Boolean sway = true;
     double clock =0;
-    double swaynum=.1;
+    double swaynum=.25;
 
 
     public void runOpMode() {
@@ -27,9 +27,9 @@ public class teleop_two_remotes_experiments extends LinearOpMode {
 
             //make robot wheels go brrr
             robot.updateDrive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
-            while(sway){
-            if(down){clock = clock -.1;}
-            if(!down){clock = clock+.1;}
+            while(sway && !isStopRequested()){
+            if(down){clock = clock -.0005;}
+            if(!down){clock = clock+.0005;}
             if (clock>8){down=true;}
             if(clock<0){down=false;}
             if(clock<8&&clock>6){robot.mtrTurret.setPower( -2*swaynum);}
@@ -37,6 +37,8 @@ public class teleop_two_remotes_experiments extends LinearOpMode {
             if(clock<4&&clock>2){robot.mtrTurret.setPower(1*swaynum);}
             if(clock<2&&clock>0){robot.mtrTurret.setPower(2*swaynum);}
             ;}
+            robot.mtrTurret.setPower(0);
+
 
             //we usually add some telemetry at the end to tell us useful information during testing :)
             telemetry.addData("left stick y value: ", gamepad1.left_stick_y);

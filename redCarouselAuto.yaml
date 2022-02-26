@@ -30,28 +30,10 @@ waypoints:
   tangent: -1.5707963267948966
   interpolationType: "CONSTANT"
 - position:
-    x: -62.0
+    x: -68.0
     y: -36.0
-  heading: 0.0
-  tangent: 1.5707963267948966
-  interpolationType: "CONSTANT"
-- position:
-    x: 10.0
-    y: -20.0
-  heading: 0.0
-  tangent: -1.5707963267948966
-  interpolationType: "CONSTANT"
-- position:
-    x: 38.0
-    y: -40.0
-  heading: 0.0
-  tangent: 0.0
-  interpolationType: "CONSTANT"
-- position:
-    x: 60.0
-    y: -40.0
   heading: 1.5707963267948966
-  tangent: 0.0
+  tangent: 1.5707963267948966
   interpolationType: "SPLINE"
 resolution: 0.25
 version: 1

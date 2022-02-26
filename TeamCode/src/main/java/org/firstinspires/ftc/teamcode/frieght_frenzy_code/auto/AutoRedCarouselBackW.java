@@ -71,10 +71,10 @@ public class AutoRedCarouselBackW extends LinearOpMode {
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end())
-                .lineTo(traj.toParkBarrierPos)
+                .lineTo(traj.toParkBarrierPosRed)
                 .build();
         Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end())
-                .lineTo(traj.toParkBarrierPos)
+                .lineTo(traj.toParkBarrierPosRed)
                 .build();
 
         Trajectory toPark1_1half = drive.trajectoryBuilder(toRedHub1.end())
@@ -82,7 +82,7 @@ public class AutoRedCarouselBackW extends LinearOpMode {
                 .build();
 
         Trajectory toPark1_1 = drive.trajectoryBuilder(toPark1_1half.end())
-                .lineTo(traj.toParkBarrierPos)
+                .lineTo(traj.toParkBarrierPosRed)
                 .build();
 
         // Tell telemetry to update faster than the default 250ms period :)

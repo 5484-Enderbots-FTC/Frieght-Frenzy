@@ -67,25 +67,25 @@ public class AutoRedWarehouseBackW extends LinearOpMode {
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end())
-                .lineTo(traj.toParkPos1)
+                .lineTo(traj.toParkRedPos1)
                 .build();
         Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end())
-                .lineTo(traj.toParkPos1)
+                .lineTo(traj.toParkRedPos1)
                 .build();
         Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end())
-                .lineTo(traj.toParkPos1)
+                .lineTo(traj.toParkRedPos1)
                 .build();
 
         Trajectory toPark2_3 = drive.trajectoryBuilder(toRedHub3.end())
-                .lineTo(traj.toParkBarrierPos)
+                .lineTo(traj.toParkBarrierPosRed)
                 .build();
 
         Trajectory toPark2_2 = drive.trajectoryBuilder(toRedHub2.end())
-                .lineTo(traj.toParkBarrierPos)
+                .lineTo(traj.toParkBarrierPosRed)
                 .build();
 
         Trajectory toPark2_1 = drive.trajectoryBuilder(toRedHub1.end())
-                .lineTo(traj.toParkBarrierPos)
+                .lineTo(traj.toParkBarrierPosRed)
                 .build();
 
         Trajectory traj = drive.trajectoryBuilder(toPark1_3.end())

@@ -138,7 +138,6 @@ public class AutoRedWarehouseFrontSwayW extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             while (!robot.midLimit.isPressed()) {
-
                 robot.mtrTurret.setPower(-0.4);
             }
             robot.mtrTurret.setPower(0);
@@ -183,7 +182,6 @@ public class AutoRedWarehouseFrontSwayW extends LinearOpMode {
              */
 
             //TODO: change this to be waiting for limit siwtch >:)
-            //TODO: fine tune this number (900) to optimize turret and arm go down
             robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.mtrTurret.setPower(0.3);
@@ -272,7 +270,7 @@ public class AutoRedWarehouseFrontSwayW extends LinearOpMode {
                     .splineToConstantHeading(traj.redHub3, Math.toRadians(90))
                     .build();
             drive.followTrajectory(goBack);
-            
+
             //TODO: update later to be during trajectory on way to hub :)
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

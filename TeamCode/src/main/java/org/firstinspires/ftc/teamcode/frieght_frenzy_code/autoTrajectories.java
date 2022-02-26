@@ -19,30 +19,30 @@ public class autoTrajectories {
     public Vector2d redCarousel = new Vector2d(-63, -58.25);
     public Vector2d blueCarousel = new Vector2d(-63, 58.25);
 
-    public Pose2d redCarouselReset = new Pose2d(-63,-55,0);
-    public Pose2d blueCarouselReset = new Pose2d(-63,55,0);
+    public Pose2d redCarouselReset = new Pose2d(-63, -55, 0);
+    public Pose2d blueCarouselReset = new Pose2d(-63, 55, 0);
 
     public Vector2d redHub3 = new Vector2d(-12, -47);
     public Vector2d redHub2 = new Vector2d(-12, -50.5);
     public Vector2d redHub1 = new Vector2d(-12, -48.5);
 
-    public Vector2d redHub3Flank = new Vector2d(-30,-22.5);
-    public Vector2d redHub2Flank = new Vector2d(-33.5,-22.5);
-    public Vector2d redHub1Flank = new Vector2d(-31.5,-22.5);
+    public Vector2d redHub3Flank = new Vector2d(-30, -22.5);
+    public Vector2d redHub2Flank = new Vector2d(-33.5, -22.5);
+    public Vector2d redHub1Flank = new Vector2d(-31.5, -22.5);
 
-    public Vector2d blueHub3Flank = new Vector2d(-30,22.5);
-    public Vector2d blueHub2Flank = new Vector2d(-33.5,22.5);
-    public Vector2d blueHub1Flank = new Vector2d(-31.5,22.5);
+    public Vector2d blueHub3Flank = new Vector2d(-30, 22.5);
+    public Vector2d blueHub2Flank = new Vector2d(-33.5, 22.5);
+    public Vector2d blueHub1Flank = new Vector2d(-31.5, 22.5);
 
     public Vector2d blueHub3 = new Vector2d(-12, 47);
     public Vector2d blueHub2 = new Vector2d(-12, 50.5);
     public Vector2d blueHub1 = new Vector2d(-12, 48.5);
 
-    public Vector2d toParkRedPos1 = new Vector2d(12, -69+2);
-    public Vector2d toParkRedPos2 = new Vector2d(42, -69+2);
+    public Vector2d toParkRedPos1 = new Vector2d(12, -69 + 2);
+    public Vector2d toParkRedPos2 = new Vector2d(42, -69 + 2);
 
-    public Vector2d toParkBluePos1 = new Vector2d(12,69-2);
-    public Vector2d toParkBluePos2 = new Vector2d(42,69-2);
+    public Vector2d toParkBluePos1 = new Vector2d(12, 69 - 2);
+    public Vector2d toParkBluePos2 = new Vector2d(42, 69 - 2);
 
     public Vector2d toParkBarrierPosRed = new Vector2d(50, -35);
     public Vector2d toParkBarrierPosBlue = new Vector2d(50, 35);
@@ -50,11 +50,11 @@ public class autoTrajectories {
     public Vector2d toParkBarrierPosRedHalf = new Vector2d(0, -35);
     public Vector2d toParkBarrierPosBlueHalf = new Vector2d(0, 35);
 
-    public Pose2d toFlankRed = new Pose2d(-50,-22.5, Math.toRadians(-90));
-    public Pose2d toFlankBlue = new Pose2d(-50,22.5, Math.toRadians(-90));
+    public Pose2d toFlankRed = new Pose2d(-50, -22.5, Math.toRadians(-90));
+    public Pose2d toFlankBlue = new Pose2d(-50, 22.5, Math.toRadians(-90));
 
-    public Pose2d toParkRedStorage = new Pose2d(-69+1, -36, Math.toRadians(-90));
-    public Pose2d toParkBlueStorage = new Pose2d(-69+1, 36, Math.toRadians(-90));
+    public Pose2d toParkRedStorage = new Pose2d(-69 + 1, -36, Math.toRadians(-90));
+    public Pose2d toParkBlueStorage = new Pose2d(-69 + 1, 36, Math.toRadians(-90));
     //new Pose2d(60, 36, Math.toRadians(-90));
 
 }

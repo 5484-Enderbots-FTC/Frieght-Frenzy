@@ -229,7 +229,7 @@ public class AutoRedCarouselFrontW extends LinearOpMode {
             drive.followTrajectory(toPark2);
 
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            while (!robot.frontLimit.isPressed()){
+            while (!robot.frontLimit.isPressed()) {
                 robot.mtrTurret.setPower(0.4);
             }
             robot.mtrTurret.setPower(0);

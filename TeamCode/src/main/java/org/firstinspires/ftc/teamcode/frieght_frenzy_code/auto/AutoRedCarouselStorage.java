@@ -70,10 +70,10 @@ public class AutoRedCarouselStorage extends LinearOpMode {
         Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end(), Math.toRadians(-135))
                 .splineToLinearHeading(traj.toParkRedStorage, Math.toRadians(90))
                 .build();
-        Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end(),Math.toRadians(-135))
+        Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end(), Math.toRadians(-135))
                 .splineToLinearHeading(traj.toParkRedStorage, Math.toRadians(90))
                 .build();
-        Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end(),Math.toRadians(-135))
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end(), Math.toRadians(-135))
                 .splineToLinearHeading(traj.toParkRedStorage, Math.toRadians(90))
                 .build();
 
@@ -179,7 +179,7 @@ public class AutoRedCarouselStorage extends LinearOpMode {
              * set turret to go collect pos and arm go down
              */
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            while (!robot.bottomLimit.isPressed()){
+            while (!robot.bottomLimit.isPressed()) {
                 robot.mtrArm.setPower(0.3);
             }
             robot.mtrArm.setPower(0);

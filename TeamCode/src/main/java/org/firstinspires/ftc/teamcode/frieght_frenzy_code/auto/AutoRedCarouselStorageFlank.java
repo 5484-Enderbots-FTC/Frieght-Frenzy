@@ -182,7 +182,7 @@ public class AutoRedCarouselStorageFlank extends LinearOpMode {
              * set turret to go collect pos and arm go down
              */
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            while (!robot.bottomLimit.isPressed()){
+            while (!robot.bottomLimit.isPressed()) {
                 robot.mtrArm.setPower(0.3);
             }
             robot.mtrArm.setPower(0);

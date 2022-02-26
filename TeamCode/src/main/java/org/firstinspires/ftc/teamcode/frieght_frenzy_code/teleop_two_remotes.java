@@ -28,7 +28,7 @@ public class teleop_two_remotes extends LinearOpMode {
     State currentState;
     Status intakeState;
 
-    private enum Status{
+    private enum Status {
         IN,
         OUT,
         STOPPED
@@ -42,7 +42,6 @@ public class teleop_two_remotes extends LinearOpMode {
     }
 
 
-    
     public void runOpMode() {
         //initialization code goes here
         robot.init(hardwareMap);
@@ -62,44 +61,42 @@ public class teleop_two_remotes extends LinearOpMode {
              */
 
             //make robot wheels go brrr
-            if(gamepad1.left_bumper && !babyMode && toggleBabyTimer.seconds() > var.toggleWait){
+            if (gamepad1.left_bumper && !babyMode && toggleBabyTimer.seconds() > var.toggleWait) {
                 //activate baby slow mode when left bumper is pressed
                 babyMode = true;
                 toggleBabyTimer.reset();
             }
-            if(gamepad1.left_bumper && babyMode && toggleBabyTimer.seconds() > var.toggleWait){
+            if (gamepad1.left_bumper && babyMode && toggleBabyTimer.seconds() > var.toggleWait) {
                 //deactivate baby slow mode by pressing left bumper again
                 babyMode = false;
                 toggleBabyTimer.reset();
             }
-            
+
             if (!babyMode) {
                 robot.updateDrive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
             }
-            if(babyMode){
-                robot.updateDrive(gamepad1.left_stick_y*0.5, gamepad1.left_stick_x*0.5, gamepad1.right_stick_x*0.5);
+            if (babyMode) {
+                robot.updateDrive(gamepad1.left_stick_y * 0.5, gamepad1.left_stick_x * 0.5, gamepad1.right_stick_x * 0.5);
             }
 
-            if(gamepad1.a){
+            if (gamepad1.a) {
                 carouselSpinning = true;
-                if(robot.alliance_switch.getState() == true){
+                if (robot.alliance_switch.getState() == true) {
                     robot.svoCarousel.setPower(var.fullPower);
-                }
-                else{
+                } else {
                     robot.svoCarousel.setPower(-var.fullPower);
                 }
 
             }
-            if(gamepad1.b){
+            if (gamepad1.b) {
                 carouselSpinning = false;
                 robot.svoCarousel.setPower(var.stop);
             }
-            if(gamepad1.x){
+            if (gamepad1.x) {
                 carouselSpinning = true;
-                if(robot.alliance_switch.getState() == true){
+                if (robot.alliance_switch.getState() == true) {
                     robot.svoCarousel.setPower(-var.fullPower);
-                }
-                else{
+                } else {
                     robot.svoCarousel.setPower(var.fullPower);
                 }
             }
@@ -108,13 +105,13 @@ public class teleop_two_remotes extends LinearOpMode {
              * GAMEPAD 2 CONTROLS
              */
 
-            if(robot.bottomLimit.isPressed() && !zeroPosSet){
+            if (robot.bottomLimit.isPressed() && !zeroPosSet) {
                 robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 zeroPosSet = true;
             }
 
-            switch(currentState) {
+            switch (currentState) {
                 case NOTHING:
                     /**
                      * Begin automated to the top of hub function
@@ -138,25 +135,23 @@ public class teleop_two_remotes extends LinearOpMode {
                      * Normal 'manual' function :)
                      */
                     //else
-                    if(robot.bottomLimit.isPressed() && gamepad2.left_stick_y > 0){
+                    if (robot.bottomLimit.isPressed() && gamepad2.left_stick_y > 0) {
                         robot.mtrArm.setPower(0);
-                    }
-                    else if(robot.bottomLimit.isPressed() && gamepad2.left_stick_y < 0){
+                    } else if (robot.bottomLimit.isPressed() && gamepad2.left_stick_y < 0) {
                         robot.mtrArm.setPower(gamepad2.left_stick_y);
-                    }
-                    else{
+                    } else {
                         robot.mtrArm.setPower(gamepad2.left_stick_y);
                     }
 
                     break;
                 case SET:
-                        robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        currentState = State.WAIT;
+                    robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    currentState = State.WAIT;
                     break;
                 case WAIT:
-                    if(robot.mtrArm.isBusy()){
+                    if (robot.mtrArm.isBusy()) {
 
-                    }else{
+                    } else {
                         currentState = State.FINISH;
                     }
                     break;
@@ -171,17 +166,17 @@ public class teleop_two_remotes extends LinearOpMode {
 
 
             //turret spin to da right
-            if(robot.frontLimit.isPressed()){
-                robot.mtrTurret.setPower(gamepad2.right_stick_x*0.3);
+            if (robot.frontLimit.isPressed()) {
+                robot.mtrTurret.setPower(gamepad2.right_stick_x * 0.3);
                 telemetry.addLine("REEE");
-            }else {
+            } else {
                 robot.mtrTurret.setPower(gamepad2.right_stick_x);
             }
             //turret spin to da left
-            if(robot.backLimit.isPressed()){
-                robot.mtrTurret.setPower(gamepad2.right_stick_x*0.3);
-            }else{
-               robot.mtrTurret.setPower(gamepad2.right_stick_x);
+            if (robot.backLimit.isPressed()) {
+                robot.mtrTurret.setPower(gamepad2.right_stick_x * 0.3);
+            } else {
+                robot.mtrTurret.setPower(gamepad2.right_stick_x);
             }
 
             robot.mtrTurret.setPower(gamepad2.right_stick_x);
@@ -189,13 +184,13 @@ public class teleop_two_remotes extends LinearOpMode {
              * tilt controls
              */
 
-            if(gamepad2.right_bumper){
+            if (gamepad2.right_bumper) {
                 robot.svoIntakeTilt.setPosition(var.intakeMid);
             }
-            if(gamepad2.dpad_up){
+            if (gamepad2.dpad_up) {
                 robot.svoIntakeTilt.setPosition(var.intakeCollect);
             }
-            if(gamepad2.left_bumper){
+            if (gamepad2.left_bumper) {
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
             }
 
@@ -204,22 +199,22 @@ public class teleop_two_remotes extends LinearOpMode {
              * Intake Controls
              */
 
-            if(!robot.intakeLimit.isPressed()){
+            if (!robot.intakeLimit.isPressed()) {
                 freightCollected = true;
-            }else{
+            } else {
                 freightCollected = false;
             }
 
-            if(!freightCollected){
-                if(robot.bottomLimit.isPressed() && intakeState != Status.IN){
+            if (!freightCollected) {
+                if (robot.bottomLimit.isPressed() && intakeState != Status.IN) {
                     robot.svoIntakeTilt.setPosition(var.intakeCollect);
                     robot.svoIntake.setPower(var.lessPower);
                     intakeState = Status.IN;
                 }
                 robot.LEDstrip.setPosition(var.green);
             }
-            if(freightCollected){
-                if(intakeState != Status.OUT) {
+            if (freightCollected) {
+                if (intakeState != Status.OUT) {
                     robot.svoIntake.setPower(var.stop);
                     intakeState = Status.STOPPED;
                     robot.LEDstrip.setPosition(var.red);
@@ -227,18 +222,18 @@ public class teleop_two_remotes extends LinearOpMode {
             }
 
             //run intake
-            if(gamepad2.a){
+            if (gamepad2.a) {
                 robot.svoIntake.setPower(var.lessPower);
                 intakeState = Status.IN;
             }
             //reverse intake
-            if(gamepad2.b){
+            if (gamepad2.b) {
                 //might turn this into an output sequence
                 intakeState = Status.OUT;
                 robot.svoIntake.setPower(-var.lessPower);
             }
             //stop intake
-            if(gamepad2.x){
+            if (gamepad2.x) {
                 robot.svoIntake.setPower(var.stop);
                 intakeState = Status.STOPPED;
             }
@@ -248,23 +243,20 @@ public class teleop_two_remotes extends LinearOpMode {
              */
 
             //we usually add some telemetry at the end to tell us useful information during testing :)
-            if(babyMode){
+            if (babyMode) {
                 telemetry.addLine("baby mode activated");
-            }
-            else{
+            } else {
                 telemetry.addLine("baby mode inactive");
             }
 
-            if(robot.alliance_switch.getState() == true) {
+            if (robot.alliance_switch.getState() == true) {
                 telemetry.addLine("red alliance");
-            }
-            else {
+            } else {
                 telemetry.addLine("blue alliance");
             }
-            if(robot.position_switch.getState() == true) {
+            if (robot.position_switch.getState() == true) {
                 telemetry.addLine("carousel side");
-            }
-            else {
+            } else {
                 telemetry.addLine("warehouse side");
             }
 

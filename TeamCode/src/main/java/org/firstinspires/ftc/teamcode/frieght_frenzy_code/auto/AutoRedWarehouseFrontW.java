@@ -185,19 +185,19 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
             robot.mtrTurret.setPower(0.3);
             telemetry.addLine("MOAR THINSG");
             telemetry.update();
-            while (!robot.frontLimit.isPressed() | !robot.bottomLimit.isPressed()){
+            while (!robot.frontLimit.isPressed() | !robot.bottomLimit.isPressed()) {
                 telemetry.addLine("turret go brrrrr");
 
-                if(robot.mtrTurret.getCurrentPosition() >=900 && !robot.bottomLimit.isPressed()){
+                if (robot.mtrTurret.getCurrentPosition() >= 900 && !robot.bottomLimit.isPressed()) {
                     robot.mtrArm.setPower(0.5);
                     telemetry.addLine("arm go brrrrrrrrrrrrrrrrrrrrrrrrrr");
 
                 }
-                if (robot.bottomLimit.isPressed()){
+                if (robot.bottomLimit.isPressed()) {
                     robot.mtrArm.setPower(0);
                     telemetry.addLine("arm stoop");
                 }
-                if (robot.frontLimit.isPressed()){
+                if (robot.frontLimit.isPressed()) {
                     robot.mtrTurret.setPower(0);
                     telemetry.addLine("turret stoop");
                 }
@@ -219,7 +219,7 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
             /**
              * drive into warehouse for consumption
              */
-            robot.svoIntake.setPower(var.lessPower*1.5);
+            robot.svoIntake.setPower(var.lessPower * 1.5);
             drive.followTrajectoryAsync(goCollect);
             while (robot.intakeLimit.isPressed()) {
                 telemetry.addLine("consuming");
@@ -275,13 +275,13 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
             spitOutBlock(true);
 
             /**
-                el parque
+             el parque
              */
             drive.followTrajectory(toPark1_3);
             drive.followTrajectory(toPark2);
 
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            while (!robot.frontLimit.isPressed()){
+            while (!robot.frontLimit.isPressed()) {
                 robot.mtrTurret.setPower(0.4);
             }
             robot.mtrTurret.setPower(0);
@@ -290,10 +290,9 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
     }
 
     public void spitOutBlock(boolean warehouse_block) {
-        if (warehouse_block){
+        if (warehouse_block) {
             robot.svoIntakeTilt.setPosition(var.intakeHigh);
-        }
-        else if (runningOpMode == 3) {
+        } else if (runningOpMode == 3) {
             robot.svoIntakeTilt.setPosition(var.intakeHigh);
         } else if (runningOpMode == 2) {
             robot.svoIntakeTilt.setPosition(var.intakeMid);

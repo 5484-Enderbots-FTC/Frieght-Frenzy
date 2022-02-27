@@ -270,7 +270,7 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
 
             //TODO: make this spline correct lmao
             Trajectory goBack = drive.trajectoryBuilder(intakeEnd)
-                    .splineToConstantHeading(traj.blueHub3, Math.toRadians(90))
+                    .splineToConstantHeading(traj.blueHub3, Math.toRadians(-90))
                     .build();
 
             drive.followTrajectory(goBack);
@@ -289,7 +289,7 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
                 telemetry.update();
                 robot.mtrTurret.setPower(-0.4);
             }
-
+            robot.mtrTurret.setPower(0);
             break;
         }
     }

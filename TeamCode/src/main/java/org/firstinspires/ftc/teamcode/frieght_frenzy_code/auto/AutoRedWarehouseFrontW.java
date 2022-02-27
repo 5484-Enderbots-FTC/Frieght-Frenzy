@@ -204,6 +204,18 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
                 telemetry.update();
             }
             robot.mtrTurret.setPower(0);
+
+            /*
+            robot.movearm(0.7, var.collect);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            while(robot.mtrArm.isBusy()){
+            }
+
+            robot.mtrArm.setPower(0);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.svoIntakeTilt.setPosition(var.intakeExtraFreight);
+             */
+
             drive.followTrajectory(toPark2);
 
             /*            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

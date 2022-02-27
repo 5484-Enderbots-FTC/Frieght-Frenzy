@@ -53,31 +53,32 @@ public class AutoRedCarouselStorageFlank extends LinearOpMode {
                 .splineToConstantHeading(traj.redCarousel, Math.toRadians(180))
                 .build();
 
-        Trajectory toRedHub3 = drive.trajectoryBuilder(toRedCarousel.end())
+        Trajectory toFlank = drive.trajectoryBuilder(toRedCarousel.end(), Math.toRadians(90))
                 .splineToLinearHeading(traj.toFlankRed, Math.toRadians(0))
-                .splineTo(traj.redHub3Flank, Math.toRadians(0))
                 .build();
 
-        Trajectory toRedHub2 = drive.trajectoryBuilder(toRedCarousel.end())
-                .splineToLinearHeading(traj.toFlankRed, Math.toRadians(0))
-                .splineTo(traj.redHub2Flank, Math.toRadians(0))
+        Trajectory toRedHub3 = drive.trajectoryBuilder(toFlank.end())
+                .lineTo(traj.redHub3Flank)
                 .build();
 
-        Trajectory toRedHub1 = drive.trajectoryBuilder(toRedCarousel.end())
-                .splineToLinearHeading(traj.toFlankRed, Math.toRadians(0))
-                .splineTo(traj.redHub1Flank, Math.toRadians(0))
+        Trajectory toRedHub2 = drive.trajectoryBuilder(toFlank.end())
+                .lineTo(traj.redHub2Flank)
                 .build();
 
-        Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end(), true)
-                .splineToLinearHeading(traj.toParkRedStorage, Math.toRadians(-90))
+        Trajectory toRedHub1 = drive.trajectoryBuilder(toFlank.end())
+                .lineTo(traj.redHub1Flank)
                 .build();
 
-        Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end(), true)
-                .splineToLinearHeading(traj.toParkRedStorage, Math.toRadians(-90))
+        Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end(), Math.toRadians(135))
+                .splineToConstantHeading(traj.toParkRedStorageFlank, Math.toRadians(-90))
                 .build();
 
-        Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end(), true)
-                .splineToLinearHeading(traj.toParkRedStorage, Math.toRadians(-90))
+        Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end(), Math.toRadians(135))
+                .splineToConstantHeading(traj.toParkRedStorageFlank, Math.toRadians(-90))
+                .build();
+
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end(), Math.toRadians(135))
+                .splineToConstantHeading(traj.toParkRedStorageFlank, Math.toRadians(-90))
                 .build();
 
         // Tell telemetry to update faster than the default 250ms period :)
@@ -159,6 +160,8 @@ public class AutoRedCarouselStorageFlank extends LinearOpMode {
              * go to red hub and spit out bloque
              * then go to wall
              */
+            drive.followTrajectory(toFlank);
+
             if (runningOpMode == 3) {
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 drive.followTrajectory(toRedHub3);

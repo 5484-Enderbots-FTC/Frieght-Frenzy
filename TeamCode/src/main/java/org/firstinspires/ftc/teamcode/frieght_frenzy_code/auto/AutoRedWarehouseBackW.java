@@ -176,7 +176,7 @@ public class AutoRedWarehouseBackW extends LinearOpMode {
                 spitOutBlock(false);
                 drive.followTrajectory(toPark1_1);
             }
-            //robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            robot.svoIntakeTilt.setPosition(var.intakeCollect);
 
             /**
              * set turret to go collect pos and arm go down

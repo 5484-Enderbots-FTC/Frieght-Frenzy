@@ -92,8 +92,8 @@ public class AutoRedWarehouseBackW extends LinearOpMode {
                 .lineTo(traj.toParkBarrierPosRed)
                 .build();
 
-        Trajectory goCollect = drive.trajectoryBuilder(toPark1_3.end())
-                .forward(50, FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+        Trajectory goCollect = drive.trajectoryBuilder(toPark2.end())
+                .forward(50, FFMecanumDrive.getVelocityConstraint(2, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
 

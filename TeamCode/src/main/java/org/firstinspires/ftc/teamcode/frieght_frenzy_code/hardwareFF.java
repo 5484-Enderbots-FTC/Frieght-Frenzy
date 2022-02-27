@@ -33,7 +33,7 @@ public class hardwareFF {
     public ElementAnalysisPipelineFF pipeline;
 
     public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR; //control hub ports , , ,
-    public DcMotorEx mtrArm, mtrTurret; //expansion hub ports ,
+    public DcMotorEx mtrArm, mtrTurret, mtrTape; //expansion hub ports ,
     public CRServo svoCarousel, svoIntake; //servo port 0, 1
     public Servo svoIntakeTilt, LEDstrip; //servo port
 
@@ -90,6 +90,10 @@ public class hardwareFF {
         mtrTurret.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         mtrTurret.setDirection(DcMotorEx.Direction.REVERSE);
 
+        mtrTape = hw.get(DcMotorEx.class, "mtrTape");
+        mtrTurret.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        mtrTurret.setDirection(DcMotorEx.Direction.FORWARD);
+
         svoCarousel = hw.get(CRServo.class, "svoCarousel");
         svoCarousel.setDirection(CRServo.Direction.REVERSE);
 
@@ -100,10 +104,7 @@ public class hardwareFF {
 
         LEDstrip = hw.get(Servo.class, "LEDstrip");
 
-        //leftLimit = hw.get(TouchSensor.class, "leftLimit");
-        //rightLimit = hw.get(TouchSensor.class, "rightLimit");
         midLimit = hw.get(TouchSensor.class, "midLimit");
-        //topLimit = hw.get(TouchSensor.class, "topLimit");
         bottomLimit = hw.get(TouchSensor.class, "bottomLimit");
         intakeLimit = hw.get(TouchSensor.class, "intakeLimit");
 

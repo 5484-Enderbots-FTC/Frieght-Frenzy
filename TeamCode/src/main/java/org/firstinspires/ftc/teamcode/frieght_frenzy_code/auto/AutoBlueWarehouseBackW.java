@@ -76,14 +76,15 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
                 .lineTo(traj.toParkBluePos1)
                 .build();
 //e
-        Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
+        Trajectory toCollect = drive.trajectoryBuilder(toPark1_3.end(), true)
                 .lineTo(traj.toParkBluePos2)
                 .build();
 
-        Trajectory toPark2_3 = drive.trajectoryBuilder(toBlueHub3.end())
+        Trajectory toPark2_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)
                 .lineTo(traj.toParkBarrierPosBlue)
                 .build();
 
+        /*
         Trajectory toPark2_2 = drive.trajectoryBuilder(toBlueHub2.end())
                 .lineTo(traj.toParkBarrierPosBlue)
                 .build();
@@ -91,8 +92,9 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
         Trajectory toPark2_1 = drive.trajectoryBuilder(toBlueHub1.end())
                 .lineTo(traj.toParkBarrierPosBlue)
                 .build();
+         */
 
-        Trajectory goCollect = drive.trajectoryBuilder(toPark2.end(), true)
+        Trajectory goCollect = drive.trajectoryBuilder(toCollect.end(), true)
                 .forward(-50, FFMecanumDrive.getVelocityConstraint(2, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 //a
@@ -218,7 +220,7 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
                 telemetry.update();
             }
             robot.mtrTurret.setPower(0);
-            drive.followTrajectory(toPark2);
+            drive.followTrajectory(toCollect);
 
             /**
              * drive into warehouse for consumption
@@ -268,7 +270,6 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
             robot.mtrArm.setPower(0);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-            //TODO: make this spline correct lmao
             Trajectory goBack = drive.trajectoryBuilder(intakeEnd)
                     .splineToConstantHeading(traj.blueHub3, Math.toRadians(-90))
                     .build();

@@ -245,7 +245,6 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
             robot.mtrArm.setPower(0);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-            //TODO: make this spline correct lmao
             Trajectory goBack = drive.trajectoryBuilder(intakeEnd)
                     .splineToConstantHeading(traj.blueHub3, Math.toRadians(-90))
                     .build();

@@ -49,35 +49,36 @@ public class AutoBlueCarouselStorageFlank extends LinearOpMode {
 
         drive.setPoseEstimate(traj.startPoseBC);
 
-        Trajectory toBlueCarousel = drive.trajectoryBuilder(traj.startPoseBC, true)
+        Trajectory toBlueCarousel = drive.trajectoryBuilder(traj.startPoseBC)
                 .splineToConstantHeading(traj.blueCarousel, Math.toRadians(180))
                 .build();
 
-        Trajectory toBlueHub3 = drive.trajectoryBuilder(toBlueCarousel.end())
+        Trajectory toFlank = drive.trajectoryBuilder(toBlueCarousel.end(), Math.toRadians(-90))
                 .splineToLinearHeading(traj.toFlankBlue, Math.toRadians(0))
-                .splineTo(traj.blueHub3Flank, Math.toRadians(0))
                 .build();
 
-        Trajectory toBlueHub2 = drive.trajectoryBuilder(toBlueCarousel.end())
-                .splineToLinearHeading(traj.toFlankBlue, Math.toRadians(0))
-                .splineTo(traj.blueHub2Flank, Math.toRadians(0))
+        Trajectory toBlueHub3 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
+                .lineTo(traj.blueHub3Flank)
                 .build();
 
-        Trajectory toBlueHub1 = drive.trajectoryBuilder(toBlueCarousel.end())
-                .splineToLinearHeading(traj.toFlankBlue, Math.toRadians(0))
-                .splineTo(traj.blueHub1Flank, Math.toRadians(0))
+        Trajectory toBlueHub2 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
+                .lineTo(traj.blueHub2Flank)
                 .build();
 
-        Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)
-                .splineToLinearHeading(traj.toParkBlueStorage, Math.toRadians(-90))
+        Trajectory toBlueHub1 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
+                .lineTo(traj.blueHub1Flank)
                 .build();
 
-        Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), true)
-                .splineToLinearHeading(traj.toParkBlueStorage, Math.toRadians(-90))
+        Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), Math.toRadians(-135))
+                .splineTo(traj.toParkBlueStorageFlank, Math.toRadians(90))
                 .build();
 
-        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(), true)
-                .splineToLinearHeading(traj.toParkBlueStorage, Math.toRadians(-90))
+        Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), Math.toRadians(-135))
+                .splineTo(traj.toParkBlueStorageFlank, Math.toRadians(90))
+                .build();
+
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(), Math.toRadians(-135))
+                .splineTo(traj.toParkBlueStorageFlank, Math.toRadians(90))
                 .build();
 
         // Tell telemetry to update faster than the default 250ms period :)

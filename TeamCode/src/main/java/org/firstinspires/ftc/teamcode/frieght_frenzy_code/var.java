@@ -48,5 +48,6 @@ public class var {
     public static int turnDirection = 1;
     //lol i cant believe you are reading this. That is not pog!
     public static double duckTime = 3;
+    public static double intakeStopTime = 5;
 
 }

@@ -29,7 +29,7 @@ public class teleop_two_remotes_experiments extends LinearOpMode {
             robot.updateDrive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
             while(sway && !isStopRequested()){
             if(down){clock = clock -.0005;}
-            if(!down){clock = clock+.0005;}//
+            if(!down){clock = clock+.0005;}
             if (clock>8){down=true;}
             if(clock<0){down=false;}
             if(clock<8&&clock>6){robot.mtrTurret.setPower( -2*swaynum);}

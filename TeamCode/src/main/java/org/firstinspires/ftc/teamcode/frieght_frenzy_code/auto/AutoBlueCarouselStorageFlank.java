@@ -57,28 +57,28 @@ public class AutoBlueCarouselStorageFlank extends LinearOpMode {
                 .splineToLinearHeading(traj.toFlankBlue, Math.toRadians(0))
                 .build();
 
-        Trajectory toBlueHub3 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
+        Trajectory toBlueHub3 = drive.trajectoryBuilder(toFlank.end(), true)
                 .lineTo(traj.blueHub3Flank)
                 .build();
 
-        Trajectory toBlueHub2 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
+        Trajectory toBlueHub2 = drive.trajectoryBuilder(toFlank.end(), true)
                 .lineTo(traj.blueHub2Flank)
                 .build();
 
-        Trajectory toBlueHub1 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
+        Trajectory toBlueHub1 = drive.trajectoryBuilder(toFlank.end(), true)
                 .lineTo(traj.blueHub1Flank)
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), Math.toRadians(-135))
-                .splineTo(traj.toParkBlueStorageFlank, Math.toRadians(90))
+                .splineToConstantHeading(traj.toParkBlueStorageFlank, Math.toRadians(90))
                 .build();
 
         Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), Math.toRadians(-135))
-                .splineTo(traj.toParkBlueStorageFlank, Math.toRadians(90))
+                .splineToConstantHeading(traj.toParkBlueStorageFlank, Math.toRadians(90))
                 .build();
 
         Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(), Math.toRadians(-135))
-                .splineTo(traj.toParkBlueStorageFlank, Math.toRadians(90))
+                .splineToConstantHeading(traj.toParkBlueStorageFlank, Math.toRadians(90))
                 .build();
 
         // Tell telemetry to update faster than the default 250ms period :)
@@ -150,8 +150,8 @@ public class AutoBlueCarouselStorageFlank extends LinearOpMode {
              * shmove on to carousel and spain without the a
              */
             drive.followTrajectory(toBlueCarousel);
-            robot.svoCarousel.setPower(1);
-            drive.setPoseEstimate(traj.redCarouselReset);
+            robot.svoCarousel.setPower(-1);
+            drive.setPoseEstimate(traj.blueCarouselResetFlank);
             drive.updatePoseEstimate();
             sleep(3000);
             robot.svoCarousel.setPower(0);
@@ -160,6 +160,9 @@ public class AutoBlueCarouselStorageFlank extends LinearOpMode {
              * go to red hub and spit out bloque
              * then go to wall
              */
+
+            drive.followTrajectory(toFlank);
+
             if (runningOpMode == 3) {
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 drive.followTrajectory(toBlueHub3);

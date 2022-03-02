@@ -37,6 +37,8 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 @Autonomous(name = "red warehouse front 2 bloque????", group = "red")
 public class AutoRedWarehouseFrontWDoubleExtra extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
@@ -45,7 +47,7 @@ public class AutoRedWarehouseFrontWDoubleExtra extends LinearOpMode {
     double runningOpMode = 3;
     Pose2d intakeEnd;
   
-    ElapsedTime totalTime = new ElapsedTime;
+    ElapsedTime totalTime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -165,7 +167,7 @@ public class AutoRedWarehouseFrontWDoubleExtra extends LinearOpMode {
                 drive.followTrajectoryAsync(toPark1_3);
             } else if (runningOpMode == 2) {
                 robot.svoIntakeTilt.setPosition(var.intakeMid);
-                robot.movearm(1, var.secondlvl);
+                robot.movearm(1, var.secondLvl);
                 robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 while (!robot.midLimit.isPressed()){
                   
@@ -180,12 +182,12 @@ public class AutoRedWarehouseFrontWDoubleExtra extends LinearOpMode {
                 drive.followTrajectoryAsync(toPark1_2);
             } else if (runningOpMode == 1) {
                 robot.svoIntakeTilt.setPosition(var.intakeLow);
-                robot.movearm(1, var.firstlvl);
+                robot.movearm(1, var.firstLvl);
                 robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 drive.followTrajectoryAsync(toRedHub1);
                 while (robot.mtrBR.isBusy() | !robot.midLimit.isPressed()){
                   drive.update();
-                  if (robot.midLimit.isPressed){
+                  if (robot.midLimit.isPressed()){
                     robot.mtrTurret.setPower(0);
                   }
                 }

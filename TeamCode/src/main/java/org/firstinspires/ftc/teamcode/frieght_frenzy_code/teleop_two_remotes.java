@@ -142,7 +142,6 @@ public class teleop_two_remotes extends LinearOpMode {
                     } else {
                         robot.mtrArm.setPower(gamepad2.left_stick_y);
                     }
-
                     break;
                 case SET:
                     robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -163,7 +162,6 @@ public class teleop_two_remotes extends LinearOpMode {
             }
 
             //TODO: rewrite the logic when we get better limits :)
-
 
             //turret spin to da right
             if (robot.frontLimit.isPressed()) {
@@ -193,7 +191,6 @@ public class teleop_two_remotes extends LinearOpMode {
             if (gamepad2.left_bumper) {
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
             }
-
 
             /**
              * Intake Controls
@@ -237,6 +234,23 @@ public class teleop_two_remotes extends LinearOpMode {
                 robot.svoIntake.setPower(var.stop);
                 intakeState = Status.STOPPED;
             }
+
+            /**
+             * MEASURE NOW
+             */
+            robot.mtrTape.setPower(gamepad2.right_trigger);
+            robot.mtrTape.setPower(-gamepad2.left_trigger);
+            //if that didnt work, change to this:
+            /*
+            if(gamepad1.right_trigger > triggerDeadzone){
+                robot.mtrTape.setPower(gamepad1.right_trigger);
+            }else if(gamepad1.left_trigger > triggerDeadzone){
+                robot.mtrTape.setPower(-gamepad1.left_trigger);
+            }
+                else{
+                robot.mtrTape.setPower(0);
+            }
+             */
 
             /**
              * Telemetry yay

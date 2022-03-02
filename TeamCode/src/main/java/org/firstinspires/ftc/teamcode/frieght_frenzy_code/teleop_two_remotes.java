@@ -23,6 +23,8 @@ public class teleop_two_remotes extends LinearOpMode {
     boolean carouselSpinning = false;
     boolean intakeOn = false;
     boolean freightCollected = false;
+
+    boolean zeroPosTapeSet = false;
     boolean zeroPosSet = false;
 
     State currentState;
@@ -163,39 +165,37 @@ public class teleop_two_remotes extends LinearOpMode {
 
             //TODO: rewrite the logic when we get better limits :)
 
-            //turret spin to da right
-            if (robot.frontLimit.isPressed()) {
-                robot.mtrTurret.setPower(gamepad2.right_stick_x * 0.3);
-                telemetry.addLine("REEE");
-            } else {
-                robot.mtrTurret.setPower(gamepad2.right_stick_x);
+            if (robot.frontLimit.isPressed() && gamepad1.right_stick_x > 0) {
+                robot.mtrTurret.setPower(0);
+                telemetry.addLine("front limit stopping power");
+            } else if (robot.backLimit.isPressed() && gamepad1.right_stick_x <0){
+                robot.mtrTurret.setPower(0);
+                telemetry.addLine("BACK limit stopping power");
             }
-            //turret spin to da left
-            if (robot.backLimit.isPressed()) {
-                robot.mtrTurret.setPower(gamepad2.right_stick_x * 0.3);
-            } else {
-                robot.mtrTurret.setPower(gamepad2.right_stick_x);
+            else {
+                robot.mtrTurret.setPower(gamepad1.right_stick_x);
             }
-
-            robot.mtrTurret.setPower(gamepad2.right_stick_x);
             /**
              * tilt controls
              */
 
-            if (gamepad2.right_bumper) {
-                robot.svoIntakeTilt.setPosition(var.intakeMid);
-            }
-            if (gamepad2.dpad_up) {
-                robot.svoIntakeTilt.setPosition(var.intakeCollect);
-            }
-            if (gamepad2.left_bumper) {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            //TODO: fix collect position if it's too low normally :P
+            if(robot.mtrTape.getCurrentPosition() < var.tapeTimeIsNow){
+                //basically: if not TAPE TIME then do this
+                if(robot.mtrArm.getCurrentPosition() <= var.armIntakeTiltSwitch){
+                    robot.svoIntakeTilt.setPosition(var.intakeCollect);
+                }
+                if(robot.mtrArm.getCurrentPosition() > var.armIntakeTiltSwitch){
+                    robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                }
+            }else{
+                //otherwise, set intake to init pls
+                robot.svoIntakeTilt.setPosition(var.intakeInit);
             }
 
             /**
              * Intake Controls
              */
-
             if (!robot.intakeLimit.isPressed()) {
                 freightCollected = true;
             } else {
@@ -204,7 +204,6 @@ public class teleop_two_remotes extends LinearOpMode {
 
             if (!freightCollected) {
                 if (robot.bottomLimit.isPressed() && intakeState != Status.IN) {
-                    robot.svoIntakeTilt.setPosition(var.intakeCollect);
                     robot.svoIntake.setPower(var.lessPower);
                     intakeState = Status.IN;
                 }
@@ -217,6 +216,8 @@ public class teleop_two_remotes extends LinearOpMode {
                     robot.LEDstrip.setPosition(var.red);
                 }
             }
+
+
 
             //run intake
             if (gamepad2.a) {
@@ -238,7 +239,16 @@ public class teleop_two_remotes extends LinearOpMode {
             /**
              * MEASURE NOW
              */
-            robot.mtrTape.setPower(gamepad2.right_trigger);
+
+            if(!zeroPosTapeSet){
+                robot.mtrTape.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.mtrTape.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                zeroPosTapeSet = true;
+            }
+
+            if(robot.mtrTape.getCurrentPosition() < var.tapeLimit){
+                robot.mtrTape.setPower(gamepad2.right_trigger);
+            }
             robot.mtrTape.setPower(-gamepad2.left_trigger);
             //if that didnt work, change to this:
             /*
@@ -274,6 +284,9 @@ public class teleop_two_remotes extends LinearOpMode {
                 telemetry.addLine("warehouse side");
             }
 
+            telemetry.addData("tape encoder reading: ", robot.mtrTape.getCurrentPosition());
+            telemetry.addData("arm encoder reading: ", robot.mtrArm.getCurrentPosition());
+            /*
             telemetry.addData("bottom limit status", robot.bottomLimit.isPressed());
             telemetry.addData("Servo current pos: ", robot.svoIntakeTilt.getPosition());
             telemetry.addData("right limit status", robot.frontLimit.isPressed());
@@ -282,6 +295,7 @@ public class teleop_two_remotes extends LinearOpMode {
             telemetry.addData("intake limit status", robot.intakeLimit.isPressed());
             telemetry.addData("front range distance: ", "%.2f cm", robot.frontRange.getDistance(DistanceUnit.CM));
             telemetry.addData("back range distance: ", "%.2f cm", robot.backRange.getDistance(DistanceUnit.CM));
+             */
             telemetry.update();
         }
     }

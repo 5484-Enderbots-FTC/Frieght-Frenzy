@@ -41,6 +41,11 @@ public class var {
     public static int thirdLvl = 4158;
     public static int thirdLvlTeleOp = 4100;
 
+    //TODO: change this as needed with telem
+    public static int tapeLimit = 2000;
+    public static int tapeTimeIsNow = 200;
+    public static int armIntakeTiltSwitch = 1200;
+
     //deinit arm
     public static int deinitArm = 400;
 

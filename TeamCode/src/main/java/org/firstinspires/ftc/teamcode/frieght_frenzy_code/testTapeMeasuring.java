@@ -71,7 +71,7 @@ public class testTapeMeasuring extends LinearOpMode {
             }
              */
 
-
+            telemetry.addData("x value of turret: ", gamepad1.right_stick_x);
             telemetry.addData("right trigger reading: ", gamepad1.right_trigger);
             telemetry.addData("left trigger reading: ", gamepad1.left_trigger);
             telemetry.addData("bottom limit status", robot.bottomLimit.isPressed());

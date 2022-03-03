@@ -91,8 +91,8 @@ public class hardwareFF {
         mtrTurret.setDirection(DcMotorEx.Direction.REVERSE);
 
         mtrTape = hw.get(DcMotorEx.class, "mtrTape");
-        mtrTurret.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-        mtrTurret.setDirection(DcMotorEx.Direction.FORWARD);
+        mtrTape.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        mtrTape.setDirection(DcMotorEx.Direction.FORWARD);
 
         svoCarousel = hw.get(CRServo.class, "svoCarousel");
         svoCarousel.setDirection(CRServo.Direction.REVERSE);

@@ -70,17 +70,17 @@ public class AutoBlueCarouselFrontW extends LinearOpMode {
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)
-                .lineTo(traj.toParkBluePos1)
+                .lineTo(traj.toParkBluePosCarousel1)
                 .build();
         Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), true)
-                .lineTo(traj.toParkBluePos1)
+                .lineTo(traj.toParkBluePosCarousel1)
                 .build();
         Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(), true)
-                .lineTo(traj.toParkBluePos1)
+                .lineTo(traj.toParkBluePosCarousel1)
                 .build();
 
         Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end(),true)
-                .lineTo(traj.toParkBluePos2)
+                .lineTo(traj.toParkBluePosCarousel2)
                 .build();
 
         // Tell telemetry to update faster than the default 250ms period :)

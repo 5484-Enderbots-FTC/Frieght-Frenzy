@@ -17,6 +17,9 @@ public class teleop_two_remotes extends LinearOpMode {
     //this is the timer used to create a toggle switch:
     ElapsedTime toggleBabyTimer = new ElapsedTime();
     ElapsedTime toggleCarousel = new ElapsedTime();
+    ElapsedTime togglePrecisionCap = new ElapsedTime();
+
+    double precisionCap = 1;
 
     //this boolean keeps track of whether or not the toggle is on or off
     boolean babyMode = false;
@@ -241,6 +244,15 @@ public class teleop_two_remotes extends LinearOpMode {
             /**
              * MEASURE NOW
              */
+
+            if (gamepad2.left_bumper && precisionCap == 1 && togglePrecisionCap.seconds() > var.toggleWait) {
+                precisionCap = 2;
+                togglePrecisionCap.reset();
+                if (gamepad2.left_bumper && precisionCap == 2 && togglePrecisionCap.seconds() > var.toggleWait) {
+                    precisionCap = 1;
+                }
+                togglePrecisionCap.reset();
+            }
 
             //if(robot.mtrTape.getCurrentPosition() < var.tapeLimit) {
                 robot.mtrTape.setPower(gamepad2.right_trigger-gamepad2.left_trigger);

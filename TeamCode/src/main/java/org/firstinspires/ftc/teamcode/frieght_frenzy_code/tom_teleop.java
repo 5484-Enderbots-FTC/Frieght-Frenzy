@@ -16,6 +16,7 @@ public class tom_teleop extends LinearOpMode {
     //this is the timer used to create a toggle switch:
     ElapsedTime toggleBabyTimer = new ElapsedTime();
     ElapsedTime toggleCarousel = new ElapsedTime();
+    ElapsedTime togglePrecisionCap = new ElapsedTime();
 
     //this boolean keeps track of whether or not the toggle is on or off
     boolean babyMode = false;
@@ -23,13 +24,14 @@ public class tom_teleop extends LinearOpMode {
     boolean intakeOn = false;
     boolean freightCollected = false;
     boolean zeroPosSet = false;
-    double armAvoidance=0;
+    double armAvoidance = 0;
     Boolean down = false;
     Boolean sway = false;
-    double clock =0;
-    double swaynum=.25;
-    double mtrSway=0;
+    double clock = 0;
+    double swaynum = .25;
+    double mtrSway = 0;
     State currentState;
+    double precisionCap = 1;
     Status intakeState;
 
     private enum Status {
@@ -77,34 +79,55 @@ public class tom_teleop extends LinearOpMode {
             }
 
             //!TOMINSERTION!
-            telemetry.addData("armboy",gamepad2.right_trigger-gamepad2.left_trigger);
-            telemetry.addData("armboy2",armAvoidance);
-            telemetry.addData("sway",sway);
-            robot.mtrTape.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
-                if(gamepad2.right_trigger-gamepad2.left_trigger>0)
-                {armAvoidance=1;}
-                if(gamepad2.right_trigger-gamepad2.left_trigger<=0)
-                {armAvoidance=0;}
-                if(armAvoidance==1){robot.svoIntakeTilt.setPosition(var.intakeCollect);}
-                if(gamepad2.dpad_left){sway=true;}
-                if(gamepad2.dpad_right){sway=false;}
-            telemetry.addData("clock",clock);
-            telemetry.addData("swaySwitch",down);
-            telemetry.addData("actualSpeed",mtrSway);
+            if (gamepad2.left_bumper && precisionCap == 1 && togglePrecisionCap.seconds() > var.toggleWait) {
+                precisionCap = 2;
+                togglePrecisionCap.reset();
+                if (gamepad2.left_bumper && precisionCap == 2 && togglePrecisionCap.seconds() > var.toggleWait) {
+                    precisionCap = 1;
+                }
+                togglePrecisionCap.reset();
+            }
+            if(gamepad2.right_bumper){;}
+            if (gamepad2.y) {
+                robot.LEDstrip.setPosition(0.2575);
+                telemetry.addData("dripped out", robot.LEDstrip);
+            }
+            telemetry.addData("armboy", gamepad2.right_trigger - gamepad2.left_trigger);
+            telemetry.addData("armboy2", armAvoidance);
+            telemetry.addData("sway", sway);
+            robot.mtrTape.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
+            if (gamepad2.right_trigger - gamepad2.left_trigger > 0) {
+                armAvoidance = 1;
+            }
+            if (gamepad2.right_trigger - gamepad2.left_trigger <= 0) {
+                armAvoidance = 0;
+            }
+            if (armAvoidance == 1) {
+                robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            }
+            if (gamepad2.dpad_left) {
+                sway = true;
+            }
+            if (gamepad2.dpad_right) {
+                sway = false;
+            }
+            telemetry.addData("clock", clock);
+            telemetry.addData("swaySwitch", down);
+            telemetry.addData("actualSpeed", mtrSway);
 
-            /*
-                    if(sway && !isStopRequested()){
-                        if(down){clock = clock -2;}
-                        if(!down){clock = clock+2;}
-                        if (clock>=8){down=true;}
-                        if(clock<=0){down=false;}
-                        if(clock<=8&&clock>6){mtrSway=( -2*swaynum);}
-                        if(clock<=6&&clock>4){mtrSway=(-1*swaynum);}
-                        if(clock<=4&&clock>2){mtrSway=(1*swaynum);}
-                        if(clock<=2&&clock>0){mtrSway=(2*swaynum);}
-                        ;}
-                    else{mtrSway=(0);}
-                    */
+        /*
+                if(sway && !isStopRequested()){
+                    if(down){clock = clock -2;}
+                    if(!down){clock = clock+2;}
+                    if (clock>=8){down=true;}
+                    if(clock<=0){down=false;}
+                    if(clock<=8&&clock>6){mtrSway=( -2*swaynum);}
+                    if(clock<=6&&clock>4){mtrSway=(-1*swaynum);}
+                    if(clock<=4&&clock>2){mtrSway=(1*swaynum);}
+                    if(clock<=2&&clock>0){mtrSway=(2*swaynum);}
+                    ;}
+                else{mtrSway=(0);}
+                */
 
             if (!babyMode) {
                 robot.updateDrive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
@@ -150,21 +173,21 @@ public class tom_teleop extends LinearOpMode {
                     /**
                      * Begin automated to the top of hub function
                      */
-                    /*
-                    if(gamepad2.left_bumper && zeroPosSet){
-                        //third level of hub
-                        robot.svoIntakeTilt.setPosition(var.intakeCollect);
-                        robot.movearm(0.7,var.groundLvl);
-                        currentState = State.SET;
-                    }
-                    if(gamepad2.right_bumper && zeroPosSet){
-                        //third level of hub
-                        robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                        robot.movearm(0.7,var.thirdLvl);
-                        currentState = State.SET;
-                    }
+                /*
+                if(gamepad2.left_bumper && zeroPosSet){
+                    //third level of hub
+                    robot.svoIntakeTilt.setPosition(var.intakeCollect);
+                    robot.movearm(0.7,var.groundLvl);
+                    currentState = State.SET;
+                }
+                if(gamepad2.right_bumper && zeroPosSet){
+                    //third level of hub
+                    robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                    robot.movearm(0.7,var.thirdLvl);
+                    currentState = State.SET;
+                }
 
-                     */
+                 */
                     /**
                      * Normal 'manual' function :)
                      */
@@ -172,9 +195,9 @@ public class tom_teleop extends LinearOpMode {
                     if (robot.bottomLimit.isPressed() && gamepad2.left_stick_y > 0) {
                         robot.mtrArm.setPower(0);
                     } else if (robot.bottomLimit.isPressed() && gamepad2.left_stick_y < 0) {
-                        robot.mtrArm.setPower(gamepad2.left_stick_y);
+                        robot.mtrArm.setPower(gamepad2.left_stick_y/precisionCap);
                     } else {
-                        robot.mtrArm.setPower(gamepad2.left_stick_y);
+                        robot.mtrArm.setPower(gamepad2.left_stick_y/precisionCap);
                     }
 
                     break;
@@ -202,7 +225,7 @@ public class tom_teleop extends LinearOpMode {
             //turret spin to da right
             if (robot.frontLimit.isPressed()) {
                 robot.mtrTurret.setPower(gamepad2.right_stick_x * 0.3);
-                sway=false;
+                sway = false;
                 telemetry.addLine("REEE");
             } else {
                 robot.mtrTurret.setPower(gamepad2.right_stick_x);
@@ -210,7 +233,7 @@ public class tom_teleop extends LinearOpMode {
             //turret spin to da left
             if (robot.backLimit.isPressed()) {
                 robot.mtrTurret.setPower(gamepad2.right_stick_x * 0.3);
-                sway=false;
+                sway = false;
             } else {
                 robot.mtrTurret.setPower(gamepad2.right_stick_x);
             }

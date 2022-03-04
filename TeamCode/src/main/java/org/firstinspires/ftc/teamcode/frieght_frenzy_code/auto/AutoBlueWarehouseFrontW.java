@@ -206,7 +206,7 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
             robot.svoIntake.setPower(var.lessPower * 1.5);
             drive.followTrajectoryAsync(goCollect);
             intakeTime.reset();
-            while (robot.intakeLimit.isPressed() && intakeTime.time() <= var.intakeStopTime) {
+            while (robot.intakeLimit.isPressed() && intakeTime.seconds() <= var.intakeStopTime) {
                 telemetry.addLine("consuming");
                 telemetry.update();
                 drive.update();

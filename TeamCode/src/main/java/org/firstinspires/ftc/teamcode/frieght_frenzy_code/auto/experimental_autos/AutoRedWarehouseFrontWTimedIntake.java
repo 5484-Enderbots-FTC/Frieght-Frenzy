@@ -206,6 +206,8 @@ public class AutoRedWarehouseFrontWTimedIntake extends LinearOpMode {
                 telemetry.update();
             }
             robot.mtrTurret.setPower(0);
+            robot.movearm(0.7,150);
+            robot.svoIntakeTilt.setPosition(var.intakeCollect+0.05);
 
             /*
             robot.movearm(0.7, var.collect);

@@ -20,6 +20,7 @@ public class var {
 
     public static double intakeInit = 1;
     public static double intakeCollect = 0.69+0.005;
+    public static double intakeCollectTeleop = 0.7;
     public static double intakeExtraFreight = 0.69-0.09;
     public static double intakeLow = 0.69-0.05;
     public static double intakeMid = 0.69-0.14;
@@ -41,10 +42,9 @@ public class var {
     public static int thirdLvl = 4158;
     public static int thirdLvlTeleOp = 4100;
 
-    //TODO: change this as needed with telem
     public static int tapeLimit = 2000;
     public static int tapeTimeIsNow = 200;
-    public static int armIntakeTiltSwitch = 1200;
+    public static int armIntakeTiltSwitch = 2200;
 
     //deinit arm
     public static int deinitArm = 400;

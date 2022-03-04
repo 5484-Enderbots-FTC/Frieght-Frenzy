@@ -127,11 +127,11 @@ public class AutoRedWarehouseFrontWTimedIntake extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             if (runningOpMode == 3) {
-                robot.movearm(0.7, var.thirdLvl);
+                robot.movearm(1, var.thirdLvl);
             } else if (runningOpMode == 2) {
-                robot.movearm(0.7, var.secondLvl);
+                robot.movearm(1, var.secondLvl);
             } else if (runningOpMode == 1) {
-                robot.movearm(0.7, var.firstLvl);
+                robot.movearm(1, var.firstLvl);
             }
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -302,6 +302,7 @@ public class AutoRedWarehouseFrontWTimedIntake extends LinearOpMode {
                 }
                 robot.mtrTurret.setPower(0);
             }
+            drive.cancelFollowing();
             break;
 
         }

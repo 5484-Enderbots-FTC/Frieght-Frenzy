@@ -17,6 +17,9 @@ public class teleop_two_remotes extends LinearOpMode {
     //this is the timer used to create a toggle switch:
     ElapsedTime toggleBabyTimer = new ElapsedTime();
     ElapsedTime toggleCarousel = new ElapsedTime();
+    ElapsedTime togglePrecisionCap = new ElapsedTime();
+
+    double precisionCap = 1;
 
     //this boolean keeps track of whether or not the toggle is on or off
     boolean babyMode = false;
@@ -50,6 +53,8 @@ public class teleop_two_remotes extends LinearOpMode {
         //robot.svoIntakeTilt.setPosition(0.5);
         currentState = State.NOTHING;
         intakeState = Status.STOPPED;
+        robot.mtrTape.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.mtrTape.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
@@ -165,15 +170,15 @@ public class teleop_two_remotes extends LinearOpMode {
 
             //TODO: rewrite the logic when we get better limits :)
 
-            if (robot.frontLimit.isPressed() && gamepad1.right_stick_x > 0) {
+            if (robot.frontLimit.isPressed() && gamepad2.right_stick_x > 0) {
                 robot.mtrTurret.setPower(0);
                 telemetry.addLine("front limit stopping power");
-            } else if (robot.backLimit.isPressed() && gamepad1.right_stick_x <0){
+            } else if (robot.backLimit.isPressed() && gamepad2.right_stick_x <0){
                 robot.mtrTurret.setPower(0);
                 telemetry.addLine("BACK limit stopping power");
             }
             else {
-                robot.mtrTurret.setPower(gamepad1.right_stick_x);
+                robot.mtrTurret.setPower(gamepad2.right_stick_x);
             }
             /**
              * tilt controls
@@ -182,10 +187,10 @@ public class teleop_two_remotes extends LinearOpMode {
             //TODO: fix collect position if it's too low normally :P
             if(robot.mtrTape.getCurrentPosition() < var.tapeTimeIsNow){
                 //basically: if not TAPE TIME then do this
-                if(robot.mtrArm.getCurrentPosition() <= var.armIntakeTiltSwitch){
-                    robot.svoIntakeTilt.setPosition(var.intakeCollect);
+                if(robot.mtrArm.getCurrentPosition() >= -var.armIntakeTiltSwitch){
+                    robot.svoIntakeTilt.setPosition(var.intakeCollectTeleop);
                 }
-                if(robot.mtrArm.getCurrentPosition() > var.armIntakeTiltSwitch){
+                if(robot.mtrArm.getCurrentPosition() < -var.armIntakeTiltSwitch){
                     robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 }
             }else{
@@ -240,16 +245,19 @@ public class teleop_two_remotes extends LinearOpMode {
              * MEASURE NOW
              */
 
-            if(!zeroPosTapeSet){
-                robot.mtrTape.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robot.mtrTape.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                zeroPosTapeSet = true;
+            if (gamepad2.left_bumper && precisionCap == 1 && togglePrecisionCap.seconds() > var.toggleWait) {
+                precisionCap = 2;
+                togglePrecisionCap.reset();
+                if (gamepad2.left_bumper && precisionCap == 2 && togglePrecisionCap.seconds() > var.toggleWait) {
+                    precisionCap = 1;
+                }
+                togglePrecisionCap.reset();
             }
 
-            if(robot.mtrTape.getCurrentPosition() < var.tapeLimit){
-                robot.mtrTape.setPower(gamepad2.right_trigger);
-            }
-            robot.mtrTape.setPower(-gamepad2.left_trigger);
+            //if(robot.mtrTape.getCurrentPosition() < var.tapeLimit) {
+                robot.mtrTape.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
+            //}
+
             //if that didnt work, change to this:
             /*
             if(gamepad1.right_trigger > triggerDeadzone){
@@ -283,7 +291,6 @@ public class teleop_two_remotes extends LinearOpMode {
             } else {
                 telemetry.addLine("warehouse side");
             }
-
             telemetry.addData("tape encoder reading: ", robot.mtrTape.getCurrentPosition());
             telemetry.addData("arm encoder reading: ", robot.mtrArm.getCurrentPosition());
             /*

@@ -27,6 +27,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
@@ -45,6 +46,7 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
 
     double runningOpMode = 3;
     Pose2d intakeEnd;
+    ElapsedTime intakeTime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -203,66 +205,71 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
 
             robot.svoIntake.setPower(var.lessPower * 1.5);
             drive.followTrajectoryAsync(goCollect);
-            while (robot.intakeLimit.isPressed()) {
+            intakeTime.reset();
+            while (robot.intakeLimit.isPressed() && intakeTime.time() <= var.intakeStopTime) {
                 telemetry.addLine("consuming");
                 telemetry.update();
                 drive.update();
                 drive.updatePoseEstimate();
             }
+            if (intakeTime.time() < var.intakeStopTime) {
+                drive.cancelFollowing();
+
+                intakeEnd = drive.getPoseEstimate();
+                drive.setDrivePower(new Pose2d());
+                drive.update();
+                telemetry.addLine("consumed");
+                telemetry.addData("intake end: ", intakeEnd);
+                telemetry.update();
+                robot.svoIntake.setPower(0);
+
+                /**
+                 * has been consumed, now go to hub (and move arm/turret)
+                 */
+
+                //TODO: update later to be during trajectory on way to hub :)
+                robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.movearm(0.7, var.thirdLvl);
+                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                while (robot.mtrArm.getCurrentPosition() >= -1000) {
+                    telemetry.addData("haha", robot.mtrArm.getCurrentPosition());
+                    telemetry.update();
+                }
+                while (!robot.midLimit.isPressed()) {
+                    robot.mtrTurret.setPower(0.3);
+                }
+                robot.mtrTurret.setPower(0);
+                while (robot.mtrArm.isBusy()) {
+                    telemetry.addLine("weeeee arm finish");
+                    telemetry.update();
+                    //drive.update();
+                }
+                //drive.updatePoseEstimate();
+                robot.mtrArm.setPower(0);
+                robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+                Trajectory goBack = drive.trajectoryBuilder(intakeEnd)
+                        .splineToConstantHeading(traj.blueHub3, Math.toRadians(-90))
+                        .build();
+
+                drive.followTrajectory(goBack);
+
+                spitOutBlock(true);
+
+                /**
+                 * send the turret back and arm down to collect again/ park
+                 */
+                drive.followTrajectory(toPark1_3);
+                drive.followTrajectory(toPark2);
+                robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                while (!robot.backLimit.isPressed()) {
+                    robot.mtrTurret.setPower(-0.4);
+                }
+                robot.mtrTurret.setPower(0);
+            }
             drive.cancelFollowing();
-            intakeEnd = drive.getPoseEstimate();
-            drive.setDrivePower(new Pose2d());
-            drive.update();
-            telemetry.addLine("consumed");
-            telemetry.addData("intake end: ", intakeEnd);
-            telemetry.update();
-            robot.svoIntake.setPower(0);
-
-            /**
-             * has been consumed, now go to hub (and move arm/turret)
-             */
-
-            //TODO: update later to be during trajectory on way to hub :)
-            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.movearm(0.7, var.thirdLvl);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            while (robot.mtrArm.getCurrentPosition() >= -1000) {
-                telemetry.addData("haha", robot.mtrArm.getCurrentPosition());
-                telemetry.update();
-            }
-            while (!robot.midLimit.isPressed()) {
-                robot.mtrTurret.setPower(0.3);
-            }
-            robot.mtrTurret.setPower(0);
-            while (robot.mtrArm.isBusy()) {
-                telemetry.addLine("weeeee arm finish");
-                telemetry.update();
-                //drive.update();
-            }
-            //drive.updatePoseEstimate();
-            robot.mtrArm.setPower(0);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-            Trajectory goBack = drive.trajectoryBuilder(intakeEnd)
-                    .splineToConstantHeading(traj.blueHub3, Math.toRadians(-90))
-                    .build();
-
-            drive.followTrajectory(goBack);
-
-            spitOutBlock(true);
-
-            /**
-             * send the turret back and arm down to collect again/ park
-             */
-            drive.followTrajectory(toPark1_3);
-            drive.followTrajectory(toPark2);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            while (!robot.backLimit.isPressed()) {
-                robot.mtrTurret.setPower(-0.4);
-            }
-            robot.mtrTurret.setPower(0);
             break;
         }
     }

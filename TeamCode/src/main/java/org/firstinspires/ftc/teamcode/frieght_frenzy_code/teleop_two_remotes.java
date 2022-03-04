@@ -145,9 +145,9 @@ public class teleop_two_remotes extends LinearOpMode {
                     if (robot.bottomLimit.isPressed() && gamepad2.left_stick_y > 0) {
                         robot.mtrArm.setPower(0);
                     } else if (robot.bottomLimit.isPressed() && gamepad2.left_stick_y < 0) {
-                        robot.mtrArm.setPower(gamepad2.left_stick_y);
+                        robot.mtrArm.setPower(gamepad2.left_stick_y / precisionCap);
                     } else {
-                        robot.mtrArm.setPower(gamepad2.left_stick_y);
+                        robot.mtrArm.setPower(gamepad2.left_stick_y / precisionCap);
                     }
                     break;
                 case SET:
@@ -173,27 +173,26 @@ public class teleop_two_remotes extends LinearOpMode {
             if (robot.frontLimit.isPressed() && gamepad2.right_stick_x > 0) {
                 robot.mtrTurret.setPower(0);
                 telemetry.addLine("front limit stopping power");
-            } else if (robot.backLimit.isPressed() && gamepad2.right_stick_x <0){
+            } else if (robot.backLimit.isPressed() && gamepad2.right_stick_x < 0) {
                 robot.mtrTurret.setPower(0);
                 telemetry.addLine("BACK limit stopping power");
-            }
-            else {
-                robot.mtrTurret.setPower(gamepad2.right_stick_x);
+            } else {
+                robot.mtrTurret.setPower(gamepad2.right_stick_x / precisionCap);
             }
             /**
              * tilt controls
              */
 
             //TODO: fix collect position if it's too low normally :P
-            if(robot.mtrTape.getCurrentPosition() < var.tapeTimeIsNow){
+            if (robot.mtrTape.getCurrentPosition() < var.tapeTimeIsNow) {
                 //basically: if not TAPE TIME then do this
-                if(robot.mtrArm.getCurrentPosition() >= -var.armIntakeTiltSwitch){
+                if (robot.mtrArm.getCurrentPosition() >= -var.armIntakeTiltSwitch) {
                     robot.svoIntakeTilt.setPosition(var.intakeCollectTeleop);
                 }
-                if(robot.mtrArm.getCurrentPosition() < -var.armIntakeTiltSwitch){
+                if (robot.mtrArm.getCurrentPosition() < -var.armIntakeTiltSwitch) {
                     robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 }
-            }else{
+            } else {
                 //otherwise, set intake to init pls
                 robot.svoIntakeTilt.setPosition(var.intakeInit);
             }
@@ -223,7 +222,6 @@ public class teleop_two_remotes extends LinearOpMode {
             }
 
 
-
             //run intake
             if (gamepad2.a) {
                 robot.svoIntake.setPower(var.lessPower);
@@ -248,17 +246,15 @@ public class teleop_two_remotes extends LinearOpMode {
             if (gamepad2.left_bumper && precisionCap == 1 && togglePrecisionCap.seconds() > var.toggleWait) {
                 precisionCap = 2;
                 togglePrecisionCap.reset();
-                if (gamepad2.left_bumper && precisionCap == 2 && togglePrecisionCap.seconds() > var.toggleWait) {
-                    precisionCap = 1;
-                }
+            }
+            if (gamepad2.left_bumper && precisionCap == 2 && togglePrecisionCap.seconds() > var.toggleWait) {
+                precisionCap = 1;
                 togglePrecisionCap.reset();
             }
 
-            //if(robot.mtrTape.getCurrentPosition() < var.tapeLimit) {
-                robot.mtrTape.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
-            //}
+            robot.mtrTape.setPower((gamepad2.right_trigger / precisionCap) - (gamepad2.left_trigger / precisionCap));
 
-            //if that didnt work, change to this:
+            //adding trigger deadzones WEEE
             /*
             if(gamepad1.right_trigger > triggerDeadzone){
                 robot.mtrTape.setPower(gamepad1.right_trigger);
@@ -280,7 +276,7 @@ public class teleop_two_remotes extends LinearOpMode {
             } else {
                 telemetry.addLine("baby mode inactive");
             }
-
+/*
             if (robot.alliance_switch.getState() == true) {
                 telemetry.addLine("red alliance");
             } else {
@@ -291,6 +287,9 @@ public class teleop_two_remotes extends LinearOpMode {
             } else {
                 telemetry.addLine("warehouse side");
             }
+
+ */
+            telemetry.addData("precision cap reading", precisionCap);
             telemetry.addData("tape encoder reading: ", robot.mtrTape.getCurrentPosition());
             telemetry.addData("arm encoder reading: ", robot.mtrArm.getCurrentPosition());
             /*

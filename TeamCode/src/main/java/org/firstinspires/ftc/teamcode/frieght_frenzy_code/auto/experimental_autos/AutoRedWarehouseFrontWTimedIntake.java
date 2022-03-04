@@ -236,13 +236,15 @@ public class AutoRedWarehouseFrontWTimedIntake extends LinearOpMode {
             robot.svoIntake.setPower(var.lessPower * 1.5);
             drive.followTrajectoryAsync(goCollect);
             intakeTime.reset();
-            while (robot.intakeLimit.isPressed() && intakeTime.time() <= var.intakeStopTime) {
+            while (robot.intakeLimit.isPressed() && intakeTime.seconds() <= var.intakeStopTime) {
+                telemetry.addData("time: ", intakeTime.time());
+                telemetry.addData("seconds: ", intakeTime.seconds());
                 telemetry.addLine("consuming");
                 telemetry.update();
                 drive.update();
                 drive.updatePoseEstimate();
             }
-            if (intakeTime.time() < var.intakeStopTime) {
+            if (intakeTime.seconds() < var.intakeStopTime) {
                 drive.cancelFollowing();
                 intakeEnd = drive.getPoseEstimate();
                 drive.setDrivePower(new Pose2d());
@@ -302,6 +304,7 @@ public class AutoRedWarehouseFrontWTimedIntake extends LinearOpMode {
                 }
                 robot.mtrTurret.setPower(0);
             }
+            drive.cancelFollowing();
             break;
 
         }

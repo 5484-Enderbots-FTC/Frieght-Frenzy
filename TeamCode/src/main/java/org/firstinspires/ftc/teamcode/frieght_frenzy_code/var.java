@@ -28,6 +28,7 @@ public class var {
 
     public static double fullPower = 1;
     public static double lessPower = 0.3;
+    public static double armInitPower = 1;
 
     //auto parking encoder counts
     public static double stop = 0;
@@ -54,5 +55,6 @@ public class var {
     //lol i cant believe you are reading this. That is not pog!
     public static double duckTime = 3;
     public static double intakeStopTime = 5;
-
+    
+    
 }

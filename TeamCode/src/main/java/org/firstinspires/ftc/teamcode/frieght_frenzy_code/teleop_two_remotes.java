@@ -157,10 +157,10 @@ public class teleop_two_remotes extends LinearOpMode {
                     currentState = State.WAIT;
                     break;
                 case WAIT:
-                    if (robot.mtrArm.isBusy()) {
-
-                    } else {
+                    if (!robot.mtrArm.isBusy()) {
                         currentState = State.FINISH;
+                    }else{
+                        currentState = State.WAIT;
                     }
                     break;
                 case FINISH:
@@ -271,7 +271,7 @@ public class teleop_two_remotes extends LinearOpMode {
             /**
              * Telemetry yay
              */
-
+//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
             //we usually add some telemetry at the end to tell us useful information during testing :)
             if (babyMode) {
                 telemetry.addLine("baby mode activated");

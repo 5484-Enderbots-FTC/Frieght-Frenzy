@@ -130,14 +130,16 @@ public class teleop_two_remotes extends LinearOpMode {
                         robot.movearm(0.7,var.groundLvl);
                         currentState = State.SET;
                     }
-                    if(gamepad2.right_bumper && zeroPosSet){
+                    */
+
+                    /*if(gamepad2.right_bumper && zeroPosSet){
                         //third level of hub
                         robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                        robot.movearm(0.7,var.thirdLvl);
+                        robot.movearm(1,var.thirdLvl);
                         currentState = State.SET;
                     }
+*/
 
-                     */
                     /**
                      * Normal 'manual' function :)
                      */

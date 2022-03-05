@@ -192,7 +192,7 @@ public class AutoRedWarehouseBackW extends LinearOpMode {
                 telemetry.addLine("turret go brrrrr");
 
                 if (robot.mtrTurret.getCurrentPosition() >= 900 && !robot.bottomLimit.isPressed()) {
-                    robot.mtrArm.setPower(0.5);
+                    robot.mtrArm.setPower(0.55);
                     telemetry.addLine("arm go brrrrrrrrrrrrrrrrrrrrrrrrrr");
 
                 }
@@ -207,6 +207,13 @@ public class AutoRedWarehouseBackW extends LinearOpMode {
                 telemetry.update();
             }
             robot.mtrTurret.setPower(0);
+            robot.movearm(0.7,150);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            while(robot.mtrArm.isBusy()){
+
+            }
+            robot.mtrArm.setPower(0);
+            robot.svoIntakeTilt.setPosition(var.intakeCollect-0.06);
             drive.followTrajectory(toPark2);
 
             /**
@@ -245,7 +252,7 @@ public class AutoRedWarehouseBackW extends LinearOpMode {
 
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.movearm(0.7, var.thirdLvl);
+            robot.movearm(var.armInitPower, var.thirdLvl);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             while (robot.mtrArm.getCurrentPosition() >= -1000) {
@@ -254,7 +261,7 @@ public class AutoRedWarehouseBackW extends LinearOpMode {
                 //drive.update();
             }
             while (!robot.midLimit.isPressed()) {
-                robot.mtrTurret.setPower(-0.3);
+                robot.mtrTurret.setPower(-0.5);
                 //drive.update();
             }
             robot.mtrTurret.setPower(0);
@@ -278,7 +285,7 @@ public class AutoRedWarehouseBackW extends LinearOpMode {
             drive.followTrajectory(toPark2_3);
 
             robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.moveturret(0.3, 1480);
+            robot.moveturret(0.7, 1480);
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             while (robot.mtrTurret.isBusy()) {
             }

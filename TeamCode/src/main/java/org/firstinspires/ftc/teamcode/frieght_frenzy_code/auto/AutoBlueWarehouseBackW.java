@@ -251,7 +251,7 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
             //TODO: update later to be during trajectory on way to hub :)
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.movearm(0.7, var.thirdLvl);
+            robot.movearm(var.armInitPower, var.thirdLvl);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             while (robot.mtrArm.getCurrentPosition() >= -1000) {

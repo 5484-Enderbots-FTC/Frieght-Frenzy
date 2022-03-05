@@ -220,6 +220,14 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
                 telemetry.update();
             }
             robot.mtrTurret.setPower(0);
+            robot.movearm(0.7, 150);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            while (robot.mtrArm.isBusy()) {
+
+            }
+            robot.mtrArm.setPower(0);
+            robot.svoIntakeTilt.setPosition(var.intakeCollect - 0.06);
+
             drive.followTrajectory(toCollect);
 
             /**

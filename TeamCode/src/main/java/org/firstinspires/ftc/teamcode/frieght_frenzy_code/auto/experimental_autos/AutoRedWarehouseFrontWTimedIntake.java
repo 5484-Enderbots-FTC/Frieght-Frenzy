@@ -207,7 +207,7 @@ public class AutoRedWarehouseFrontWTimedIntake extends LinearOpMode {
                 telemetry.update();
             }
             robot.mtrTurret.setPower(0);
-            robot.movearm(0.7, 150);
+            robot.movearm(0.7, 275);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             while (robot.mtrArm.isBusy()) {
 

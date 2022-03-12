@@ -20,11 +20,11 @@ public class var {
 
     public static double intakeInit = 1;
     public static double intakeCollect = 0.69+0.005;
-    public static double intakeCollectTeleop = 0.68;
+    public static double intakeCollectTeleop = 0.67;
     public static double intakeExtraFreight = 0.69-0.09;
     public static double intakeLow = 0.69-0.05;
     public static double intakeMid = 0.69-0.11;
-    public static double intakeHigh = 0.69-0.18;
+    public static double intakeHigh = 0.69-0.27;
 
     public static double fullPower = 1;
     public static double lessPower = 0.3;

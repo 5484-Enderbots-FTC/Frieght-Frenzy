@@ -20,15 +20,14 @@ public class var {
 
     public static double intakeInit = 1;
     public static double intakeCollect = 0.69+0.005;
-    public static double intakeCollectTeleop = 0.67;
+    public static double intakeCollectTeleop = 0.65;
     public static double intakeExtraFreight = 0.69-0.09;
     public static double intakeLow = 0.69-0.05;
-    public static double intakeMid = 0.69-0.11;
-    public static double intakeHigh = 0.69-0.27;
+    public static double intakeMid = 0.69-0.14;
+    public static double intakeHigh = 0.69-0.23;
 
     public static double fullPower = 1;
     public static double lessPower = 0.3;
-    public static double armInitPower = 1;
 
     //auto parking encoder counts
     public static double stop = 0;
@@ -45,7 +44,7 @@ public class var {
 
     public static int tapeLimit = 2000;
     public static int tapeTimeIsNow = 200;
-    public static int armIntakeTiltSwitch = 1400;
+    public static int armIntakeTiltSwitch = 2200;
 
     //deinit arm
     public static int deinitArm = 400;
@@ -54,7 +53,6 @@ public class var {
     public static int turnDirection = 1;
     //lol i cant believe you are reading this. That is not pog!
     public static double duckTime = 3;
-    public static double intakeStopTime = 4;
-    
-    
+    public static double intakeStopTime = 5;
+
 }

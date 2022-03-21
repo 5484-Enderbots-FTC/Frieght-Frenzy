@@ -172,31 +172,52 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
              * set turret to go collect pos and arm go down
              */
 
-            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.mtrTurret.setPower(-0.3);
-            telemetry.addLine("MOAR THINSG");
-            telemetry.update();
-            while (!robot.backLimit.isPressed() | !robot.bottomLimit.isPressed()) {
-                telemetry.addLine("turret go brrrrr");
+            if(runningOpMode != 1){
+                robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.mtrTurret.setPower(-0.3);
+                telemetry.addLine("MOAR THINSG");
+                telemetry.update();
+                while (!robot.backLimit.isPressed() | !robot.bottomLimit.isPressed()) {
+                    telemetry.addLine("turret go brrrrr");
 
-                if (robot.mtrTurret.getCurrentPosition() <= -900 && !robot.bottomLimit.isPressed()) {
+                    if (robot.mtrTurret.getCurrentPosition() <= -900 && !robot.bottomLimit.isPressed()) {
+                        robot.mtrArm.setPower(0.5);
+                        telemetry.addLine("arm go brrrrrrrrrrrrrrrrrrrrrrrrrr");
+
+                    }
+                    if (robot.bottomLimit.isPressed()) {
+                        robot.mtrArm.setPower(0);
+                        telemetry.addLine("arm stoop");
+                    }
+                    if (robot.frontLimit.isPressed()) {
+                        robot.mtrTurret.setPower(0);
+                        telemetry.addLine("turret stoop");
+                    }
+                    telemetry.update();
+
+                }
+                robot.mtrTurret.setPower(0);
+            }else{
+                robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.mtrTurret.setPower(-0.3);
+                telemetry.addLine("MOAR THINSG");
+                telemetry.update();
+                while(!robot.backLimit.isPressed()){
+                    telemetry.addLine("turret go brrrrr");
+                    telemetry.update();
+                }
+                robot.mtrTurret.setPower(0);
+                while(!robot.bottomLimit.isPressed()){
                     robot.mtrArm.setPower(0.5);
                     telemetry.addLine("arm go brrrrrrrrrrrrrrrrrrrrrrrrrr");
-
                 }
-                if (robot.bottomLimit.isPressed()) {
-                    robot.mtrArm.setPower(0);
-                    telemetry.addLine("arm stoop");
-                }
-                if (robot.frontLimit.isPressed()) {
-                    robot.mtrTurret.setPower(0);
-                    telemetry.addLine("turret stoop");
-                }
+                robot.mtrArm.setPower(0);
+                telemetry.addLine("arm stoop");
                 telemetry.update();
             }
-            robot.mtrTurret.setPower(0);
-            robot.movearm(0.7, 150);
+            robot.movearm(0.7, 275);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             while (robot.mtrArm.isBusy()) {
 
@@ -244,7 +265,7 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
                     telemetry.update();
                 }
                 while (!robot.midLimit.isPressed()) {
-                    robot.mtrTurret.setPower(0.3);
+                    robot.mtrTurret.setPower(0.4);
                 }
                 robot.mtrTurret.setPower(0);
                 while (robot.mtrArm.isBusy()) {
@@ -261,7 +282,7 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
                         .build();
 
                 drive.followTrajectory(goBack);
-
+                robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 spitOutBlock(true);
 
                 /**

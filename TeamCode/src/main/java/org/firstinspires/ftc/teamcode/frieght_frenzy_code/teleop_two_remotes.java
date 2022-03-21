@@ -14,6 +14,7 @@ public class teleop_two_remotes extends LinearOpMode {
     //imported hardware from "hardwareFF" public class:
     hardwareFF robot = new hardwareFF();
 
+    ElapsedTime runtime = new ElapsedTime();
     //this is the timer used to create a toggle switch:
     ElapsedTime toggleBabyTimer = new ElapsedTime();
     ElapsedTime toggleCarousel = new ElapsedTime();
@@ -196,6 +197,7 @@ public class teleop_two_remotes extends LinearOpMode {
                 }
             } else {
                 //otherwise, set intake to init pls
+                robot.LEDstrip.setPosition(var.rainbowo);
                 robot.svoIntakeTilt.setPosition(var.intakeInit);
             }
 
@@ -213,13 +215,19 @@ public class teleop_two_remotes extends LinearOpMode {
                     robot.svoIntake.setPower(var.lessPower);
                     intakeState = Status.IN;
                 }
-                robot.LEDstrip.setPosition(var.green);
+                if(runtime.seconds() < 90){
+                    robot.LEDstrip.setPosition(var.green);
+                }
+
             }
             if (freightCollected) {
                 if (intakeState != Status.OUT) {
                     robot.svoIntake.setPower(var.stop);
                     intakeState = Status.STOPPED;
-                    robot.LEDstrip.setPosition(var.red);
+                    if(runtime.seconds() < 90){
+                        robot.LEDstrip.setPosition(var.red);
+                    }
+
                 }
             }
 

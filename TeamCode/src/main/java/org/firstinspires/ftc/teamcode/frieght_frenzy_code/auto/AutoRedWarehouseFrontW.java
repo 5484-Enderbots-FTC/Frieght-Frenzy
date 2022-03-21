@@ -125,11 +125,11 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             if (runningOpMode == 3) {
-                robot.movearm(1, var.thirdLvl);
+                robot.movearm(var.armInitPower, var.thirdLvl);
             } else if (runningOpMode == 2) {
-                robot.movearm(1, var.secondLvl);
+                robot.movearm(var.armInitPower, var.secondLvl);
             } else if (runningOpMode == 1) {
-                robot.movearm(1, var.firstLvl);
+                robot.movearm(var.armInitPower, var.firstLvl);
             }
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -259,7 +259,7 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
             //TODO: update later to be during trajectory on way to hub :)
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.movearm(0.7, var.thirdLvl);
+            robot.movearm(var.armInitPower, var.thirdLvl);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             while (robot.mtrArm.getCurrentPosition() >= -1000) {
@@ -268,7 +268,7 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
                 //drive.update();
             }
             while (!robot.midLimit.isPressed()) {
-                robot.mtrTurret.setPower(-0.3);
+                robot.mtrTurret.setPower(-0.5);
                 //drive.update();
             }
             robot.mtrTurret.setPower(0);
@@ -294,7 +294,7 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
 
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             while (!robot.frontLimit.isPressed()) {
-                robot.mtrTurret.setPower(0.4);
+                robot.mtrTurret.setPower(0.7);
             }
             robot.mtrTurret.setPower(0);
             break;

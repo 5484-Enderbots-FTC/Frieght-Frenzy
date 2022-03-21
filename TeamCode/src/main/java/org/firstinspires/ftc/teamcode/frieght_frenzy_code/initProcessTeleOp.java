@@ -51,6 +51,8 @@ public class initProcessTeleOp extends LinearOpMode {
             if(gamepad1.right_bumper){
                 robot.svoIntakeTilt.setPosition(var.intakeCollect);
             }
+            robot.mtrTape.setPower(gamepad1.right_trigger);
+            robot.mtrTape.setPower(-gamepad1.left_trigger);
 
             telemetry.addData("MidLimit? ", robot.midLimit.isPressed());
             telemetry.addData("Back limit? ", robot.backLimit.isPressed());

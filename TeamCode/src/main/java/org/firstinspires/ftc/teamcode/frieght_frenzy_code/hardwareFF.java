@@ -4,6 +4,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -101,6 +102,7 @@ public class hardwareFF {
         svoIntake.setDirection(CRServo.Direction.FORWARD);
 
         svoIntakeTilt = hw.get(Servo.class, "svoIntakeTilt");
+
 
         LEDstrip = hw.get(Servo.class, "LEDstrip");
 

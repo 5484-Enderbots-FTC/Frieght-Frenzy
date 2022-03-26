@@ -25,6 +25,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.ElementAnalysisPipelineFF;
@@ -40,6 +41,7 @@ public class AutoBlueCarouselStorageFlank extends LinearOpMode {
     autoTrajectories traj = new autoTrajectories();
 
     double runningOpMode = 3;
+    ElapsedTime duckTime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -51,6 +53,11 @@ public class AutoBlueCarouselStorageFlank extends LinearOpMode {
 
         Trajectory toBlueCarousel = drive.trajectoryBuilder(traj.startPoseBC)
                 .splineToConstantHeading(traj.blueCarousel, Math.toRadians(180))
+                .addDisplacementMarker(0.5,0, () -> {
+                            robot.svoCarousel.setPower(-1);
+                            robot.mtrTurret.setPower(-0.4);
+                        }
+                )
                 .build();
 
         Trajectory toFlank = drive.trajectoryBuilder(toBlueCarousel.end(), Math.toRadians(-90))
@@ -129,32 +136,21 @@ public class AutoBlueCarouselStorageFlank extends LinearOpMode {
             }
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            while (!robot.midLimit.isPressed()) {
-                telemetry.addData("pose estimate: ", drive.getPoseEstimate());
-                telemetry.update();
-                robot.mtrTurret.setPower(-0.4);
-                drive.update();
-                drive.updatePoseEstimate();
-            }
-            robot.mtrTurret.setPower(0);
-            while (robot.mtrArm.isBusy()) {
-                telemetry.addLine("weeeee arm finish");
-                telemetry.addData("pose estimate: ", drive.getPoseEstimate());
-                drive.update();
-                drive.updatePoseEstimate();
-            }
-            robot.mtrArm.setPower(0);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
             /**
              * shmove on to carousel and spain without the a
              */
             drive.followTrajectory(toBlueCarousel);
-            robot.svoCarousel.setPower(-1);
             drive.setPoseEstimate(traj.blueCarouselResetFlank);
             drive.updatePoseEstimate();
-            sleep(3000);
-            robot.svoCarousel.setPower(0);
+            duckTime.reset();
+            while (!robot.midLimit.isPressed() | duckTime.seconds() < 3 && !isStopRequested()){
+                if (robot.midLimit.isPressed()){
+                    robot.mtrTurret.setPower(0);
+                }
+                if (duckTime.seconds() > 3){
+                    robot.svoCarousel.setPower(0);
+                }
+            }
 
             /**
              * go to red hub and spit out bloque

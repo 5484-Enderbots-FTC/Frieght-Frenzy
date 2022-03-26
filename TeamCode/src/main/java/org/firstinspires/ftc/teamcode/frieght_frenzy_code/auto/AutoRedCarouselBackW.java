@@ -27,6 +27,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
@@ -42,6 +43,7 @@ import java.util.ArrayList;
 public class AutoRedCarouselBackW extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
+    ElapsedTime duckTime = new ElapsedTime();
 
     double runningOpMode = 3;
     Pose2d intakeEnd;
@@ -118,89 +120,79 @@ public class AutoRedCarouselBackW extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
-        while (opModeIsActive()) {
-            /**
-             * move arm and turret at same time
-             */
-            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            if (runningOpMode == 3) {
-                robot.movearm(var.armInitPower, var.thirdLvl);
-            } else if (runningOpMode == 2) {
-                robot.movearm(var.armInitPower, var.secondLvl);
-            } else if (runningOpMode == 1) {
-                robot.movearm(var.armInitPower, var.firstLvl);
-            }
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            while (!robot.midLimit.isPressed()) {
-                telemetry.addData("pose estimate: ", drive.getPoseEstimate());
-                telemetry.update();
-                robot.mtrTurret.setPower(-0.4);
-                drive.update();
-                drive.updatePoseEstimate();
+        /**
+         * move arm while go to carousel
+         */
+        robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if (runningOpMode == 3) {
+            robot.movearm(var.armInitPower, var.thirdLvl);
+        } else if (runningOpMode == 2) {
+            robot.movearm(var.armInitPower, var.secondLvl);
+        } else if (runningOpMode == 1) {
+            robot.movearm(var.armInitPower, var.firstLvl);
+        }
+        robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        /**
+         * shmove on to carousel and spain without the a
+         */
+        drive.followTrajectory(toRedCarousel);
+        robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        drive.setPoseEstimate(traj.redCarouselReset);
+        drive.updatePoseEstimate();
+        duckTime.reset();
+
+        while (!robot.midLimit.isPressed() | duckTime.seconds() < 3) {
+            if (robot.midLimit.isPressed()) {
+                robot.mtrTurret.setPower(0);
             }
-            robot.mtrTurret.setPower(0);
+            if (duckTime.seconds() > 3) {
+                robot.svoCarousel.setPower(0);
+            }
+        }
+
+        /**
+         * go to red hub and spit out bloque
+         * then go to wall
+         */
+        if (runningOpMode == 3) {
+            robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            drive.followTrajectory(toRedHub3);
+            spitOutBlock();
+            drive.followTrajectory(toPark1_3);
+        } else if (runningOpMode == 2) {
+            robot.svoIntakeTilt.setPosition(var.intakeMid);
+            drive.followTrajectory(toRedHub2);
+            spitOutBlock();
+            drive.followTrajectory(toPark1_2);
+        } else if (runningOpMode == 1) {
+            robot.svoIntakeTilt.setPosition(var.intakeLow);
+            drive.followTrajectory(toRedHub1);
+            spitOutBlock();
+            robot.svoIntakeTilt.setPosition(var.intakeInit);
+            drive.followTrajectory(toPark1_1);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.movearm(0.7, var.secondLvl);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             while (robot.mtrArm.isBusy()) {
-                telemetry.addLine("weeeee arm finish");
-                telemetry.addData("pose estimate: ", drive.getPoseEstimate());
-                drive.update();
-                drive.updatePoseEstimate();
+
             }
             robot.mtrArm.setPower(0);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-            /**
-             * shmove on to carousel and spain without the a
-             */
-            drive.followTrajectory(toRedCarousel);
-            robot.svoCarousel.setPower(1);
-            drive.setPoseEstimate(traj.redCarouselReset);
-            drive.updatePoseEstimate();
-            sleep(3000);
-            robot.svoCarousel.setPower(0);
-
-            /**
-             * go to red hub and spit out bloque
-             * then go to wall
-             */
-            if (runningOpMode == 3) {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                drive.followTrajectory(toRedHub3);
-                spitOutBlock();
-                drive.followTrajectory(toPark1_3);
-            } else if (runningOpMode == 2) {
-                robot.svoIntakeTilt.setPosition(var.intakeMid);
-                drive.followTrajectory(toRedHub2);
-                spitOutBlock();
-                drive.followTrajectory(toPark1_2);
-            } else if (runningOpMode == 1) {
-                robot.svoIntakeTilt.setPosition(var.intakeLow);
-                drive.followTrajectory(toRedHub1);
-                spitOutBlock();
-                robot.svoIntakeTilt.setPosition(var.intakeInit);
-                drive.followTrajectory(toPark1_1);
-                robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.movearm(0.7, var.secondLvl);
-                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                while(robot.mtrArm.isBusy()){
-
-                }
-                robot.mtrArm.setPower(0);
-            }
-            robot.svoIntakeTilt.setPosition(var.intakeInit);
-
-            /**
-             * set turret to go collect pos and arm go down
-             */
-
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            while (!robot.frontLimit.isPressed()){
-                robot.mtrTurret.setPower(0.4);
-            }
-            robot.mtrTurret.setPower(0);
-            break;
         }
+        robot.svoIntakeTilt.setPosition(var.intakeInit);
+
+        /**
+         * set turret to go collect pos and arm go down
+         */
+
+        robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        while (!robot.frontLimit.isPressed()) {
+            robot.mtrTurret.setPower(0.4);
+        }
+        robot.mtrTurret.setPower(0);
     }
 
     public void spitOutBlock() {

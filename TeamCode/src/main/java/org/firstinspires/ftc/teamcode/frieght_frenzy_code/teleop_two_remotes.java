@@ -27,6 +27,7 @@ public class teleop_two_remotes extends LinearOpMode {
     boolean carouselSpinning = false;
     boolean intakeOn = false;
     boolean freightCollected = false;
+    boolean tapeDispensed = false;
 
     boolean zeroPosTapeSet = false;
     boolean zeroPosSet = false;
@@ -140,7 +141,6 @@ public class teleop_two_remotes extends LinearOpMode {
                         currentState = State.SET;
                     }
 */
-
                     /**
                      * Normal 'manual' function :)
                      */
@@ -262,7 +262,17 @@ public class teleop_two_remotes extends LinearOpMode {
                 togglePrecisionCap.reset();
             }
 
-            robot.mtrTape.setPower((gamepad2.right_trigger / precisionCap) - (gamepad2.left_trigger / precisionCap));
+            if(robot.mtrTape.getCurrentPosition() > 30){
+                tapeDispensed = true;
+            }else{
+                tapeDispensed = false;
+            }
+
+            if(tapeDispensed){
+                robot.mtrTape.setPower((gamepad2.right_trigger / precisionCap) - (gamepad2.left_trigger / precisionCap));
+            }else{
+                robot.mtrTape.setPower((gamepad2.right_trigger / precisionCap));
+            }
 
             //adding trigger deadzones WEEE
             /*
@@ -300,6 +310,7 @@ public class teleop_two_remotes extends LinearOpMode {
 
  */
             telemetry.addData("precision cap reading", precisionCap);
+            telemetry.addData("tape dispensed?", tapeDispensed);
             telemetry.addData("tape encoder reading: ", robot.mtrTape.getCurrentPosition());
             telemetry.addData("arm encoder reading: ", robot.mtrArm.getCurrentPosition());
             /*

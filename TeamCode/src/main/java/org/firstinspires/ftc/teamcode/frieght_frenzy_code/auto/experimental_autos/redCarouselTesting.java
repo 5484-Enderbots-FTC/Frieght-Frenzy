@@ -64,6 +64,10 @@ public class redCarouselTesting extends LinearOpMode {
 
         waitForStart();
 
+        /**
+         * this was so easy holy crap omg
+         */
+
         robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.movearm(var.armInitPower, var.thirdLvl);
@@ -72,11 +76,13 @@ public class redCarouselTesting extends LinearOpMode {
         drive.followTrajectory(toRedCarousel);
         robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        while (!robot.midLimit.isPressed() | duckTime.seconds() < 3 && !isStopRequested()){
-            if (robot.midLimit.isPressed()){
+
+        duckTime.reset();
+        while (!robot.midLimit.isPressed() | duckTime.seconds() < 3) {
+            if (robot.midLimit.isPressed()) {
                 robot.mtrTurret.setPower(0);
             }
-            if (duckTime.seconds() > 3){
+            if (duckTime.seconds() > 3) {
                 robot.svoCarousel.setPower(0);
             }
         }

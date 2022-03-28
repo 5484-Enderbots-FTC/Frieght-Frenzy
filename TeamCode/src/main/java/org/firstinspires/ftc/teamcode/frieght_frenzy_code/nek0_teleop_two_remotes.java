@@ -5,12 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "eww teleop ff", group = "teleop")
-public class Tom_teleop_two_remotes extends LinearOpMode {
+@TeleOp(name = "nek0 teleop ff", group = "teleop")
+public class nek0_teleop_two_remotes extends LinearOpMode {
 
     //imported hardware from "hardwareFF" public class:
     hardwareFF robot = new hardwareFF();
 
+    ElapsedTime runtime = new ElapsedTime();
     //this is the timer used to create a toggle switch:
     ElapsedTime toggleBabyTimer = new ElapsedTime();
     ElapsedTime toggleCarousel = new ElapsedTime();
@@ -27,6 +28,53 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
     boolean zeroPosTapeSet = false;
     boolean zeroPosSet = false;
 
+    String nek0Neutral1 = "(^-u-^)";
+    String nek0Neutral2 = "( ^-u-^)";
+    String nek0Neutral3 = "(^-u-^ )";
+    String nek0Approving = "(^‾u‾^)";
+    String nek0Happy = "(^-U-^)";
+    String nek0Awkward = "(^._.^)";
+    String nek0Bad = "(^-n-^)";
+    String nek0Right = "(͡° ͜ʖ ͡°)";
+    String nek0ReallyRight = "(^°U°^)";
+    String nek0Suspicous = "(^-_.^)";
+    String nek0Dead1 = "(^*-*^)";
+    String nek0Dead2 = "(^+-+^)";
+    String nek0Readjusting = "(^...^)";
+    String nek0Angry1 = "(^◣_◢^)";
+    String nek0Angry2 = "(^◣o◢^)";
+    String nek0Hurried = "(^°-°^)";
+    String nek0OwO = "(^owo^)";
+    String nek0UwU = "(^uwu^)";
+    String nek0CurrentQuote = "";
+    String nek0CurrentFace = "";
+    Boolean nek0NeutralState = true;
+    Boolean nek0ApprovingState = false;
+    Boolean nek0HappyState = false;
+    Boolean nek0AwkwardState = false;
+    Boolean nek0BadState = false;
+    Boolean nek0RightState = false;
+    Boolean nek0ReallyRightState = false;
+    Boolean nek0SusState = false;
+    Boolean nek0DeadState = false;
+    Boolean nek0ReadjustingState = false;
+    Boolean nek0AngryState = false;
+    Boolean nek0HurriedState = false;
+    Boolean nek0OwOState = false;
+    Boolean nek0UwUState = false;
+
+    Boolean nek0CheerState1=false;
+    Boolean nek0CheerStatekill1=false;
+    Boolean nek0CheerState2=false;
+    Boolean nek0CheerStatekill2=false;
+    Boolean nek0CheerState3=false;
+    Boolean nek0CheerStatekill3=false;
+    double freightCollectionPointValue=0;
+    Boolean freightResetValue=false;
+    ElapsedTime gameTime = new ElapsedTime();
+    ElapsedTime nek0Time = new ElapsedTime();
+    ElapsedTime nek0ResetTime = new ElapsedTime();
+    Boolean nek0TimeReset = false;
     State currentState;
     Status intakeState;
 
@@ -42,6 +90,17 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
         WAIT,
         FINISH
     }
+/*everyti
+
+/*
+everytime i go to the robot room i feel more and more useless
+
+i hate this
+
+all my projects are just ways to distract myself from my own uselessness
+
+whats the point
+ */
 
 
     public void runOpMode() {
@@ -53,6 +112,7 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
         robot.mtrTape.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.mtrTape.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         telemetry.addData("Status", "Initialized");
+
         telemetry.update();
         waitForStart();
 
@@ -127,14 +187,16 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
                         robot.movearm(0.7,var.groundLvl);
                         currentState = State.SET;
                     }
-                    if(gamepad2.right_bumper && zeroPosSet){
+                    */
+
+                    /*if(gamepad2.right_bumper && zeroPosSet){
                         //third level of hub
                         robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                        robot.movearm(0.7,var.thirdLvl);
+                        robot.movearm(1,var.thirdLvl);
                         currentState = State.SET;
                     }
+*/
 
-                     */
                     /**
                      * Normal 'manual' function :)
                      */
@@ -142,9 +204,9 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
                     if (robot.bottomLimit.isPressed() && gamepad2.left_stick_y > 0) {
                         robot.mtrArm.setPower(0);
                     } else if (robot.bottomLimit.isPressed() && gamepad2.left_stick_y < 0) {
-                        robot.mtrArm.setPower(gamepad2.left_stick_y);
+                        robot.mtrArm.setPower(gamepad2.left_stick_y / precisionCap);
                     } else {
-                        robot.mtrArm.setPower(gamepad2.left_stick_y);
+                        robot.mtrArm.setPower(gamepad2.left_stick_y / precisionCap);
                     }
                     break;
                 case SET:
@@ -152,10 +214,10 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
                     currentState = State.WAIT;
                     break;
                 case WAIT:
-                    if (robot.mtrArm.isBusy()) {
-
-                    } else {
+                    if (!robot.mtrArm.isBusy()) {
                         currentState = State.FINISH;
+                    } else {
+                        currentState = State.WAIT;
                     }
                     break;
                 case FINISH:
@@ -164,34 +226,108 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
                     currentState = State.NOTHING;
                     break;
             }
+            //this is where all the nek0 stuff goes
+            if (nek0ResetTime.seconds()>10&& nek0TimeReset==true) {
+                nek0Time.reset(); nek0ResetTime.reset();
+            }
+            if(nek0Time.seconds() > 8){nek0Time.reset();}
+            //below is the idle animation code for the base state, no quotes, lil animation
+            if (nek0NeutralState == true && nek0Time.seconds() > 3 && nek0Time.seconds() < 5) {
+                nek0CurrentFace = nek0Neutral2;
+            } else if (nek0NeutralState == true && nek0Time.seconds() > 5 && nek0Time.seconds() < 8) {
+                nek0CurrentFace = nek0Neutral3;
+            } else if (nek0NeutralState == true && nek0Time.seconds() < 3 | nek0Time.seconds() > 8) {
+                nek0CurrentFace = nek0Neutral1;
+            }
+            // if you touch these limits nek0 gets a lil angry, and will play a little animation and tell you you to knock it off.
+            if (robot.frontLimit.isPressed() | robot.backLimit.isPressed() | robot.bottomLimit.isPressed()) {
+                nek0TimeReset=true;
+                nek0AngryState = true;
+                nek0CurrentQuote = "HEY STOP THAT";
+            }
+            if (nek0AngryState == true && Math.round(nek0Time.seconds()) % 2 == 0) {
+                nek0CurrentFace = nek0Angry1;
+            } else if (nek0AngryState == true && Math.round(nek0Time.seconds()) % 2 != 0) {
+                nek0CurrentFace = nek0Angry2;
+            }
+            if (nek0AngryState == true && nek0Time.seconds() > 8 && robot.frontLimit.isPressed() == false && robot.backLimit.isPressed() == false && robot.bottomLimit.isPressed() == false) {
+                nek0AngryState = false;
+            }
+            //below is some logic to switch to and from neutral state
+            if (nek0NeutralState = true) {
+                
+            }
+            if (nek0NeutralState = true &&
+                    nek0ApprovingState == false &&
+                    nek0HappyState == false &&
+                    nek0AwkwardState == false &&
+                    nek0BadState == false &&
+                    nek0RightState == false &&
+                    nek0ReallyRightState == false &&
+                    nek0SusState == false &&
+                    nek0DeadState == false &&
+                    nek0ReadjustingState == false &&
+                    nek0AngryState == false &&
+                    nek0HurriedState == false &&
+                    nek0OwOState == false &&
+                    nek0UwUState == false) {
+                nek0NeutralState = true;
+            } else {
+                nek0NeutralState = false;
+            }
+            //below this is the carousel scripting where when the carousel spins it gives congrats
+
+            // IMPORTANT NOTE: while adding pieces, do not declare neutral as true, declare special face as false,
+            // neutral sets in the event of no current face
+            if(carouselSpinning==true){nek0HappyState=true;nek0CurrentQuote="GOOD JOB FELLAS, GET THIS DUB";nek0TimeReset=true;}
+            if(nek0HappyState==true&&nek0Time.seconds()<=4){nek0CurrentFace=nek0Happy;}
+            else if(nek0HappyState==true&&nek0Time.seconds()<4){nek0CurrentFace=nek0ReallyRight;}
+            if(nek0HappyState=true&&nek0Time.seconds()>8){nek0HappyState=false;}
+            //TODO: check if time is measured in dec, and then augment code accordingly
+            telemetry.addData("time value for nek0",nek0Time.seconds());
+            // a lil note fore i keep goin, the way i normally do face movements is either modular division or set times
+            // the below lines of telemetry are where the actual data is stored
+            if(freightCollectionPointValue==4&&nek0CheerStatekill1==false){nek0CheerState1=true;}
+            if(nek0CheerState1==true){
+                nek0CurrentQuote="wow stylin, keep it up";
+                if(Math.round(nek0Time.seconds())%2==0){nek0CurrentFace=nek0UwU;}
+            else if(Math.round(nek0Time.seconds())%2!=0){nek0CurrentFace=nek0ReallyRight;}
+
+            }
+
+            if(freightCollectionPointValue==6&&nek0CheerStatekill2==false){nek0CheerState2=true;}
+            if(freightCollectionPointValue==10&&nek0CheerStatekill3==false){nek0CheerState3=true;}
+            telemetry.addData("", nek0CurrentFace);
+            telemetry.addData("", nek0CurrentQuote);
+
 
             //TODO: rewrite the logic when we get better limits :)
 
             if (robot.frontLimit.isPressed() && gamepad2.right_stick_x > 0) {
                 robot.mtrTurret.setPower(0);
                 telemetry.addLine("front limit stopping power");
-            } else if (robot.backLimit.isPressed() && gamepad2.right_stick_x <0){
+            } else if (robot.backLimit.isPressed() && gamepad2.right_stick_x < 0) {
                 robot.mtrTurret.setPower(0);
                 telemetry.addLine("BACK limit stopping power");
-            }
-            else {
-                robot.mtrTurret.setPower(gamepad2.right_stick_x);
+            } else {
+                robot.mtrTurret.setPower(gamepad2.right_stick_x / precisionCap);
             }
             /**
              * tilt controls
              */
 
             //TODO: fix collect position if it's too low normally :P
-            if(robot.mtrTape.getCurrentPosition() < var.tapeTimeIsNow){
+            if (robot.mtrTape.getCurrentPosition() < var.tapeTimeIsNow) {
                 //basically: if not TAPE TIME then do this
-                if(robot.mtrArm.getCurrentPosition() >= -var.armIntakeTiltSwitch){
+                if (robot.mtrArm.getCurrentPosition() >= -var.armIntakeTiltSwitch) {
                     robot.svoIntakeTilt.setPosition(var.intakeCollectTeleop);
                 }
-                if(robot.mtrArm.getCurrentPosition() < -var.armIntakeTiltSwitch){
+                if (robot.mtrArm.getCurrentPosition() < -var.armIntakeTiltSwitch) {
                     robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 }
-            }else{
+            } else {
                 //otherwise, set intake to init pls
+                robot.LEDstrip.setPosition(var.rainbowo);
                 robot.svoIntakeTilt.setPosition(var.intakeInit);
             }
 
@@ -209,16 +345,21 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
                     robot.svoIntake.setPower(var.lessPower);
                     intakeState = Status.IN;
                 }
-                robot.LEDstrip.setPosition(var.green);
+                if (runtime.seconds() < 90) {
+                    robot.LEDstrip.setPosition(var.green);
+                }
+
             }
             if (freightCollected) {
                 if (intakeState != Status.OUT) {
                     robot.svoIntake.setPower(var.stop);
                     intakeState = Status.STOPPED;
-                    robot.LEDstrip.setPosition(var.red);
+                    if (runtime.seconds() < 90) {
+                        robot.LEDstrip.setPosition(var.red);
+                    }
+
                 }
             }
-
 
 
             //run intake
@@ -231,7 +372,12 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
                 //might turn this into an output sequence
                 intakeState = Status.OUT;
                 robot.svoIntake.setPower(-var.lessPower);
+
+                if(freightResetValue=true){
+                freightCollectionPointValue+=1;
+                freightResetValue=false;}
             }
+            else{freightResetValue=true;}
             //stop intake
             if (gamepad2.x) {
                 robot.svoIntake.setPower(var.stop);
@@ -245,17 +391,15 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
             if (gamepad2.left_bumper && precisionCap == 1 && togglePrecisionCap.seconds() > var.toggleWait) {
                 precisionCap = 2;
                 togglePrecisionCap.reset();
-                if (gamepad2.left_bumper && precisionCap == 2 && togglePrecisionCap.seconds() > var.toggleWait) {
-                    precisionCap = 1;
-                }
+            }
+            if (gamepad2.left_bumper && precisionCap == 2 && togglePrecisionCap.seconds() > var.toggleWait) {
+                precisionCap = 1;
                 togglePrecisionCap.reset();
             }
 
-            //if(robot.mtrTape.getCurrentPosition() < var.tapeLimit) {
-                robot.mtrTape.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
-            //}
+            robot.mtrTape.setPower((gamepad2.right_trigger / precisionCap) - (gamepad2.left_trigger / precisionCap));
 
-            //if that didnt work, change to this:
+            //adding trigger deadzones WEEE
             /*
             if(gamepad1.right_trigger > triggerDeadzone){
                 robot.mtrTape.setPower(gamepad1.right_trigger);
@@ -270,14 +414,14 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
             /**
              * Telemetry yay
              */
-
+//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
             //we usually add some telemetry at the end to tell us useful information during testing :)
             if (babyMode) {
                 telemetry.addLine("baby mode activated");
             } else {
                 telemetry.addLine("baby mode inactive");
             }
-
+/*
             if (robot.alliance_switch.getState() == true) {
                 telemetry.addLine("red alliance");
             } else {
@@ -288,6 +432,9 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
             } else {
                 telemetry.addLine("warehouse side");
             }
+
+ */
+            telemetry.addData("precision cap reading", precisionCap);
             telemetry.addData("tape encoder reading: ", robot.mtrTape.getCurrentPosition());
             telemetry.addData("arm encoder reading: ", robot.mtrArm.getCurrentPosition());
             /*

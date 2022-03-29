@@ -27,8 +27,6 @@ public class var {
     public static double intakeHigh = 0.69-0.23;
     public static double armInitPower = 1;
 
-    public static double armInitPower = 1;
-
     public static double fullPower = 1;
     public static double lessPower = 0.3;
 
@@ -40,9 +38,9 @@ public class var {
     //teleop encoder counts from ground as 0
     public static int groundLvl = 0;
     public static int collect = 150;
-    public static int firstLvl = 1050; //degrees: 48
-    public static int secondLvl = 2524; //degrees:
-    public static int thirdLvl = 4158;
+    public static int firstLvl = 470; //degrees: 48
+    public static int secondLvl = 1250; //degrees:
+    public static int thirdLvl = 2200;
     public static int thirdLvlTeleOp = 4100;
 
     public static int tapeLimit = 2000;

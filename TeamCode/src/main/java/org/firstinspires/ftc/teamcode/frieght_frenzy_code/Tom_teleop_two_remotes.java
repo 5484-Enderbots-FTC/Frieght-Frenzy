@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "eww teleop ff", group = "teleop")
+@TeleOp(name = "teleop ff mod", group = "teleop")
 public class Tom_teleop_two_remotes extends LinearOpMode {
 
     //imported hardware from "hardwareFF" public class:

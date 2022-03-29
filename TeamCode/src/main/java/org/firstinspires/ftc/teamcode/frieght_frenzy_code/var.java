@@ -27,6 +27,9 @@ public class var {
     public static double intakeLow = 0.69-0.05;
     public static double intakeMid = 0.69-0.14;
     public static double intakeHigh = 0.69-0.23;
+    public static double armInitPower = 1;
+
+    public static double armInitPower = 1;
 
     public static double fullPower = 1;
     public static double lessPower = 0.3;

@@ -18,6 +18,8 @@ public class var {
 
     public static double toggleWait = 1; //(seconds)
 
+    public static double armInitPower = 1;
+
     public static double intakeInit = 1;
     public static double intakeCollect = 0.69+0.005;
     public static double intakeCollectTeleop = 0.65;

@@ -117,6 +117,14 @@ public class AutoRedWarehouseFrontWTurretMoveInitial extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
+        //TODO:
+        // - displacement marker for first block placement (the one near init)
+        // - arm lowering speed can be made slightly faster, with moving the servo during the arm
+        // - move turret faster when depositing second block
+        // - find out why the hell the turret doesn't move at the end
+        // - go for third bloque ?????
+
+
         while (opModeIsActive()) {
             /**
              * move arm and turret at same time
@@ -150,45 +158,62 @@ public class AutoRedWarehouseFrontWTurretMoveInitial extends LinearOpMode {
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 drive.followTrajectory(toRedHub3);
                 spitOutBlock(false);
-                drive.followTrajectory(toPark1_3);
+                drive.followTrajectoryAsync(toPark1_3);
             } else if (runningOpMode == 2) {
                 robot.svoIntakeTilt.setPosition(var.intakeMid);
                 drive.followTrajectory(toRedHub2);
                 spitOutBlock(false);
-                drive.followTrajectory(toPark1_2);
+                drive.followTrajectoryAsync(toPark1_2);
             } else if (runningOpMode == 1) {
                 robot.svoIntakeTilt.setPosition(var.intakeLow);
                 drive.followTrajectory(toRedHub1);
                 spitOutBlock(false);
-                drive.followTrajectory(toPark1_1);
+                drive.followTrajectoryAsync(toPark1_1);
                 robot.svoIntakeTilt.setPosition(var.intakeInit);
             }
 
             telemetry.addLine("1st part done");
             telemetry.update();
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            robot.svoIntakeTilt.setPosition(var.intakeInit);
             robot.mtrTurret.setPower(0.7);
             drive.update();
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.mtrArm.setPower(0);
             while (drive.isBusy()) {
                 drive.update();
+                telemetry.update();
                 if (robot.frontLimit.isPressed()) {
                     robot.mtrTurret.setPower(0);
-                    robot.mtrArm.setPower(0.5);
+                    robot.mtrArm.setPower(0.6);
+                    telemetry.addLine("front limit pressed");
                 }
                 if (robot.bottomLimit.isPressed()) {
                     robot.mtrArm.setPower(0);
+                    telemetry.addLine("arm down all the way");
                 }
             }
+            telemetry.addLine("drive done");
+            telemetry.update();
             while (!robot.bottomLimit.isPressed()) {
-                robot.mtrArm.setPower(0.5);
+                robot.mtrArm.setPower(0.6);
+                telemetry.addLine("arm moving");
+                telemetry.update();
             }
+            telemetry.addLine("arm down after move");
+            telemetry.update();
+            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setPower(0);
+            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            robot.movearm(0.5,125);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            while(robot.mtrArm.isBusy()){
+
+            }
+            telemetry.addLine("optimize done");
+            telemetry.update();
             /**
              * set turret to go collect pos and arm go down
              */
-
-            //TODO: change this to be waiting for limit siwtch >:)
-            //TODO: fine tune this number (900) to optimize turret and arm go down
 
             /*
             robot.movearm(0.7, var.collect);
@@ -238,18 +263,20 @@ public class AutoRedWarehouseFrontWTurretMoveInitial extends LinearOpMode {
              */
             Trajectory goBack = drive.trajectoryBuilder(intakeEnd, true)
                     .splineToConstantHeading(traj.redHub3, Math.toRadians(90))
-                    .addDisplacementMarker(0.3, 0, () -> {
-                        robot.mtrTurret.setPower(-0.5);
+                    .addDisplacementMarker(0.25, 0, () -> {
+                        robot.mtrTurret.setPower(-0.2);
                     })
                     .build();
             robot.movearm(var.armInitPower, var.thirdLvl);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            drive.followTrajectory(goBack);
-
+            drive.followTrajectoryAsync(goBack);
+            drive.update();
             //TODO: update later to be during trajectory on way to hub :)
-            while (drive.isBusy() | !robot.midLimit.isPressed()){
-                if (robot.midLimit.isPressed()){
+            while (drive.isBusy() | !robot.midLimit.isPressed()) {
+                drive.update();
+                if (robot.midLimit.isPressed()) {
                     robot.mtrTurret.setPower(0);
+                    telemetry.addLine("midlimit hit");
                 }
             }
 
@@ -262,10 +289,12 @@ public class AutoRedWarehouseFrontWTurretMoveInitial extends LinearOpMode {
             drive.followTrajectory(toPark2);
 
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.mtrTurret.setPower(0.7);
             while (!robot.frontLimit.isPressed()) {
-                robot.mtrTurret.setPower(0.7);
+
             }
             robot.mtrTurret.setPower(0);
+            robot.svoIntake.setPower(0);
             break;
         }
     }

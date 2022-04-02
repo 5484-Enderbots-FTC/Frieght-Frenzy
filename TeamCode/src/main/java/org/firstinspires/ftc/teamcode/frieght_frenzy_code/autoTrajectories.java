@@ -40,7 +40,7 @@ public class autoTrajectories {
     public Vector2d blueHub1 = new Vector2d(-12, 48.5);
 
     public Vector2d toParkRedPos1 = new Vector2d(12, -69 + 2);
-    public Vector2d toParkRedPos2 = new Vector2d(42, -69 + 2);
+    public Vector2d toParkRedPos2 = new Vector2d(40, -69 + 2);
 
     public Vector2d toParkBluePosCarousel1 = new Vector2d(12, 69);
     public Vector2d toParkBluePosCarousel2 = new Vector2d(45, 69);

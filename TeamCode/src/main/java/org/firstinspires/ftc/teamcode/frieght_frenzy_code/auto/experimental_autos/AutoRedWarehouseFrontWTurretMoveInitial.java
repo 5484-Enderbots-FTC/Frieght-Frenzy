@@ -169,17 +169,17 @@ public class AutoRedWarehouseFrontWTurretMoveInitial extends LinearOpMode {
             robot.svoIntakeTilt.setPosition(var.intakeCollect);
             robot.mtrTurret.setPower(0.7);
             drive.update();
-            while (drive.isBusy()){
+            while (drive.isBusy()) {
                 drive.update();
-                if (robot.frontLimit.isPressed()){
+                if (robot.frontLimit.isPressed()) {
                     robot.mtrTurret.setPower(0);
                     robot.mtrArm.setPower(0.5);
                 }
-                if (robot.bottomLimit.isPressed()){
+                if (robot.bottomLimit.isPressed()) {
                     robot.mtrArm.setPower(0);
                 }
             }
-            while (!robot.bottomLimit.isPressed()){
+            while (!robot.bottomLimit.isPressed()) {
                 robot.mtrArm.setPower(0.5);
             }
             robot.mtrArm.setPower(0);
@@ -238,36 +238,20 @@ public class AutoRedWarehouseFrontWTurretMoveInitial extends LinearOpMode {
              */
             Trajectory goBack = drive.trajectoryBuilder(intakeEnd, true)
                     .splineToConstantHeading(traj.redHub3, Math.toRadians(90))
+                    .addDisplacementMarker(0.3, 0, () -> {
+                        robot.mtrTurret.setPower(-0.5);
+                    })
                     .build();
+            robot.movearm(var.armInitPower, var.thirdLvl);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             drive.followTrajectory(goBack);
 
             //TODO: update later to be during trajectory on way to hub :)
-            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.movearm(var.armInitPower, var.thirdLvl);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            while (robot.mtrArm.getCurrentPosition() >= -1000) {
-                telemetry.addData("haha", robot.mtrArm.getCurrentPosition());
-                telemetry.update();
-                //drive.update();
+            while (drive.isBusy() | !robot.midLimit.isPressed()){
+                if (robot.midLimit.isPressed()){
+                    robot.mtrTurret.setPower(0);
+                }
             }
-            while (!robot.midLimit.isPressed()) {
-                robot.mtrTurret.setPower(-0.5);
-                //drive.update();
-            }
-            robot.mtrTurret.setPower(0);
-            while (robot.mtrArm.isBusy()) {
-                telemetry.addLine("weeeee arm finish");
-                telemetry.update();
-                //drive.update();
-            }
-            //drive.updatePoseEstimate();
-            robot.mtrArm.setPower(0);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-            //TODO: make this spline correct lmao
-
 
             spitOutBlock(true);
 

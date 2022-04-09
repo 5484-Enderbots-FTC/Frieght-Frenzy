@@ -39,7 +39,7 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 import java.util.ArrayList;
 
 @Autonomous(name = "bad attempt at 3rd bloque", group = "red")
-public class AutoRedWarehouseFrontWOptimized extends LinearOpMode {
+public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
     ElapsedTime spitTime = new ElapsedTime();
@@ -177,6 +177,7 @@ public class AutoRedWarehouseFrontWOptimized extends LinearOpMode {
                 while(spitTime.seconds() < 1.5){
 
                 }
+                robot.svoIntake.setPower(0);
                 drive.followTrajectoryAsync(toPark1_3);
             } else if (runningOpMode == 2) {
                 robot.svoIntakeTilt.setPosition(var.intakeMid);
@@ -184,6 +185,7 @@ public class AutoRedWarehouseFrontWOptimized extends LinearOpMode {
                 while(spitTime.seconds() < 1.5){
 
                 }
+                robot.svoIntake.setPower(0);
                 drive.followTrajectoryAsync(toPark1_2);
             } else if (runningOpMode == 1) {
                 robot.svoIntakeTilt.setPosition(var.intakeLow);
@@ -191,6 +193,7 @@ public class AutoRedWarehouseFrontWOptimized extends LinearOpMode {
                 while(spitTime.seconds() < 1.5){
 
                 }
+                robot.svoIntake.setPower(0);
                 drive.followTrajectoryAsync(toPark1_1);
             }
 
@@ -301,7 +304,7 @@ public class AutoRedWarehouseFrontWOptimized extends LinearOpMode {
                     telemetry.addLine("midlimit hit");
                 }
             }
-
+            robot.mtrTurret.setPower(0);
             spitOutBlock(true);
 
             /**

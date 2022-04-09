@@ -57,7 +57,7 @@ public class AutoBlueCarouselFrontW extends LinearOpMode {
 
         Trajectory toBlueCarousel = drive.trajectoryBuilder(traj.startPoseBC)
                 .splineToConstantHeading(traj.blueCarousel, Math.toRadians(180))
-                .addDisplacementMarker(0.5,0, () -> {
+                .addDisplacementMarker(0.95,0, () -> {
                             robot.svoCarousel.setPower(-1);
                             robot.mtrTurret.setPower(-0.4);
                         }
@@ -153,6 +153,8 @@ public class AutoBlueCarouselFrontW extends LinearOpMode {
                     robot.svoCarousel.setPower(0);
                 }
             }
+            robot.mtrTurret.setPower(0);
+            robot.svoCarousel.setPower(0);
 
             /**
              * go to red hub and spit out bloque

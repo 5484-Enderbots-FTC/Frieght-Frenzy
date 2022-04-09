@@ -24,7 +24,7 @@ public class autoTrajectories {
     public Pose2d blueCarouselResetFlank = new Pose2d(-63, 57.5, Math.toRadians(180));
 
     public Vector2d redHub3 = new Vector2d(-12, -47);
-    public Vector2d redHub2 = new Vector2d(-12, -48.5);
+    public Vector2d redHub2 = new Vector2d(-12, -49);
     public Vector2d redHub1 = new Vector2d(-12, -47);
 
     public Vector2d redHub3Flank = new Vector2d(-30, -19);

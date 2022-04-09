@@ -141,7 +141,6 @@ public class AutoRedWarehouseFrontWOptimized extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             while (!robot.midLimit.isPressed()) {
-
                 robot.mtrTurret.setPower(-0.4);
             }
             robot.mtrTurret.setPower(0);
@@ -169,7 +168,7 @@ public class AutoRedWarehouseFrontWOptimized extends LinearOpMode {
                 drive.followTrajectory(toRedHub1);
                 spitOutBlock(false);
                 drive.followTrajectoryAsync(toPark1_1);
-                robot.svoIntakeTilt.setPosition(var.intakeInit);
+                //robot.svoIntakeTilt.setPosition(var.intakeInit);
             }
 
             telemetry.addLine("1st part done");
@@ -264,7 +263,7 @@ public class AutoRedWarehouseFrontWOptimized extends LinearOpMode {
             Trajectory goBack = drive.trajectoryBuilder(intakeEnd, true)
                     .splineToConstantHeading(traj.redHub3, Math.toRadians(90))
                     .addDisplacementMarker(0.25, 0, () -> {
-                        robot.mtrTurret.setPower(-0.2);
+                        robot.mtrTurret.setPower(-0.35);
                     })
                     .build();
             robot.movearm(var.armInitPower, var.thirdLvl);
@@ -279,7 +278,7 @@ public class AutoRedWarehouseFrontWOptimized extends LinearOpMode {
                     telemetry.addLine("midlimit hit");
                 }
             }
-
+            robot.mtrTurret.setPower(0);
             spitOutBlock(true);
 
             /**

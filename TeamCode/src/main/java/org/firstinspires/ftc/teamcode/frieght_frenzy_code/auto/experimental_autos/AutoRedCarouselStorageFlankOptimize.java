@@ -19,13 +19,10 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.frieght_frenzy_code.auto;
+package org.firstinspires.ftc.teamcode.frieght_frenzy_code.auto.experimental_autos;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -38,9 +35,8 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
-
-@Autonomous(name = "blue carousel front", group = "blue")
-public class AutoBlueCarouselFrontW extends LinearOpMode {
+@Autonomous(name = "red carousel storage flank test", group = "red")
+public class AutoRedCarouselStorageFlankOptimize extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
 
@@ -53,41 +49,83 @@ public class AutoBlueCarouselFrontW extends LinearOpMode {
         robot.initWebcam();
         FFMecanumDriveCancelable drive = new FFMecanumDriveCancelable(hardwareMap);
 
-        drive.setPoseEstimate(traj.startPoseBC);
+        drive.setPoseEstimate(traj.startPoseRC);
 
-        Trajectory toBlueCarousel = drive.trajectoryBuilder(traj.startPoseBC)
-                .splineToConstantHeading(traj.blueCarousel, Math.toRadians(180))
-                .addDisplacementMarker(0.95,0, () -> {
-                            robot.svoCarousel.setPower(-1);
-                            robot.mtrTurret.setPower(-0.4);
-                        }
-                )
-                .build();
 
-        Trajectory toBlueHub3 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
-                .splineTo(traj.blueHub3, Math.toRadians(0))
-                .build();
-
-        Trajectory toBlueHub2 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
-                .splineTo(traj.blueHub2, Math.toRadians(0))
-                .build();
-
-        Trajectory toBlueHub1 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
-                .splineTo(traj.blueHub1, Math.toRadians(0))
+        Trajectory toRedCarousel3 = drive.trajectoryBuilder(traj.startPoseRC, true)
+                .addTemporalMarker(0, () -> {
+                    robot.movearm(var.armInitPower, var.thirdLvl);
+                })
+                .addTemporalMarker(0.01, () -> {
+                    robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                })
+                .splineToConstantHeading(traj.redCarousel, Math.toRadians(180))
+                .addTemporalMarker(3, () -> {
+                    robot.mtrTurret.setPower(-0.4);
+                })
+                .addTemporalMarker(3, () -> {
+                    robot.svoCarousel.setPower(1);
+                })
                 .build();
 
-        Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)
-                .lineTo(traj.toParkBluePosCarousel1)
-                .build();
-        Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), true)
-                .lineTo(traj.toParkBluePosCarousel1)
-                .build();
-        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(), true)
-                .lineTo(traj.toParkBluePosCarousel1)
+        Trajectory toRedCarousel2 = drive.trajectoryBuilder(traj.startPoseRC, true)
+                .addTemporalMarker(0, () -> {
+                    robot.movearm(var.armInitPower, var.secondLvl);
+                })
+                .addTemporalMarker(0.01, () -> {
+                    robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                })
+                .splineToConstantHeading(traj.redCarousel, Math.toRadians(180))
+                .addTemporalMarker(3, () -> {
+                    robot.mtrTurret.setPower(-0.4);
+                })
+                .addTemporalMarker(3, () -> {
+                    robot.svoCarousel.setPower(1);
+                })
                 .build();
 
-        Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end(),true)
-                .lineTo(traj.toParkBluePosCarousel2)
+        Trajectory toRedCarousel1 = drive.trajectoryBuilder(traj.startPoseRC, true)
+                .addTemporalMarker(0, () -> {
+                    robot.movearm(var.armInitPower, var.firstLvl);
+                })
+                .addTemporalMarker(0.01, () -> {
+                    robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                })
+                .splineToConstantHeading(traj.redCarousel, Math.toRadians(180))
+                .addTemporalMarker(3, () -> {
+                    robot.mtrTurret.setPower(-0.4);
+                })
+                .addTemporalMarker(3, () -> {
+                    robot.svoCarousel.setPower(1);
+                })
+                .build();
+
+        Trajectory toFlank = drive.trajectoryBuilder(toRedCarousel3.end(), Math.toRadians(90))
+                .splineToLinearHeading(traj.toFlankRed, Math.toRadians(0))
+                .build();
+
+        Trajectory toRedHub3 = drive.trajectoryBuilder(toFlank.end())
+                .lineTo(traj.redHub3Flank)
+                .build();
+
+        Trajectory toRedHub2 = drive.trajectoryBuilder(toFlank.end())
+                .lineTo(traj.redHub2Flank)
+                .build();
+
+        Trajectory toRedHub1 = drive.trajectoryBuilder(toFlank.end())
+                .lineTo(traj.redHub1Flank)
+                .build();
+
+        Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end(), Math.toRadians(135))
+                .splineToConstantHeading(traj.toParkRedStorageFlank, Math.toRadians(-90))
+                .build();
+
+        Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end(), Math.toRadians(135))
+                .splineToConstantHeading(traj.toParkRedStorageFlank, Math.toRadians(-90))
+                .build();
+
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end(), Math.toRadians(135))
+                .splineToConstantHeading(traj.toParkRedStorageFlank, Math.toRadians(-90))
                 .build();
 
         // Tell telemetry to update faster than the default 250ms period :)
@@ -129,74 +167,65 @@ public class AutoBlueCarouselFrontW extends LinearOpMode {
              */
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            if (runningOpMode == 3) {
-                robot.movearm(var.armInitPower, var.thirdLvl);
-            } else if (runningOpMode == 2) {
-                robot.movearm(var.armInitPower, var.secondLvl);
-            } else if (runningOpMode == 1) {
-                robot.movearm(var.armInitPower, var.firstLvl);
-            }
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
             /**
              * shmove on to carousel and spain without the a
              */
-            drive.followTrajectory(toBlueCarousel);
-            drive.setPoseEstimate(traj.blueCarouselReset);
+
+            if (runningOpMode == 3) {
+                drive.followTrajectory(toRedCarousel3);
+            } else if (runningOpMode == 2) {
+                drive.followTrajectory(toRedCarousel2);
+            } else if (runningOpMode == 1) {
+                drive.followTrajectory(toRedCarousel1);
+            }
+            drive.setPoseEstimate(traj.redCarouselReset);
             drive.updatePoseEstimate();
             duckTime.reset();
-            while (!robot.midLimit.isPressed() | duckTime.seconds() < 3 && !isStopRequested()){
-                if (robot.midLimit.isPressed()){
+
+            while (!robot.midLimit.isPressed() | duckTime.seconds() < 3) {
+                if (robot.midLimit.isPressed()) {
                     robot.mtrTurret.setPower(0);
                 }
-                if (duckTime.seconds() > 3){
+                if (duckTime.seconds() > 3) {
                     robot.svoCarousel.setPower(0);
                 }
             }
-            robot.mtrTurret.setPower(0);
-            robot.svoCarousel.setPower(0);
 
             /**
              * go to red hub and spit out bloque
              * then go to wall
              */
+            drive.followTrajectory(toFlank);
+
             if (runningOpMode == 3) {
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                drive.followTrajectory(toBlueHub3);
+                drive.followTrajectory(toRedHub3);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_3);
             } else if (runningOpMode == 2) {
                 robot.svoIntakeTilt.setPosition(var.intakeMid);
-                drive.followTrajectory(toBlueHub2);
+                drive.followTrajectory(toRedHub2);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_2);
             } else if (runningOpMode == 1) {
                 robot.svoIntakeTilt.setPosition(var.intakeLow);
-                drive.followTrajectory(toBlueHub1);
+                drive.followTrajectory(toRedHub1);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
-                robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.movearm(0.7, var.secondLvl);
-                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                while(robot.mtrArm.isBusy()){
-
-                }
-                robot.mtrArm.setPower(0);
             }
 
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            robot.svoIntakeTilt.setPosition(var.intakeInit);
 
             /**
              * set turret to go collect pos and arm go down
              */
-            while (!robot.backLimit.isPressed()) {
-                telemetry.addLine("turret go brr");
-                telemetry.update();
-                robot.mtrTurret.setPower(-0.4);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            while (!robot.bottomLimit.isPressed()) {
+                robot.mtrArm.setPower(0.3);
             }
-
-            drive.followTrajectory(toPark2);
-
+            robot.mtrArm.setPower(0);
             break;
         }
     }

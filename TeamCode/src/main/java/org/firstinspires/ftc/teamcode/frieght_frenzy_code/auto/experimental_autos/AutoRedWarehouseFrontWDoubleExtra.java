@@ -19,14 +19,14 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.frieght_frenzy_code.auto;
+package org.firstinspires.ftc.teamcode.frieght_frenzy_code.auto.experimental_autos;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
@@ -38,13 +38,17 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "red warehouse front", group = "red")
-public class AutoRedWarehouseFrontW extends LinearOpMode {
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+@Autonomous(name = "red warehouse front 2 bloque????", group = "red")
+public class AutoRedWarehouseFrontWDoubleExtra extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
 
     double runningOpMode = 3;
     Pose2d intakeEnd;
+  
+    ElapsedTime totalTime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -119,24 +123,17 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
 
         waitForStart();
         while (opModeIsActive()) {
+            totalTime.reset();
             /**
              * move arm and turret at same time
              */
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            if (runningOpMode == 3) {
-                robot.movearm(var.armInitPower, var.thirdLvl);
-            } else if (runningOpMode == 2) {
-                robot.movearm(var.armInitPower, var.secondLvl);
+            if (runningOpMode == 2) {
+                robot.movearm(0.7, var.secondLvl);
             } else if (runningOpMode == 1) {
-                robot.movearm(var.armInitPower, var.firstLvl);
+                robot.movearm(0.7, var.firstLvl);
             }
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            while (!robot.midLimit.isPressed()) {
-
-                robot.mtrTurret.setPower(-0.4);
-            }
+          
             robot.mtrTurret.setPower(0);
             while (robot.mtrArm.isBusy()) {
                 telemetry.addLine("weeeee arm finish");
@@ -152,149 +149,174 @@ public class AutoRedWarehouseFrontW extends LinearOpMode {
 
             telemetry.addLine("GOOOOOOOOO");
             telemetry.update();
+            robot.mtrTurret.setPower(-0.7);
             if (runningOpMode == 3) {
+                robot.movearm(1, var.thirdLvl);
+                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                while (robot.mtrArm.getCurrentPosition() >= -3000){
+                  if (robot.midLimit.isPressed()){
+                    robot.mtrTurret.setPower(0);
+                  }
+                }
                 drive.followTrajectory(toRedHub3);
                 spitOutBlock(false);
-                drive.followTrajectory(toPark1_3);
+                robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.mtrTurret.setPower(0.5);
+                robot.svoIntakeTilt.setPosition(var.intakeCollect);
+                drive.followTrajectoryAsync(toPark1_3);
             } else if (runningOpMode == 2) {
                 robot.svoIntakeTilt.setPosition(var.intakeMid);
+                robot.movearm(1, var.secondLvl);
+                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                while (!robot.midLimit.isPressed()){
+                  
+                }
+                robot.mtrTurret.setPower(0);
                 drive.followTrajectory(toRedHub2);
                 spitOutBlock(false);
-                drive.followTrajectory(toPark1_2);
+                robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.mtrTurret.setPower(0.5);
+                robot.svoIntakeTilt.setPosition(var.intakeCollect);
+                drive.followTrajectoryAsync(toPark1_2);
             } else if (runningOpMode == 1) {
                 robot.svoIntakeTilt.setPosition(var.intakeLow);
-                drive.followTrajectory(toRedHub1);
+                robot.movearm(1, var.firstLvl);
+                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                drive.followTrajectoryAsync(toRedHub1);
+                while (robot.mtrBR.isBusy() | !robot.midLimit.isPressed()){
+                  drive.update();
+                  if (robot.midLimit.isPressed()){
+                    robot.mtrTurret.setPower(0);
+                  }
+                }
                 spitOutBlock(false);
-                drive.followTrajectory(toPark1_1);
-                robot.svoIntakeTilt.setPosition(var.intakeInit);
+                robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.mtrTurret.setPower(0.5);
+                robot.svoIntakeTilt.setPosition(var.intakeCollect);
+                drive.followTrajectoryAsync(toPark1_1);
             }
 
             telemetry.addLine("1st part done");
             telemetry.update();
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+
 
             /**
              * set turret to go collect pos and arm go down
              */
+            while (30 - totalTime.time() > 10){
+              telemetry.addLine("MOAR THINSG");
+              telemetry.update();
+              while (!robot.frontLimit.isPressed() | !robot.bottomLimit.isPressed()) {
+                  telemetry.addLine("turret go brrrrr");
+                  drive.updatePoseEstimate();
+                  drive.update();
+                  if (robot.mtrTurret.getCurrentPosition() >= 900 && !robot.bottomLimit.isPressed()) {
+                      robot.mtrArm.setPower(0.5);
+                      telemetry.addLine("arm go brrrrrrrrrrrrrrrrrrrrrrrrrr");
 
-            //TODO: change this to be waiting for limit siwtch >:)
-            //TODO: fine tune this number (900) to optimize turret and arm go down
-            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.mtrTurret.setPower(0.3);
-            telemetry.addLine("MOAR THINSG");
-            telemetry.update();
-            while (!robot.frontLimit.isPressed() | !robot.bottomLimit.isPressed()) {
-                telemetry.addLine("turret go brrrrr");
+                  }
+                  if (robot.bottomLimit.isPressed()) {
+                      robot.mtrArm.setPower(0);
+                      telemetry.addLine("arm stoop");
+                  }
+                  if (robot.frontLimit.isPressed()) {
+                      robot.mtrTurret.setPower(0);
+                      telemetry.addLine("turret stoop");
+                  }
+                  telemetry.update();
+              }
+              drive.cancelFollowing();
+              robot.mtrTurret.setPower(0);
 
-                if (robot.mtrTurret.getCurrentPosition() >= 900 && !robot.bottomLimit.isPressed()) {
-                    robot.mtrArm.setPower(0.5);
-                    telemetry.addLine("arm go brrrrrrrrrrrrrrrrrrrrrrrrrr");
+              /*
+              robot.movearm(0.7, var.collect);
+              robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+              while(robot.mtrArm.isBusy()){
+              }
 
-                }
-                if (robot.bottomLimit.isPressed()) {
-                    robot.mtrArm.setPower(0);
-                    telemetry.addLine("arm stoop");
-                }
-                if (robot.frontLimit.isPressed()) {
-                    robot.mtrTurret.setPower(0);
-                    telemetry.addLine("turret stoop");
-                }
-                telemetry.update();
-            }
-            robot.mtrTurret.setPower(0);
+              robot.mtrArm.setPower(0);
+              robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+              robot.svoIntakeTilt.setPosition(var.intakeExtraFreight);
+               */
 
-            /*
-            robot.movearm(0.7, var.collect);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while(robot.mtrArm.isBusy()){
-            }
+              drive.followTrajectory(toPark2);
 
-            robot.mtrArm.setPower(0);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.svoIntakeTilt.setPosition(var.intakeExtraFreight);
-             */
+              /*            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-            drive.followTrajectory(toPark2);
+              robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+              robot.movearm(0.5, 150);
+              robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+              while (robot.mtrArm.isBusy()) {
+              }
+              robot.mtrArm.setPower(0);
+               */
 
-            /*            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+              /**
+               * drive into warehouse for consumption
+               */
+              robot.svoIntake.setPower(var.lessPower * 1.5);
+              drive.followTrajectoryAsync(goCollect);
+              while (robot.intakeLimit.isPressed()) {
+                  telemetry.addLine("consuming");
+                  telemetry.update();
+                  drive.update();
+                  drive.updatePoseEstimate();
+              }
+              drive.cancelFollowing();
+              intakeEnd = drive.getPoseEstimate();
+              drive.setDrivePower(new Pose2d());
+              drive.update();
+              telemetry.addLine("consumed");
+              telemetry.addData("intake end: ", intakeEnd);
+              telemetry.update();
+              robot.svoIntake.setPower(0);
 
-            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.movearm(0.5, 150);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while (robot.mtrArm.isBusy()) {
-            }
-            robot.mtrArm.setPower(0);
-             */
+              /**
+               * has been consumed, now go to hub (and move arm/turret)
+               */
+              Trajectory goBack = drive.trajectoryBuilder(intakeEnd, true)
+                      .splineToConstantHeading(traj.redHub3, Math.toRadians(90))
+                      .build();
+              robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+              robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+              robot.movearm(0.7, var.thirdLvl);
+              robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+              drive.followTrajectoryAsync(goBack);
+              while (robot.mtrArm.isBusy() | !robot.midLimit.isPressed()) {
+                  drive.update();
+                  drive.updatePoseEstimate();
+                  if (robot.mtrArm.getCurrentPosition() <= -1000 && !robot.midLimit.isPressed()) {
+                      robot.mtrTurret.setPower(-0.3);
+                  } else if (robot.midLimit.isPressed()) {
+                      robot.mtrTurret.setPower(0);
+                  }
+                  if (!robot.mtrArm.isBusy()) {
+                      robot.mtrArm.setPower(0);
+                      robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                  }
+              }
+              drive.cancelFollowing();
 
-            /**
-             * drive into warehouse for consumption
-             */
-            robot.svoIntake.setPower(var.lessPower * 1.5);
-            drive.followTrajectoryAsync(goCollect);
-            while (robot.intakeLimit.isPressed()) {
-                telemetry.addLine("consuming");
-                telemetry.update();
-                drive.update();
-                drive.updatePoseEstimate();
-            }
-            drive.cancelFollowing();
-            intakeEnd = drive.getPoseEstimate();
-            drive.setDrivePower(new Pose2d());
-            drive.update();
-            telemetry.addLine("consumed");
-            telemetry.addData("intake end: ", intakeEnd);
-            telemetry.update();
-            robot.svoIntake.setPower(0);
+              spitOutBlock(true);
 
-            /**
-             * has been consumed, now go to hub (and move arm/turret)
-             */
-            Trajectory goBack = drive.trajectoryBuilder(intakeEnd, true)
-                    .splineToConstantHeading(traj.redHub3, Math.toRadians(90))
-                    .build();
-            drive.followTrajectory(goBack);
+              /**
+               el parque
+               */
+              drive.followTrajectory(toPark1_3);
 
-            //TODO: update later to be during trajectory on way to hub :)
-            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.movearm(var.armInitPower, var.thirdLvl);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            while (robot.mtrArm.getCurrentPosition() >= -1000) {
-                telemetry.addData("haha", robot.mtrArm.getCurrentPosition());
-                telemetry.update();
-                //drive.update();
-            }
-            while (!robot.midLimit.isPressed()) {
-                robot.mtrTurret.setPower(-0.5);
-                //drive.update();
-            }
-            robot.mtrTurret.setPower(0);
-            while (robot.mtrArm.isBusy()) {
-                telemetry.addLine("weeeee arm finish");
-                telemetry.update();
-                //drive.update();
-            }
-            //drive.updatePoseEstimate();
-            robot.mtrArm.setPower(0);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-            //TODO: make this spline correct lmao
-
-
-            spitOutBlock(true);
-
-            /**
-             el parque
-             */
-            drive.followTrajectory(toPark1_3);
-            drive.followTrajectory(toPark2);
-
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            while (!robot.frontLimit.isPressed()) {
+              robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 robot.mtrTurret.setPower(0.7);
+            }
+            drive.followTrajectoryAsync(toPark2);
+            while (!robot.frontLimit.isPressed() | robot.mtrFL.isBusy()) {
+              drive.update();
+              if (robot.frontLimit.isPressed()){
+                robot.mtrTurret.setPower(0);
+              }
             }
             robot.mtrTurret.setPower(0);
             break;

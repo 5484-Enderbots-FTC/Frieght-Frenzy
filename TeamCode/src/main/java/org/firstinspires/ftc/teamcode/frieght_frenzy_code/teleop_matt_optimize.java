@@ -4,12 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.sun.tools.javac.comp.Todo;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-@TeleOp(name = "teleop ff", group = "teleop")
-public class teleop_two_remotes extends LinearOpMode {
+@TeleOp(name = "Matt's attempt at teleop moment", group = "teleop")
+public class teleop_matt_optimize extends LinearOpMode {
 
     //imported hardware from "hardwareFF" public class:
     hardwareFF robot = new hardwareFF();
@@ -253,12 +250,11 @@ public class teleop_two_remotes extends LinearOpMode {
              * MEASURE NOW
              */
 
-            if (gamepad2.left_bumper && precisionCap == 1 && togglePrecisionCap.seconds() > var.toggleWait) {
-                precisionCap = 2;
-                togglePrecisionCap.reset();
-            }
-            if (gamepad2.left_bumper && precisionCap == 2 && togglePrecisionCap.seconds() > var.toggleWait) {
-                precisionCap = 1;
+            if (gamepad2.left_bumper && togglePrecisionCap.seconds() > var.toggleWait) {
+                precisionCap += 1;
+                if (precisionCap == 4){
+                    precisionCap = 1;
+                }
                 togglePrecisionCap.reset();
             }
 

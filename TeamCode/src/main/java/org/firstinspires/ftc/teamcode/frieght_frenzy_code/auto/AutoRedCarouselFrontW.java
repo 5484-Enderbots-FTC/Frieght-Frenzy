@@ -27,6 +27,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
@@ -38,13 +39,14 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "red carousel front warehouse", group = "red")
+@Autonomous(name = "red carousel front", group = "red")
 public class AutoRedCarouselFrontW extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
 
     double runningOpMode = 3;
     Pose2d intakeEnd;
+    ElapsedTime duckTime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -56,6 +58,11 @@ public class AutoRedCarouselFrontW extends LinearOpMode {
 
         Trajectory toRedCarousel = drive.trajectoryBuilder(traj.startPoseRC, true)
                 .splineToConstantHeading(traj.redCarousel, Math.toRadians(180))
+                .addDisplacementMarker(0.95,0, () -> {
+                            robot.svoCarousel.setPower(1);
+                            robot.mtrTurret.setPower(-0.4);
+                        }
+                )
                 .build();
 
         Trajectory toRedHub3 = drive.trajectoryBuilder(toRedCarousel.end())
@@ -124,39 +131,31 @@ public class AutoRedCarouselFrontW extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             if (runningOpMode == 3) {
-                robot.movearm(0.7, var.thirdLvl);
+                robot.movearm(var.armInitPower, var.thirdLvl);
             } else if (runningOpMode == 2) {
-                robot.movearm(0.7, var.secondLvl);
+                robot.movearm(var.armInitPower, var.secondLvl);
             } else if (runningOpMode == 1) {
-                robot.movearm(0.7, var.firstLvl);
+                robot.movearm(var.armInitPower, var.firstLvl);
             }
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            while (!robot.midLimit.isPressed()) {
-                telemetry.addData("pose estimate: ", drive.getPoseEstimate());
-                telemetry.update();
-                robot.mtrTurret.setPower(-0.4);
-                drive.update();
-                drive.updatePoseEstimate();
-            }
-            robot.mtrTurret.setPower(0);
-            while (robot.mtrArm.isBusy()) {
-                telemetry.addLine("weeeee arm finish");
-                telemetry.addData("pose estimate: ", drive.getPoseEstimate());
-                drive.update();
-                drive.updatePoseEstimate();
-            }
-            robot.mtrArm.setPower(0);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             /**
              * shmove on to carousel and spain without the a
              */
             drive.followTrajectory(toRedCarousel);
-            robot.svoCarousel.setPower(1);
-            sleep(3000);
+            drive.setPoseEstimate(traj.redCarouselReset);
+            drive.updatePoseEstimate();
+            duckTime.reset();
+            while (!robot.midLimit.isPressed() | duckTime.seconds() < 3 && !isStopRequested()){
+                if (robot.midLimit.isPressed()){
+                    robot.mtrTurret.setPower(0);
+                }
+                if (duckTime.seconds() > 3){
+                    robot.svoCarousel.setPower(0);
+                }
+            }
+            robot.mtrTurret.setPower(0);
             robot.svoCarousel.setPower(0);
-
             /**
              * go to red hub and spit out bloque
              * then go to wall
@@ -178,11 +177,12 @@ public class AutoRedCarouselFrontW extends LinearOpMode {
                 drive.followTrajectory(toPark1_1);
             }
 
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            robot.svoIntakeTilt.setPosition(var.intakeInit);
 
             /**
              * set turret to go collect pos and arm go down
              */
+            /*
             //TODO: change this to be waiting for limit siwtch >:)
             robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.moveturret(0.3, 1480);
@@ -209,11 +209,27 @@ public class AutoRedCarouselFrontW extends LinearOpMode {
             }
             robot.mtrArm.setPower(0);
 
+
+             */
             /**
              * el parque
              */
-            drive.followTrajectory(toPark1_3);
+            /*
+            while (!robot.frontLimit.isPressed()) {
+                telemetry.addLine("turret go brr");
+                telemetry.update();
+                robot.mtrTurret.setPower(0.4);
+            }
+
+             */
+
             drive.followTrajectory(toPark2);
+
+            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            while (!robot.frontLimit.isPressed()) {
+                robot.mtrTurret.setPower(0.4);
+            }
+            robot.mtrTurret.setPower(0);
             break;
         }
     }

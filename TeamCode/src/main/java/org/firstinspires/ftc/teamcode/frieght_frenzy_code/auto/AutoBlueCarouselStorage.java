@@ -68,23 +68,18 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
                 .splineToConstantHeading(traj.blueHub1, Math.toRadians(0))
                 .build();
 
-        Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)
-                .lineToLinearHeading(traj.toParkBlueStorage)
-                .build();
-        Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), true)
-                .lineToLinearHeading(traj.toParkBlueStorage)
-                .build();
-        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(),true)
-                .lineToLinearHeading(traj.toParkBlueStorage)
+        Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), Math.toRadians(135))
+                .splineToLinearHeading(traj.toParkBlueStorage, Math.toRadians(-90))
                 .build();
 
-
-        /**
-        Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
-                .lineTo(traj.toParkPos2)
+        Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), Math.toRadians(135))
+                .splineToLinearHeading(traj.toParkBlueStorage, Math.toRadians(-90))
                 .build();
-        */
-            
+
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(), Math.toRadians(135))
+                .splineToLinearHeading(traj.toParkBlueStorage, Math.toRadians(-90))
+                .build();
+
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
         robot.svoIntakeTilt.setPosition(var.intakeInit);
@@ -125,11 +120,11 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             if (runningOpMode == 3) {
-                robot.movearm(0.7, var.thirdLvl);
+                robot.movearm(var.armInitPower, var.thirdLvl);
             } else if (runningOpMode == 2) {
-                robot.movearm(0.7, var.secondLvl);
+                robot.movearm(var.armInitPower, var.secondLvl);
             } else if (runningOpMode == 1) {
-                robot.movearm(0.7, var.firstLvl);
+                robot.movearm(var.armInitPower, var.firstLvl);
             }
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -154,14 +149,18 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
              * shmove on to carousel and spain without the a
              */
             drive.followTrajectory(toBlueCarousel);
-            robot.svoCarousel.setPower(1);
+            robot.svoCarousel.setPower(-1);
+            drive.setPoseEstimate(traj.blueCarouselReset);
+            drive.updatePoseEstimate();
             sleep(3000);
             robot.svoCarousel.setPower(0);
 
             /**
              * go to red hub and spit out bloque
-             * then go to wall
+             * then go to storage
              */
+            telemetry.addLine("go to hub");
+            telemetry.update();
             if (runningOpMode == 3) {
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 drive.followTrajectory(toBlueHub3);
@@ -177,17 +176,7 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
                 drive.followTrajectory(toBlueHub1);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
-                robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.movearm(0.7, var.secondLvl);
-                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                while(robot.mtrArm.isBusy()){
-
-                }
-                robot.mtrArm.setPower(0);
             }
-
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
-
 
             robot.svoIntakeTilt.setPosition(var.intakeInit);
 
@@ -195,7 +184,7 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
              * set turret to go collect pos and arm go down
              */
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            while (!robot.bottomLimit.isPressed()){
+            while (!robot.bottomLimit.isPressed()) {
                 robot.mtrArm.setPower(0.4);
             }
             robot.mtrArm.setPower(0);
@@ -212,6 +201,7 @@ public class AutoBlueCarouselStorage extends LinearOpMode {
             robot.svoIntakeTilt.setPosition(var.intakeLow);
         }
         sleep(1000);
+
         robot.svoIntake.setPower(-var.lessPower);
         sleep(1500);
         robot.svoIntake.setPower(0);

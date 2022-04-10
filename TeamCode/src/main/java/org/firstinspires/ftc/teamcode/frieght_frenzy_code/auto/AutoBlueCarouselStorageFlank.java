@@ -21,11 +21,8 @@
 
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code.auto;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -38,9 +35,8 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
-
-@Autonomous(name = "blue carousel front", group = "blue")
-public class AutoBlueCarouselFrontW extends LinearOpMode {
+@Autonomous(name = "blue carousel storage flank", group = "blue")
+public class AutoBlueCarouselStorageFlank extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
 
@@ -64,30 +60,32 @@ public class AutoBlueCarouselFrontW extends LinearOpMode {
                 )
                 .build();
 
-        Trajectory toBlueHub3 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
-                .splineTo(traj.blueHub3, Math.toRadians(0))
+        Trajectory toFlank = drive.trajectoryBuilder(toBlueCarousel.end(), Math.toRadians(-90))
+                .splineToLinearHeading(traj.toFlankBlue, Math.toRadians(0))
                 .build();
 
-        Trajectory toBlueHub2 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
-                .splineTo(traj.blueHub2, Math.toRadians(0))
+        Trajectory toBlueHub3 = drive.trajectoryBuilder(toFlank.end(), true)
+                .lineTo(traj.blueHub3Flank)
                 .build();
 
-        Trajectory toBlueHub1 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
-                .splineTo(traj.blueHub1, Math.toRadians(0))
+        Trajectory toBlueHub2 = drive.trajectoryBuilder(toFlank.end(), true)
+                .lineTo(traj.blueHub2Flank)
                 .build();
 
-        Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)
-                .lineTo(traj.toParkBluePosCarousel1)
-                .build();
-        Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), true)
-                .lineTo(traj.toParkBluePosCarousel1)
-                .build();
-        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(), true)
-                .lineTo(traj.toParkBluePosCarousel1)
+        Trajectory toBlueHub1 = drive.trajectoryBuilder(toFlank.end(), true)
+                .lineTo(traj.blueHub1Flank)
                 .build();
 
-        Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end(),true)
-                .lineTo(traj.toParkBluePosCarousel2)
+        Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), Math.toRadians(-135))
+                .splineToConstantHeading(traj.toParkBlueStorageFlank, Math.toRadians(90))
+                .build();
+
+        Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), Math.toRadians(-135))
+                .splineToConstantHeading(traj.toParkBlueStorageFlank, Math.toRadians(90))
+                .build();
+
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(), Math.toRadians(-135))
+                .splineToConstantHeading(traj.toParkBlueStorageFlank, Math.toRadians(90))
                 .build();
 
         // Tell telemetry to update faster than the default 250ms period :)
@@ -142,7 +140,7 @@ public class AutoBlueCarouselFrontW extends LinearOpMode {
              * shmove on to carousel and spain without the a
              */
             drive.followTrajectory(toBlueCarousel);
-            drive.setPoseEstimate(traj.blueCarouselReset);
+            drive.setPoseEstimate(traj.blueCarouselResetFlank);
             drive.updatePoseEstimate();
             duckTime.reset();
             while (!robot.midLimit.isPressed() | duckTime.seconds() < 3 && !isStopRequested()){
@@ -160,6 +158,9 @@ public class AutoBlueCarouselFrontW extends LinearOpMode {
              * go to red hub and spit out bloque
              * then go to wall
              */
+
+            drive.followTrajectory(toFlank);
+
             if (runningOpMode == 3) {
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 drive.followTrajectory(toBlueHub3);
@@ -175,28 +176,18 @@ public class AutoBlueCarouselFrontW extends LinearOpMode {
                 drive.followTrajectory(toBlueHub1);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
-                robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.movearm(0.7, var.secondLvl);
-                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                while(robot.mtrArm.isBusy()){
-
-                }
-                robot.mtrArm.setPower(0);
             }
 
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            robot.svoIntakeTilt.setPosition(var.intakeInit);
 
             /**
              * set turret to go collect pos and arm go down
              */
-            while (!robot.backLimit.isPressed()) {
-                telemetry.addLine("turret go brr");
-                telemetry.update();
-                robot.mtrTurret.setPower(-0.4);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            while (!robot.bottomLimit.isPressed()){
+                robot.mtrArm.setPower(0.3);
             }
-
-            drive.followTrajectory(toPark2);
-
+            robot.mtrArm.setPower(0);
             break;
         }
     }

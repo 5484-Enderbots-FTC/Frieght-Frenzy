@@ -67,14 +67,14 @@ public class AutoRedCarouselStorage extends LinearOpMode {
                 .splineTo(traj.redHub1, Math.toRadians(0))
                 .build();
 
-        Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end())
-                .lineToLinearHeading(traj.toParkRedStorage)
+        Trajectory toPark1_3 = drive.trajectoryBuilder(toRedHub3.end(), Math.toRadians(-135))
+                .splineToLinearHeading(traj.toParkRedStorage, Math.toRadians(90))
                 .build();
-        Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end())
-                .lineToLinearHeading(traj.toParkRedStorage)
+        Trajectory toPark1_2 = drive.trajectoryBuilder(toRedHub2.end(), Math.toRadians(-135))
+                .splineToLinearHeading(traj.toParkRedStorage, Math.toRadians(90))
                 .build();
-        Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end())
-                .lineToLinearHeading(traj.toParkRedStorage)
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end(), Math.toRadians(-135))
+                .splineToLinearHeading(traj.toParkRedStorage, Math.toRadians(90))
                 .build();
 
         // Tell telemetry to update faster than the default 250ms period :)
@@ -117,11 +117,11 @@ public class AutoRedCarouselStorage extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             if (runningOpMode == 3) {
-                robot.movearm(0.7, var.thirdLvl);
+                robot.movearm(var.armInitPower, var.thirdLvl);
             } else if (runningOpMode == 2) {
-                robot.movearm(0.7, var.secondLvl);
+                robot.movearm(var.armInitPower, var.secondLvl);
             } else if (runningOpMode == 1) {
-                robot.movearm(0.7, var.firstLvl);
+                robot.movearm(var.armInitPower, var.firstLvl);
             }
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -147,6 +147,8 @@ public class AutoRedCarouselStorage extends LinearOpMode {
              */
             drive.followTrajectory(toRedCarousel);
             robot.svoCarousel.setPower(1);
+            drive.setPoseEstimate(traj.redCarouselReset);
+            drive.updatePoseEstimate();
             sleep(3000);
             robot.svoCarousel.setPower(0);
 
@@ -169,13 +171,6 @@ public class AutoRedCarouselStorage extends LinearOpMode {
                 drive.followTrajectory(toRedHub1);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
-                robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.movearm(0.7, var.secondLvl);
-                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                while(robot.mtrArm.isBusy()){
-
-                }
-                robot.mtrArm.setPower(0);
             }
 
             robot.svoIntakeTilt.setPosition(var.intakeInit);
@@ -184,7 +179,7 @@ public class AutoRedCarouselStorage extends LinearOpMode {
              * set turret to go collect pos and arm go down
              */
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            while (!robot.bottomLimit.isPressed()){
+            while (!robot.bottomLimit.isPressed()) {
                 robot.mtrArm.setPower(0.3);
             }
             robot.mtrArm.setPower(0);

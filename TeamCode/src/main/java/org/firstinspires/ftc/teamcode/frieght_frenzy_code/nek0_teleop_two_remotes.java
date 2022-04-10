@@ -4,12 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.sun.tools.javac.comp.Todo;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-@TeleOp(name = "teleop ff", group = "teleop")
-public class teleop_two_remotes extends LinearOpMode {
+@TeleOp(name = "nek0 teleop ff", group = "teleop")
+public class nek0_teleop_two_remotes extends LinearOpMode {
 
     //imported hardware from "hardwareFF" public class:
     hardwareFF robot = new hardwareFF();
@@ -27,11 +24,57 @@ public class teleop_two_remotes extends LinearOpMode {
     boolean carouselSpinning = false;
     boolean intakeOn = false;
     boolean freightCollected = false;
-    boolean tapeDispensed = false;
 
     boolean zeroPosTapeSet = false;
     boolean zeroPosSet = false;
 
+    String nek0Neutral1 = "(^-u-^)";
+    String nek0Neutral2 = "( ^-u-^)";
+    String nek0Neutral3 = "(^-u-^ )";
+    String nek0Approving = "(^‾u‾^)";
+    String nek0Happy = "(^-U-^)";
+    String nek0Awkward = "(^._.^)";
+    String nek0Bad = "(^-n-^)";
+    String nek0Right = "(͡° ͜ʖ ͡°)";
+    String nek0ReallyRight = "(^°U°^)";
+    String nek0Suspicous = "(^-_.^)";
+    String nek0Dead1 = "(^*-*^)";
+    String nek0Dead2 = "(^+-+^)";
+    String nek0Readjusting = "(^...^)";
+    String nek0Angry1 = "(^◣_◢^)";
+    String nek0Angry2 = "(^◣o◢^)";
+    String nek0Hurried = "(^°-°^)";
+    String nek0OwO = "(^owo^)";
+    String nek0UwU = "(^uwu^)";
+    String nek0CurrentQuote = "";
+    String nek0CurrentFace = "";
+    Boolean nek0NeutralState = true;
+    Boolean nek0ApprovingState = false;
+    Boolean nek0HappyState = false;
+    Boolean nek0AwkwardState = false;
+    Boolean nek0BadState = false;
+    Boolean nek0RightState = false;
+    Boolean nek0ReallyRightState = false;
+    Boolean nek0SusState = false;
+    Boolean nek0DeadState = false;
+    Boolean nek0ReadjustingState = false;
+    Boolean nek0AngryState = false;
+    Boolean nek0HurriedState = false;
+    Boolean nek0OwOState = false;
+    Boolean nek0UwUState = false;
+
+    Boolean nek0CheerState1=false;
+    Boolean nek0CheerStatekill1=false;
+    Boolean nek0CheerState2=false;
+    Boolean nek0CheerStatekill2=false;
+    Boolean nek0CheerState3=false;
+    Boolean nek0CheerStatekill3=false;
+    double freightCollectionPointValue=0;
+    Boolean freightResetValue=false;
+    ElapsedTime gameTime = new ElapsedTime();
+    ElapsedTime nek0Time = new ElapsedTime();
+    ElapsedTime nek0ResetTime = new ElapsedTime();
+    Boolean nek0TimeReset = false;
     State currentState;
     Status intakeState;
 
@@ -47,6 +90,17 @@ public class teleop_two_remotes extends LinearOpMode {
         WAIT,
         FINISH
     }
+/*everyti
+
+/*
+everytime i go to the robot room i feel more and more useless
+
+i hate this
+
+all my projects are just ways to distract myself from my own uselessness
+
+whats the point
+ */
 
 
     public void runOpMode() {
@@ -58,6 +112,7 @@ public class teleop_two_remotes extends LinearOpMode {
         robot.mtrTape.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.mtrTape.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         telemetry.addData("Status", "Initialized");
+
         telemetry.update();
         waitForStart();
 
@@ -141,6 +196,7 @@ public class teleop_two_remotes extends LinearOpMode {
                         currentState = State.SET;
                     }
 */
+
                     /**
                      * Normal 'manual' function :)
                      */
@@ -160,7 +216,7 @@ public class teleop_two_remotes extends LinearOpMode {
                 case WAIT:
                     if (!robot.mtrArm.isBusy()) {
                         currentState = State.FINISH;
-                    }else{
+                    } else {
                         currentState = State.WAIT;
                     }
                     break;
@@ -170,6 +226,80 @@ public class teleop_two_remotes extends LinearOpMode {
                     currentState = State.NOTHING;
                     break;
             }
+            //this is where all the nek0 stuff goes
+            if (nek0ResetTime.seconds()>10&& nek0TimeReset==true) {
+                nek0Time.reset(); nek0ResetTime.reset();
+            }
+            if(nek0Time.seconds() > 8){nek0Time.reset();}
+            //below is the idle animation code for the base state, no quotes, lil animation
+            if (nek0NeutralState == true && nek0Time.seconds() > 3 && nek0Time.seconds() < 5) {
+                nek0CurrentFace = nek0Neutral2;
+            } else if (nek0NeutralState == true && nek0Time.seconds() > 5 && nek0Time.seconds() < 8) {
+                nek0CurrentFace = nek0Neutral3;
+            } else if (nek0NeutralState == true && nek0Time.seconds() < 3 | nek0Time.seconds() > 8) {
+                nek0CurrentFace = nek0Neutral1;
+            }
+            // if you touch these limits nek0 gets a lil angry, and will play a little animation and tell you you to knock it off.
+            if (robot.frontLimit.isPressed() | robot.backLimit.isPressed() | robot.bottomLimit.isPressed()) {
+                nek0TimeReset=true;
+                nek0AngryState = true;
+                nek0CurrentQuote = "HEY STOP THAT";
+            }
+            if (nek0AngryState == true && Math.round(nek0Time.seconds()) % 2 == 0) {
+                nek0CurrentFace = nek0Angry1;
+            } else if (nek0AngryState == true && Math.round(nek0Time.seconds()) % 2 != 0) {
+                nek0CurrentFace = nek0Angry2;
+            }
+            if (nek0AngryState == true && nek0Time.seconds() > 8 && robot.frontLimit.isPressed() == false && robot.backLimit.isPressed() == false && robot.bottomLimit.isPressed() == false) {
+                nek0AngryState = false;
+            }
+            //below is some logic to switch to and from neutral state
+            if (nek0NeutralState = true) {
+                
+            }
+            if (nek0NeutralState = true &&
+                    nek0ApprovingState == false &&
+                    nek0HappyState == false &&
+                    nek0AwkwardState == false &&
+                    nek0BadState == false &&
+                    nek0RightState == false &&
+                    nek0ReallyRightState == false &&
+                    nek0SusState == false &&
+                    nek0DeadState == false &&
+                    nek0ReadjustingState == false &&
+                    nek0AngryState == false &&
+                    nek0HurriedState == false &&
+                    nek0OwOState == false &&
+                    nek0UwUState == false) {
+                nek0NeutralState = true;
+            } else {
+                nek0NeutralState = false;
+            }
+            //below this is the carousel scripting where when the carousel spins it gives congrats
+
+            // IMPORTANT NOTE: while adding pieces, do not declare neutral as true, declare special face as false,
+            // neutral sets in the event of no current face
+            if(carouselSpinning==true){nek0HappyState=true;nek0CurrentQuote="GOOD JOB FELLAS, GET THIS DUB";nek0TimeReset=true;}
+            if(nek0HappyState==true&&nek0Time.seconds()<=4){nek0CurrentFace=nek0Happy;}
+            else if(nek0HappyState==true&&nek0Time.seconds()<4){nek0CurrentFace=nek0ReallyRight;}
+            if(nek0HappyState=true&&nek0Time.seconds()>8){nek0HappyState=false;}
+            //TODO: check if time is measured in dec, and then augment code accordingly
+            telemetry.addData("time value for nek0",nek0Time.seconds());
+            // a lil note fore i keep goin, the way i normally do face movements is either modular division or set times
+            // the below lines of telemetry are where the actual data is stored
+            if(freightCollectionPointValue==4&&nek0CheerStatekill1==false){nek0CheerState1=true;}
+            if(nek0CheerState1==true){
+                nek0CurrentQuote="wow stylin, keep it up";
+                if(Math.round(nek0Time.seconds())%2==0){nek0CurrentFace=nek0UwU;}
+            else if(Math.round(nek0Time.seconds())%2!=0){nek0CurrentFace=nek0ReallyRight;}
+
+            }
+
+            if(freightCollectionPointValue==6&&nek0CheerStatekill2==false){nek0CheerState2=true;}
+            if(freightCollectionPointValue==10&&nek0CheerStatekill3==false){nek0CheerState3=true;}
+            telemetry.addData("", nek0CurrentFace);
+            telemetry.addData("", nek0CurrentQuote);
+
 
             //TODO: rewrite the logic when we get better limits :)
 
@@ -215,7 +345,7 @@ public class teleop_two_remotes extends LinearOpMode {
                     robot.svoIntake.setPower(var.lessPower);
                     intakeState = Status.IN;
                 }
-                if(runtime.seconds() < 90){
+                if (runtime.seconds() < 90) {
                     robot.LEDstrip.setPosition(var.green);
                 }
 
@@ -224,7 +354,7 @@ public class teleop_two_remotes extends LinearOpMode {
                 if (intakeState != Status.OUT) {
                     robot.svoIntake.setPower(var.stop);
                     intakeState = Status.STOPPED;
-                    if(runtime.seconds() < 90){
+                    if (runtime.seconds() < 90) {
                         robot.LEDstrip.setPosition(var.red);
                     }
 
@@ -242,7 +372,12 @@ public class teleop_two_remotes extends LinearOpMode {
                 //might turn this into an output sequence
                 intakeState = Status.OUT;
                 robot.svoIntake.setPower(-var.lessPower);
+
+                if(freightResetValue=true){
+                freightCollectionPointValue+=1;
+                freightResetValue=false;}
             }
+            else{freightResetValue=true;}
             //stop intake
             if (gamepad2.x) {
                 robot.svoIntake.setPower(var.stop);
@@ -262,17 +397,7 @@ public class teleop_two_remotes extends LinearOpMode {
                 togglePrecisionCap.reset();
             }
 
-            if(robot.mtrTape.getCurrentPosition() > 50){
-                tapeDispensed = true;
-            }else{
-                tapeDispensed = false;
-            }
-
-            if(tapeDispensed){
-                robot.mtrTape.setPower((gamepad2.right_trigger / precisionCap) - (gamepad2.left_trigger / precisionCap));
-            }else{
-                robot.mtrTape.setPower((gamepad2.right_trigger / precisionCap));
-            }
+            robot.mtrTape.setPower((gamepad2.right_trigger / precisionCap) - (gamepad2.left_trigger / precisionCap));
 
             //adding trigger deadzones WEEE
             /*
@@ -310,7 +435,6 @@ public class teleop_two_remotes extends LinearOpMode {
 
  */
             telemetry.addData("precision cap reading", precisionCap);
-            telemetry.addData("tape dispensed?", tapeDispensed);
             telemetry.addData("tape encoder reading: ", robot.mtrTape.getCurrentPosition());
             telemetry.addData("arm encoder reading: ", robot.mtrArm.getCurrentPosition());
             /*

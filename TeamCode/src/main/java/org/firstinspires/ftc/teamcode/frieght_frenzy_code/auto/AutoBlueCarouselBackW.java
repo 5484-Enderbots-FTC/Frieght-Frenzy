@@ -28,6 +28,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.ElementAnalysisPipelineFF;
@@ -37,12 +38,15 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "blue carousel back warehouse", group = "blue")
+import dalvik.system.DelegateLastClassLoader;
+
+@Autonomous(name = "blue carousel back", group = "blue")
 public class AutoBlueCarouselBackW extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
 
     double runningOpMode = 3;
+    ElapsedTime duckTime = new ElapsedTime();
     Pose2d intakeEnd;
 
     @Override
@@ -55,6 +59,11 @@ public class AutoBlueCarouselBackW extends LinearOpMode {
 
         Trajectory toBlueCarousel = drive.trajectoryBuilder(traj.startPoseBC)
                 .splineToConstantHeading(traj.blueCarousel, Math.toRadians(180))
+                .addDisplacementMarker(0.95,0, () -> {
+                            robot.svoCarousel.setPower(-1);
+                            robot.mtrTurret.setPower(-0.4);
+                        }
+                )
                 .build();
 
         Trajectory toBlueHub3 = drive.trajectoryBuilder(toBlueCarousel.end(), true)
@@ -75,22 +84,19 @@ public class AutoBlueCarouselBackW extends LinearOpMode {
         Trajectory toPark1_2 = drive.trajectoryBuilder(toBlueHub2.end(), true)
                 .lineTo(traj.toParkBarrierPosBlue)
                 .build();
-        Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(),true)
-                .lineTo(traj.toParkBarrierPosBlue)
+        Trajectory toPark1_1half = drive.trajectoryBuilder(toBlueHub1.end(),true)
+                .lineTo(traj.toParkBarrierPosBlueHalf)
                 .build();
 
-        /**
-        Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
-                .lineTo(traj.toParkPos2)
+        Trajectory toPark1_1 = drive.trajectoryBuilder(toPark1_1half.end(),true)
+                .lineTo(traj.toParkBarrierPosBlue)
                 .build();
-        */
             
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
         robot.svoIntakeTilt.setPosition(var.intakeInit);
         sleep(5000);
         while (!isStarted()) {
-            /*
             //what did u detect
             ArrayList<ElementAnalysisPipelineFF.AnalyzedElement> elements = robot.pipeline.getDetectedElements();
             sleep(250);
@@ -113,8 +119,6 @@ public class AutoBlueCarouselBackW extends LinearOpMode {
 
                 }
             }
-
-             */
             telemetry.update();
         }
 
@@ -128,42 +132,35 @@ public class AutoBlueCarouselBackW extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             if (runningOpMode == 3) {
-                robot.movearm(0.7, var.thirdLvl);
+                robot.movearm(var.armInitPower, var.thirdLvl);
             } else if (runningOpMode == 2) {
-                robot.movearm(0.7, var.secondLvl);
+                robot.movearm(var.armInitPower, var.secondLvl);
             } else if (runningOpMode == 1) {
-                robot.movearm(0.7, var.firstLvl);
+                robot.movearm(var.armInitPower, var.firstLvl);
             }
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            while (!robot.midLimit.isPressed()) {
-                telemetry.addData("pose estimate: ", drive.getPoseEstimate());
-                telemetry.update();
-                robot.mtrTurret.setPower(-0.4);
-                drive.update();
-                drive.updatePoseEstimate();
-            }
-            robot.mtrTurret.setPower(0);
-            while (robot.mtrArm.isBusy()) {
-                telemetry.addLine("weeeee arm finish");
-                telemetry.addData("pose estimate: ", drive.getPoseEstimate());
-                drive.update();
-                drive.updatePoseEstimate();
-            }
-            robot.mtrArm.setPower(0);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
             /**
              * shmove on to carousel and spain without the a
              */
             drive.followTrajectory(toBlueCarousel);
-            robot.svoCarousel.setPower(1);
-            sleep(3000);
+            drive.setPoseEstimate(traj.blueCarouselReset);
+            drive.updatePoseEstimate();
+            duckTime.reset();
+            while (!robot.midLimit.isPressed() | duckTime.seconds() < 3 && !isStopRequested()){
+                if (robot.midLimit.isPressed()){
+                    robot.mtrTurret.setPower(0);
+                }
+                if (duckTime.seconds() > 3){
+                    robot.svoCarousel.setPower(0);
+                }
+            }
+            robot.mtrTurret.setPower(0);
             robot.svoCarousel.setPower(0);
 
             /**
              * go to red hub and spit out bloque
-             * then go to wall
+             * then go to barrier
              */
             if (runningOpMode == 3) {
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
@@ -179,7 +176,8 @@ public class AutoBlueCarouselBackW extends LinearOpMode {
                 robot.svoIntakeTilt.setPosition(var.intakeLow);
                 drive.followTrajectory(toBlueHub1);
                 spitOutBlock();
-                drive.followTrajectory(toPark1_1);
+                drive.followTrajectory(toPark1_1half);
+                robot.svoIntakeTilt.setPosition(var.intakeInit);
                 robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 robot.movearm(0.7, var.secondLvl);
                 robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -187,20 +185,20 @@ public class AutoBlueCarouselBackW extends LinearOpMode {
 
                 }
                 robot.mtrArm.setPower(0);
+                robot.svoIntakeTilt.setPosition(var.intakeInit);
+                drive.followTrajectory(toPark1_1);
             }
 
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+
 
             /**
-             * set turret to go collect pos and arm go down
+             * set turret to go collect pos
              */
-            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.moveturret(-0.3, -1480);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while (robot.mtrTurret.isBusy()) {
+            while (!robot.backLimit.isPressed()) {
+                telemetry.addLine("turret go brr");
+                telemetry.update();
+                robot.mtrTurret.setPower(-0.4);
             }
-            robot.mtrTurret.setPower(0);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             break;
         }
     }

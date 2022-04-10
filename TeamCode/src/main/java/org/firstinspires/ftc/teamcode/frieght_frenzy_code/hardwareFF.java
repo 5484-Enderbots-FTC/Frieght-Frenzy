@@ -4,6 +4,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -26,15 +27,14 @@ public class hardwareFF {
     /**
      * the variables here that are only used in this doc can be private but everything else like motors and servos need to be
      * public so they can be called in the other programs.
-     * <p>
+     *
      * the methods and classes are public so you can call them and have them reference the other things in here
-     * <p>
-     * //So far this season we just have motors, so I've done the work to initialize them here:
+     *
      */
     public ElementAnalysisPipelineFF pipeline;
 
     public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR; //control hub ports , , ,
-    public DcMotorEx mtrArm, mtrTurret; //expansion hub ports ,
+    public DcMotorEx mtrArm, mtrTurret, mtrTape; //expansion hub ports ,
     public CRServo svoCarousel, svoIntake; //servo port 0, 1
     public Servo svoIntakeTilt, LEDstrip; //servo port
 
@@ -91,6 +91,10 @@ public class hardwareFF {
         mtrTurret.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         mtrTurret.setDirection(DcMotorEx.Direction.REVERSE);
 
+        mtrTape = hw.get(DcMotorEx.class, "mtrTape");
+        mtrTape.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        mtrTape.setDirection(DcMotorEx.Direction.FORWARD);
+
         svoCarousel = hw.get(CRServo.class, "svoCarousel");
         svoCarousel.setDirection(CRServo.Direction.REVERSE);
 
@@ -99,12 +103,10 @@ public class hardwareFF {
 
         svoIntakeTilt = hw.get(Servo.class, "svoIntakeTilt");
 
+
         LEDstrip = hw.get(Servo.class, "LEDstrip");
 
-        //leftLimit = hw.get(TouchSensor.class, "leftLimit");
-        //rightLimit = hw.get(TouchSensor.class, "rightLimit");
         midLimit = hw.get(TouchSensor.class, "midLimit");
-        //topLimit = hw.get(TouchSensor.class, "topLimit");
         bottomLimit = hw.get(TouchSensor.class, "bottomLimit");
         intakeLimit = hw.get(TouchSensor.class, "intakeLimit");
 

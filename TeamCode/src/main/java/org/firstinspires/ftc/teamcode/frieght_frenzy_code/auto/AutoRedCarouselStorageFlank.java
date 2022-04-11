@@ -25,6 +25,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.ElementAnalysisPipelineFF;
@@ -40,6 +41,7 @@ public class AutoRedCarouselStorageFlank extends LinearOpMode {
     autoTrajectories traj = new autoTrajectories();
 
     double runningOpMode = 3;
+    ElapsedTime duckTime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
@@ -51,6 +53,11 @@ public class AutoRedCarouselStorageFlank extends LinearOpMode {
 
         Trajectory toRedCarousel = drive.trajectoryBuilder(traj.startPoseRC, true)
                 .splineToConstantHeading(traj.redCarousel, Math.toRadians(180))
+                .addDisplacementMarker(0.95,0, () -> {
+                            robot.svoCarousel.setPower(1);
+                            robot.mtrTurret.setPower(-0.4);
+                        }
+                )
                 .build();
 
         Trajectory toFlank = drive.trajectoryBuilder(toRedCarousel.end(), Math.toRadians(90))
@@ -129,31 +136,23 @@ public class AutoRedCarouselStorageFlank extends LinearOpMode {
             }
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            while (!robot.midLimit.isPressed()) {
-                telemetry.addData("pose estimate: ", drive.getPoseEstimate());
-                telemetry.update();
-                robot.mtrTurret.setPower(-0.4);
-                drive.update();
-                drive.updatePoseEstimate();
-            }
-            robot.mtrTurret.setPower(0);
-            while (robot.mtrArm.isBusy()) {
-                telemetry.addLine("weeeee arm finish");
-                telemetry.addData("pose estimate: ", drive.getPoseEstimate());
-                drive.update();
-                drive.updatePoseEstimate();
-            }
-            robot.mtrArm.setPower(0);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
             /**
              * shmove on to carousel and spain without the a
              */
             drive.followTrajectory(toRedCarousel);
-            robot.svoCarousel.setPower(1);
             drive.setPoseEstimate(traj.redCarouselReset);
             drive.updatePoseEstimate();
-            sleep(3000);
+            duckTime.reset();
+            while (!robot.midLimit.isPressed() | duckTime.seconds() < 3 && !isStopRequested()){
+                if (robot.midLimit.isPressed()){
+                    robot.mtrTurret.setPower(0);
+                }
+                if (duckTime.seconds() > 3){
+                    robot.svoCarousel.setPower(0);
+                }
+            }
+
+            robot.mtrTurret.setPower(0);
             robot.svoCarousel.setPower(0);
 
             /**
@@ -184,6 +183,7 @@ public class AutoRedCarouselStorageFlank extends LinearOpMode {
             /**
              * set turret to go collect pos and arm go down
              */
+            robot.mtrArm.setPower(0);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             while (!robot.bottomLimit.isPressed()) {
                 robot.mtrArm.setPower(0.3);

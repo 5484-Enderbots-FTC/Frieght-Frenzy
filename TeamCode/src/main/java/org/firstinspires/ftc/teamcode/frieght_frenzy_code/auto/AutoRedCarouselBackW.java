@@ -58,6 +58,11 @@ public class AutoRedCarouselBackW extends LinearOpMode {
 
         Trajectory toRedCarousel = drive.trajectoryBuilder(traj.startPoseRC, true)
                 .splineToConstantHeading(traj.redCarousel, Math.toRadians(180))
+                .addDisplacementMarker(0.95,0, () -> {
+                            robot.svoCarousel.setPower(1);
+                            robot.mtrTurret.setPower(-0.4);
+                        }
+                )
                 .build();
 
         Trajectory toRedHub3 = drive.trajectoryBuilder(toRedCarousel.end())
@@ -139,8 +144,6 @@ public class AutoRedCarouselBackW extends LinearOpMode {
          * shmove on to carousel and spain without the a
          */
         drive.followTrajectory(toRedCarousel);
-        robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         drive.setPoseEstimate(traj.redCarouselReset);
         drive.updatePoseEstimate();
         duckTime.reset();
@@ -153,6 +156,9 @@ public class AutoRedCarouselBackW extends LinearOpMode {
                 robot.svoCarousel.setPower(0);
             }
         }
+        robot.mtrTurret.setPower(0);
+        robot.svoCarousel.setPower(0);
+
 
         /**
          * go to red hub and spit out bloque

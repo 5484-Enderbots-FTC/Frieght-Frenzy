@@ -25,11 +25,12 @@ public class teleop_two_remotes extends LinearOpMode {
     //this boolean keeps track of whether or not the toggle is on or off
     boolean babyMode = false;
     boolean carouselSpinning = false;
-    boolean intakeOn = false;
+
     boolean freightCollected = false;
+    boolean intakeLimitPressed = false;
+
     boolean tapeDispensed = false;
 
-    boolean zeroPosTapeSet = false;
     boolean zeroPosSet = false;
 
     State currentState;
@@ -206,7 +207,9 @@ public class teleop_two_remotes extends LinearOpMode {
              */
             if (!robot.intakeLimit.isPressed()) {
                 freightCollected = true;
-            } else {
+            } else if(gamepad2.b){
+                intakeState = Status.OUT;
+                robot.svoIntake.setPower(-var.lessPower);
                 freightCollected = false;
             }
 
@@ -215,18 +218,18 @@ public class teleop_two_remotes extends LinearOpMode {
                     robot.svoIntake.setPower(var.lessPower);
                     intakeState = Status.IN;
                 }
-                if(runtime.seconds() < 90){
+                //if(runtime.seconds() < 90){
                     robot.LEDstrip.setPosition(var.green);
-                }
+                //}
 
             }
             if (freightCollected) {
                 if (intakeState != Status.OUT) {
                     robot.svoIntake.setPower(var.stop);
                     intakeState = Status.STOPPED;
-                    if(runtime.seconds() < 90){
+                    //if(runtime.seconds() < 90){
                         robot.LEDstrip.setPosition(var.red);
-                    }
+                    //}
 
                 }
             }
@@ -239,7 +242,6 @@ public class teleop_two_remotes extends LinearOpMode {
             }
             //reverse intake
             if (gamepad2.b) {
-                //might turn this into an output sequence
                 intakeState = Status.OUT;
                 robot.svoIntake.setPower(-var.lessPower);
             }
@@ -269,9 +271,9 @@ public class teleop_two_remotes extends LinearOpMode {
             }
 
             if(tapeDispensed){
-                robot.mtrTape.setPower((gamepad2.right_trigger / precisionCap) - (gamepad2.left_trigger / precisionCap));
+                robot.mtrTape.setPower((gamepad2.left_trigger / precisionCap) - (gamepad2.right_trigger / precisionCap));
             }else{
-                robot.mtrTape.setPower((gamepad2.right_trigger / precisionCap));
+                robot.mtrTape.setPower((-gamepad2.right_trigger / precisionCap));
             }
 
             //adding trigger deadzones WEEE
@@ -313,6 +315,7 @@ public class teleop_two_remotes extends LinearOpMode {
             telemetry.addData("tape dispensed?", tapeDispensed);
             telemetry.addData("tape encoder reading: ", robot.mtrTape.getCurrentPosition());
             telemetry.addData("arm encoder reading: ", robot.mtrArm.getCurrentPosition());
+            telemetry.addData("is the servo supposed to be moving", robot.svoIntake.getPower());
             /*
             telemetry.addData("bottom limit status", robot.bottomLimit.isPressed());
             telemetry.addData("Servo current pos: ", robot.svoIntakeTilt.getPosition());

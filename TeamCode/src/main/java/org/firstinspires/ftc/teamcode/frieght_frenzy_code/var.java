@@ -22,7 +22,7 @@ public class var {
 
     public static double intakeInit = 1;
     public static double intakeCollect = 0.69-0.04;
-    public static double intakeCollectTeleop = 0.69-0.04;
+    public static double intakeCollectTeleop = 0.335;
     public static double intakeExtraFreight = 0.69-0.09;
     public static double intakeLow = 0.69-0.05;
     public static double intakeMid = 0.69-0.09;

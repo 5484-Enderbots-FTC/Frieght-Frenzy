@@ -37,6 +37,8 @@ import java.util.ArrayList;
 
 @Autonomous(name = "red carousel storage flank", group = "red")
 public class AutoRedCarouselStorageFlank extends LinearOpMode {
+    //TODO: ur mome
+    //lol   ^^^^^^^ funny
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
 

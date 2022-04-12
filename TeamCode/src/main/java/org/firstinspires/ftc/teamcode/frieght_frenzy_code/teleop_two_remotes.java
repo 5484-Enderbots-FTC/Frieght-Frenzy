@@ -188,7 +188,7 @@ public class teleop_two_remotes extends LinearOpMode {
              */
 
             //TODO: fix collect position if it's too low normally :P
-            if (robot.mtrTape.getCurrentPosition() < var.tapeTimeIsNow) {
+            if (robot.mtrTape.getCurrentPosition() < -var.tapeTimeIsNow) {
                 //basically: if not TAPE TIME then do this
                 if (robot.mtrArm.getCurrentPosition() >= -var.armIntakeTiltSwitch) {
                     robot.svoIntakeTilt.setPosition(var.intakeCollectTeleop);
@@ -264,7 +264,7 @@ public class teleop_two_remotes extends LinearOpMode {
                 togglePrecisionCap.reset();
             }
 
-            if(robot.mtrTape.getCurrentPosition() > 50){
+            if(robot.mtrTape.getCurrentPosition() < -50){
                 tapeDispensed = true;
             }else{
                 tapeDispensed = false;

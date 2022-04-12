@@ -55,7 +55,7 @@ public class AutoBlueCarouselStorageFlank extends LinearOpMode {
                 .splineToConstantHeading(traj.blueCarousel, Math.toRadians(180))
                 .addDisplacementMarker(0.95,0, () -> {
                             robot.svoCarousel.setPower(-1);
-                            robot.mtrTurret.setPower(-0.4);
+                            robot.mtrTurret.setPower(-0.25);
                         }
                 )
                 .build();

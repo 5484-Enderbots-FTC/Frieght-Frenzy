@@ -30,6 +30,7 @@ public class var {
     public static double intakeHigh = 0.085;
 
     public static double fullPower = 1;
+    public static double almostFullPower = 0.75;
     public static double lessPower = 0.3;
 
     //auto parking encoder counts

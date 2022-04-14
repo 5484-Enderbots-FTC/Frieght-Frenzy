@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+@Disabled
 @TeleOp(name = "test da angle", group = "teleop")
 public class test_da_angle extends LinearOpMode {
     hardwareFF robot = new hardwareFF();

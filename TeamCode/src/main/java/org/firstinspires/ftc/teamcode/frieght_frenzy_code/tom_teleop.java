@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
-
+@Disabled
 @TeleOp(name = "teleop ff modified", group = "teleop")
 public class tom_teleop extends LinearOpMode {
 

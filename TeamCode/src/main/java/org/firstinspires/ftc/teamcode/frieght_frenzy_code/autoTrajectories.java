@@ -65,6 +65,12 @@ public class autoTrajectories {
     public Vector2d toParkRedStorageFlank = new Vector2d(-69, -33);
     public Vector2d toParkBlueStorageFlank = new Vector2d(-70, 30);
 
+    //this spline enters at 45 degrees
+    public Vector2d warehouseSpline1 = new Vector2d(60,-55);
+    //this one exits at 90 degrees and enters at 45
+    public Pose2d warehouseSpline2 = new Pose2d(55,-57, Math.toRadians(30));
+
+
     //new Pose2d(60, 36, Math.toRadians(-90));
 
 }

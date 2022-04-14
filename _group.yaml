@@ -4,5 +4,5 @@ maxAccel: 40.0
 maxAngVel: 3.141592653589793
 maxAngAccel: 3.141592653589793
 robotLength: 18.0
-robotWidth: 12.5
+robotWidth: 16.0
 driveType: "GENERIC"

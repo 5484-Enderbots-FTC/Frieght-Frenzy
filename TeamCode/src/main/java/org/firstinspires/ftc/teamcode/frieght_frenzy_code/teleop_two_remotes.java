@@ -53,7 +53,7 @@ public class teleop_two_remotes extends LinearOpMode {
     public void runOpMode() {
         //initialization code goes here
         robot.init(hardwareMap);
-        //robot.svoIntakeTilt.setPosition(0.5);
+        //robot.svoIntakeTilt.setPosition(var.intakeCollectTeleop);
         currentState = State.NOTHING;
         intakeState = Status.STOPPED;
         robot.mtrTape.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -187,8 +187,7 @@ public class teleop_two_remotes extends LinearOpMode {
              * tilt controls
              */
 
-            //TODO: fix collect position if it's too low normally :P
-            if (robot.mtrTape.getCurrentPosition() < -var.tapeTimeIsNow) {
+            if (robot.mtrTape.getCurrentPosition() > -var.tapeTimeIsNow) {
                 //basically: if not TAPE TIME then do this
                 if (robot.mtrArm.getCurrentPosition() >= -var.armIntakeTiltSwitch) {
                     robot.svoIntakeTilt.setPosition(var.intakeCollectTeleop);
@@ -196,8 +195,7 @@ public class teleop_two_remotes extends LinearOpMode {
                 if (robot.mtrArm.getCurrentPosition() < -var.armIntakeTiltSwitch) {
                     robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 }
-            } else {
-                //otherwise, set intake to init pls
+            }else {
                 robot.LEDstrip.setPosition(var.rainbowo);
                 robot.svoIntakeTilt.setPosition(var.intakeInit);
             }
@@ -205,32 +203,34 @@ public class teleop_two_remotes extends LinearOpMode {
             /**
              * Intake Controls
              */
-            if (!robot.intakeLimit.isPressed()) {
-                freightCollected = true;
-            } else if(gamepad2.b){
-                intakeState = Status.OUT;
-                robot.svoIntake.setPower(-var.lessPower);
-                freightCollected = false;
-            }
-
-            if (!freightCollected) {
-                if (robot.bottomLimit.isPressed() && intakeState != Status.IN) {
-                    robot.svoIntake.setPower(var.lessPower);
-                    intakeState = Status.IN;
+            if(robot.mtrTape.getCurrentPosition() > -var.tapeTimeIsNow) {
+                if (!robot.intakeLimit.isPressed()) {
+                    freightCollected = true;
+                } else if (gamepad2.b) {
+                    intakeState = Status.OUT;
+                    robot.svoIntake.setPower(-var.lessPower);
+                    freightCollected = false;
                 }
-                //if(runtime.seconds() < 90){
-                    robot.LEDstrip.setPosition(var.green);
-                //}
 
-            }
-            if (freightCollected) {
-                if (intakeState != Status.OUT) {
-                    robot.svoIntake.setPower(var.stop);
-                    intakeState = Status.STOPPED;
+                if (!freightCollected) {
+                    if (robot.bottomLimit.isPressed() && intakeState != Status.IN) {
+                        robot.svoIntake.setPower(var.lessPower);
+                        intakeState = Status.IN;
+                    }
                     //if(runtime.seconds() < 90){
-                        robot.LEDstrip.setPosition(var.red);
+                    robot.LEDstrip.setPosition(var.green);
                     //}
 
+                }
+                if (freightCollected) {
+                    if (intakeState != Status.OUT) {
+                        robot.svoIntake.setPower(var.stop);
+                        intakeState = Status.STOPPED;
+                        //if(runtime.seconds() < 90){
+                        robot.LEDstrip.setPosition(var.red);
+                        //}
+
+                    }
                 }
             }
 
@@ -316,6 +316,7 @@ public class teleop_two_remotes extends LinearOpMode {
             telemetry.addData("tape encoder reading: ", robot.mtrTape.getCurrentPosition());
             telemetry.addData("arm encoder reading: ", robot.mtrArm.getCurrentPosition());
             telemetry.addData("is the servo supposed to be moving", robot.svoIntake.getPower());
+            telemetry.addData("Servo current pos: ", robot.svoIntakeTilt.getPosition());
             /*
             telemetry.addData("bottom limit status", robot.bottomLimit.isPressed());
             telemetry.addData("Servo current pos: ", robot.svoIntakeTilt.getPosition());

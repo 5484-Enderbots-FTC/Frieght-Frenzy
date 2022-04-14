@@ -22,7 +22,7 @@ public class var {
 
     public static double intakeInit = 1;
     public static double intakeCollect = 0.15;
-    public static double intakeCollectTeleop = 0.335;
+    public static double intakeCollectTeleop = 0.15;
     public static double intakeCollectHalfway = 0.5;
     public static double intakeExtraFreight = 0.69-0.09;
     public static double intakeLow = 0.37;
@@ -47,7 +47,7 @@ public class var {
 
     public static int tapeLimit = 2000;
     public static int tapeTimeIsNow = 200;
-    public static int armIntakeTiltSwitch = 2200;
+    public static int armIntakeTiltSwitch = 1800;
 
     //deinit arm
     public static int deinitArm = 400;

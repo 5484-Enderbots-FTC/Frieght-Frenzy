@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
+package org.firstinspires.ftc.teamcode.frieght_frenzy_code.hot_garbo;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;

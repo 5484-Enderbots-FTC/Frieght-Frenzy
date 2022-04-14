@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
+package org.firstinspires.ftc.teamcode.frieght_frenzy_code.hot_garbo;
 
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -9,6 +9,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.autoTrajectories;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 @Disabled
 @Autonomous(name = "armturretduring traj", group = "auto")

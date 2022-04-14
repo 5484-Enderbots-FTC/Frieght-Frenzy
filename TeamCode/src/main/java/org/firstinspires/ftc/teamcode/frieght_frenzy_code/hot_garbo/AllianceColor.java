@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
+package org.firstinspires.ftc.teamcode.frieght_frenzy_code.hot_garbo;
  
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

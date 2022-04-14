@@ -254,10 +254,10 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
             /**
              * drive into warehouse for consumption
              */
-            robot.svoIntake.setPower(var.lessPower * 1.5);
+            robot.svoIntake.setPower(var.almostFullPower);
             drive.followTrajectoryAsync(goCollect);
             intakeTime.reset();
-            while (robot.intakeLimit.isPressed() && intakeTime.seconds() < 3.5) {
+            while (robot.intakeLimit.isPressed() && intakeTime.seconds() < var.intakeStopTime) {
                 telemetry.addLine("consuming");
                 telemetry.update();
                 drive.update();
@@ -270,6 +270,9 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
             telemetry.addLine("consumed");
             telemetry.addData("intake end: ", intakeEnd);
             telemetry.update();
+            robot.svoIntake.setPower(0.1);
+            sleep(500);
+            robot.svoIntake.setPower(0.03);
 
 
             /**
@@ -289,9 +292,7 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
                     .build();
             robot.movearm(var.armInitPower, var.thirdLvl);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.svoIntake.setPower(0.1);
-            sleep(500);
-            robot.svoIntake.setPower(0.03);
+
             drive.followTrajectoryAsync(goBack);
             drive.update();
 
@@ -362,10 +363,10 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
             /**
              * drive into warehouse for consumption
              */
-            robot.svoIntake.setPower(var.lessPower * 1.5);
+            robot.svoIntake.setPower(var.almostFullPower);
             drive.followTrajectoryAsync(goCollect);
             intakeTime.reset();
-            while (robot.intakeLimit.isPressed() && intakeTime.seconds() < 3.5) {
+            while (robot.intakeLimit.isPressed() && intakeTime.seconds() < var.intakeStopTime) {
                 telemetry.addLine("consuming");
                 telemetry.update();
                 drive.update();
@@ -383,7 +384,7 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
              * has been consumed, now go to hub (and move arm/turret)
              */
             Trajectory goBack2 = drive.trajectoryBuilder(intakeEnd, true)
-                    .splineToConstantHeading(traj.redHub3, Math.toRadians(90))
+                    .splineToConstantHeading(traj.redHub3_2, Math.toRadians(90))
                     .addDisplacementMarker(0.2, 0, () -> {
                         robot.mtrTurret.setPower(-0.4);
                     })

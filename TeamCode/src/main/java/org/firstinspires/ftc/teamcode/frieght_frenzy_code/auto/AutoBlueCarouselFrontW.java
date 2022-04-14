@@ -84,6 +84,9 @@ public class AutoBlueCarouselFrontW extends LinearOpMode {
                 .build();
         Trajectory toPark1_1 = drive.trajectoryBuilder(toBlueHub1.end(), true)
                 .lineTo(traj.toParkBluePosCarousel1)
+                .addDisplacementMarker(0.5,0, () -> {
+                    robot.svoIntakeTilt.setPosition(var.intakeInit);
+                })
                 .build();
 
         Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end(),true)
@@ -184,7 +187,7 @@ public class AutoBlueCarouselFrontW extends LinearOpMode {
                 robot.mtrArm.setPower(0);
             }
 
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            robot.svoIntakeTilt.setPosition(var.intakeInit);
 
             /**
              * set turret to go collect pos and arm go down

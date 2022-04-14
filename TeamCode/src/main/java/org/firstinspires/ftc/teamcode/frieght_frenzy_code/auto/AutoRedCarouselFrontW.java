@@ -85,6 +85,9 @@ public class AutoRedCarouselFrontW extends LinearOpMode {
                 .build();
         Trajectory toPark1_1 = drive.trajectoryBuilder(toRedHub1.end())
                 .lineTo(traj.toParkRedPos1)
+                .addDisplacementMarker(0.5, 0, () -> {
+                    robot.svoIntakeTilt.setPosition(var.intakeInit);
+                })
                 .build();
 
         Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
@@ -175,53 +178,16 @@ public class AutoRedCarouselFrontW extends LinearOpMode {
                 drive.followTrajectory(toRedHub1);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
+                robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.movearm(0.7, var.secondLvl);
+                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                while(robot.mtrArm.isBusy()){
+
+                }
+                robot.mtrArm.setPower(0);
             }
 
             robot.svoIntakeTilt.setPosition(var.intakeInit);
-
-            /**
-             * set turret to go collect pos and arm go down
-             */
-            /*
-            //TODO: change this to be waiting for limit siwtch >:)
-            robot.mtrTurret.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.moveturret(0.3, 1480);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            //TODO: fine tune this number (900) to optimize turret and arm go down
-            while (robot.mtrTurret.getCurrentPosition() <= 900) {
-                telemetry.addLine("turret go brrrrr");
-                telemetry.update();
-            }
-            while (!robot.bottomLimit.isPressed()) {
-                robot.mtrArm.setPower(0.7);
-                telemetry.addLine("arm go brrrrrrrrrrrrrrrrrrrrrrrrrr");
-                telemetry.update();
-            }
-            while (robot.mtrTurret.isBusy()) {
-            }
-            robot.mtrTurret.setPower(0);
-            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-            robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.movearm(0.5, 150);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while (robot.mtrArm.isBusy()) {
-            }
-            robot.mtrArm.setPower(0);
-
-
-             */
-            /**
-             * el parque
-             */
-            /*
-            while (!robot.frontLimit.isPressed()) {
-                telemetry.addLine("turret go brr");
-                telemetry.update();
-                robot.mtrTurret.setPower(0.4);
-            }
-
-             */
 
             drive.followTrajectory(toPark2);
 

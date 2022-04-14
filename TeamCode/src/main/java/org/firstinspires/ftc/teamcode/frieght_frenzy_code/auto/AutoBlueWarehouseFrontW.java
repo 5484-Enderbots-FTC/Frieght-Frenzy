@@ -43,6 +43,7 @@ import java.util.ArrayList;
 public class AutoBlueWarehouseFrontW extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
+    ElapsedTime spitTime = new ElapsedTime();
 
     double runningOpMode = 3;
     Pose2d intakeEnd;
@@ -58,14 +59,26 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
 
         Trajectory toBlueHub3 = drive.trajectoryBuilder(traj.startPoseBW)
                 .splineToConstantHeading(traj.blueHub3, Math.toRadians(180))
+                .addDisplacementMarker(0.95, 0, () -> {
+                    robot.svoIntake.setPower(-var.lessPower);
+                    spitTime.reset();
+                })
                 .build();
 
         Trajectory toBlueHub2 = drive.trajectoryBuilder(traj.startPoseBW)
                 .splineToConstantHeading(traj.blueHub2, Math.toRadians(180))
+                .addDisplacementMarker(0.95, 0, () -> {
+                    robot.svoIntake.setPower(-var.lessPower);
+                    spitTime.reset();
+                })
                 .build();
 
         Trajectory toBlueHub1 = drive.trajectoryBuilder(traj.startPoseBW)
                 .splineToConstantHeading(traj.blueHub1, Math.toRadians(180))
+                .addDisplacementMarker(0.95, 0, () -> {
+                    robot.svoIntake.setPower(-var.lessPower);
+                    spitTime.reset();
+                })
                 .build();
 
         Trajectory toPark1_3 = drive.trajectoryBuilder(toBlueHub3.end(), true)
@@ -82,7 +95,7 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
                 .build();
 
         Trajectory goCollect = drive.trajectoryBuilder(toPark2.end(), true)
-                .forward(-50, FFMecanumDrive.getVelocityConstraint(2, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .forward(-25, FFMecanumDrive.getVelocityConstraint(3.5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build(); //TODO: make sure -50 is right or if it needs to reverse
 
         // Tell telemetry to update faster than the default 250ms period :)
@@ -143,17 +156,28 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
             if (runningOpMode == 3) {
                 robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 drive.followTrajectory(toBlueHub3);
-                spitOutBlock(false);
+                while (spitTime.seconds() < 1.5) {
+
+                }
+                robot.svoIntake.setPower(0);
+                var.intakeCollectHalfway = ((var.intakeHigh - var.intakeCollect) / 2) + var.intakeCollect;
                 drive.followTrajectoryAsync(toPark1_3);
             } else if (runningOpMode == 2) {
                 robot.svoIntakeTilt.setPosition(var.intakeMid);
                 drive.followTrajectory(toBlueHub2);
-                spitOutBlock(false);
+                while (spitTime.seconds() < 1.5) {
+
+                }
+                robot.svoIntake.setPower(0);
+                var.intakeCollectHalfway = ((var.intakeMid - var.intakeCollect) / 2) + var.intakeCollect;
                 drive.followTrajectoryAsync(toPark1_2);
             } else if (runningOpMode == 1) {
                 robot.svoIntakeTilt.setPosition(var.intakeLow);
                 drive.followTrajectory(toBlueHub1);
-                spitOutBlock(false);
+                while (spitTime.seconds() < 1.5) {
+
+                }
+                robot.svoIntake.setPower(0);
                 drive.followTrajectoryAsync(toPark1_1);
             }
             robot.svoIntakeTilt.setPosition(var.intakeCollect);
@@ -171,7 +195,7 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
                 telemetry.update();
                 if (robot.backLimit.isPressed()) {
                     robot.mtrTurret.setPower(0);
-                    robot.mtrArm.setPower(0.6);
+                    robot.mtrArm.setPower(0.65);
                     telemetry.addLine("front limit pressed");
                 }
                 if (robot.bottomLimit.isPressed()) {
@@ -182,7 +206,7 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
             telemetry.addLine("drive done");
             telemetry.update();
             while (!robot.bottomLimit.isPressed()) {
-                robot.mtrArm.setPower(0.6);
+                robot.mtrArm.setPower(0.65);
                 telemetry.addLine("arm moving");
                 telemetry.update();
             }
@@ -191,11 +215,6 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setPower(0);
             robot.svoIntakeTilt.setPosition(var.intakeCollect);
-            robot.movearm(0.5,125);
-            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            while(robot.mtrArm.isBusy()){
-
-            }
             telemetry.addLine("optimize done");
             telemetry.update();
 
@@ -204,7 +223,7 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
              * drive into warehouse for consumption
              */
 
-            robot.svoIntake.setPower(var.lessPower * 1.5);
+            robot.svoIntake.setPower(var.almostFullPower);
             drive.followTrajectoryAsync(goCollect);
             intakeTime.reset();
             while (robot.intakeLimit.isPressed() && intakeTime.seconds() <= var.intakeStopTime) {
@@ -213,53 +232,59 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
                 drive.update();
                 drive.updatePoseEstimate();
             }
-            if (intakeTime.time() < var.intakeStopTime) {
-                drive.cancelFollowing();
+            drive.cancelFollowing();
 
-                intakeEnd = drive.getPoseEstimate();
-                drive.setDrivePower(new Pose2d());
+            intakeEnd = drive.getPoseEstimate();
+            drive.setDrivePower(new Pose2d());
+            drive.update();
+            telemetry.addLine("consumed");
+            telemetry.addData("intake end: ", intakeEnd);
+            telemetry.update();
+            robot.svoIntake.setPower(0.1);
+            sleep(500);
+            robot.svoIntake.setPower(0.03);
+
+            /**
+             * has been consumed, now go to hub (and move arm/turret)
+             */
+            Trajectory goBack = drive.trajectoryBuilder(intakeEnd, true)
+                    .splineToConstantHeading(traj.blueHub3, Math.toRadians(-90))
+                    .addDisplacementMarker(0.2, 0, () -> {
+                        robot.mtrTurret.setPower(0.4);
+                    })
+                    .addDisplacementMarker(0.96, 0, () -> {
+                        robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                        robot.svoIntake.setPower(-var.lessPower);
+                        spitTime.reset();
+                    })
+                    .build();
+            robot.movearm(var.armInitPower, var.thirdLvl);
+            robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            drive.followTrajectoryAsync(goBack);
+            drive.update();
+
+            while (drive.isBusy() | !robot.midLimit.isPressed()) {
                 drive.update();
-                telemetry.addLine("consumed");
-                telemetry.addData("intake end: ", intakeEnd);
-                telemetry.update();
-                robot.svoIntake.setPower(0);
-
-                /**
-                 * has been consumed, now go to hub (and move arm/turret)
-                 */
-                Trajectory goBack = drive.trajectoryBuilder(intakeEnd, true)
-                        .splineToConstantHeading(traj.blueHub3, Math.toRadians(-90))
-                        .addDisplacementMarker(0.25, 0, () -> {
-                            robot.mtrTurret.setPower(0.35);
-                        })
-                        .build();
-                robot.movearm(var.armInitPower, var.thirdLvl);
-                robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                drive.followTrajectoryAsync(goBack);
-                drive.update();
-
-                while (drive.isBusy() | !robot.midLimit.isPressed()) {
-                    drive.update();
-                    if (robot.midLimit.isPressed()) {
-                        robot.mtrTurret.setPower(0);
-                        telemetry.addLine("midlimit hit");
-                    }
+                if (robot.midLimit.isPressed()) {
+                    robot.mtrTurret.setPower(0);
+                    telemetry.addLine("midlimit hit");
                 }
-                robot.mtrTurret.setPower(0);
-                spitOutBlock(true);
-
-                /**
-                 el parque
-                 */
-                drive.followTrajectory(toPark1_3);
-                drive.followTrajectory(toPark2);
-
-                robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                while (!robot.backLimit.isPressed()) {
-                    robot.mtrTurret.setPower(-0.4);
-                }
-                robot.mtrTurret.setPower(0);
             }
+            robot.mtrTurret.setPower(0);
+            spitOutBlock(true);
+
+            /**
+             el parque
+             */
+            drive.followTrajectory(toPark1_3);
+            drive.followTrajectory(toPark2);
+
+            robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            while (!robot.backLimit.isPressed()) {
+                robot.mtrTurret.setPower(-0.4);
+            }
+            robot.mtrTurret.setPower(0);
+
             drive.cancelFollowing();
             break;
         }
@@ -281,3 +306,4 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
         robot.svoIntake.setPower(0);
     }
 }
+

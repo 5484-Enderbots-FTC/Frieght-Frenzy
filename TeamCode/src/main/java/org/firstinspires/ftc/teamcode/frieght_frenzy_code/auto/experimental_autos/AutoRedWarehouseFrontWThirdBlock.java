@@ -95,7 +95,7 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
                 .build();
 
         Trajectory goCollect = drive.trajectoryBuilder(toPark2.end())
-                .forward(25, FFMecanumDrive.getVelocityConstraint(2, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .forward(25, FFMecanumDrive.getVelocityConstraint(3.5, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH), FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
 
 
@@ -278,9 +278,9 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
                     .build();
             robot.movearm(var.armInitPower, var.thirdLvl);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.svoIntake.setPower(0.15);
-            sleep(750);
-            robot.svoIntake.setPower(0.03);
+            //robot.svoIntake.setPower(0.15);
+            //sleep(750);
+            //robot.svoIntake.setPower(0.03);
             drive.followTrajectoryAsync(goBack);
             drive.update();
 
@@ -309,10 +309,10 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
             drive.update();
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.mtrArm.setPower(0);
+            limitTime.reset();
             while (drive.isBusy()) {
                 drive.update();
                 telemetry.update();
-                limitTime.reset();
                 if (robot.frontLimit.isPressed() && limitTime.seconds() > 0.75) {
                     robot.mtrTurret.setPower(0);
                     robot.mtrArm.setPower(0.65);
@@ -377,9 +377,9 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
 
             robot.movearm(var.armInitPower, var.thirdLvl);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.svoIntake.setPower(0.15);
-            sleep(750);
-            robot.svoIntake.setPower(0.03);
+            //robot.svoIntake.setPower(0.15);
+            //sleep(750);
+            //robot.svoIntake.setPower(0.03);
             drive.followTrajectoryAsync(goBack2);
             drive.update();
             //TODO: update later to be during trajectory on way to hub :)
@@ -423,7 +423,7 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
         }
         sleep(750);
         robot.svoIntake.setPower(-var.lessPower);
-        sleep(1500);
+        sleep(2500);
         robot.svoIntake.setPower(0);
     }
 }

@@ -264,7 +264,7 @@ public class teleop_two_remotes extends LinearOpMode {
                 togglePrecisionCap.reset();
             }
 
-            if(robot.mtrTape.getCurrentPosition() < -50){
+            if(robot.mtrTape.getCurrentPosition() < -20){
                 tapeDispensed = true;
             }else{
                 tapeDispensed = false;

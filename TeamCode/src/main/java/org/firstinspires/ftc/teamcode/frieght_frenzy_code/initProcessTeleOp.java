@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp(name = "initProcess", group = "teleop")
 public class initProcessTeleOp extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
-    private static double reset = 0.28;
+    private static double reset = 0;
     private static double low = 0;
     private static double inc = 0.005;
-    private double tiltNumber = 0.28;
+    private double tiltNumber = 0;
 
     boolean freightCollected = false;
     public void runOpMode() {

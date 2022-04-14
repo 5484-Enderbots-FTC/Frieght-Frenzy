@@ -1,12 +1,13 @@
-package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
+package org.firstinspires.ftc.teamcode.frieght_frenzy_code.tom_things;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Disabled
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
+
 @TeleOp(name = "teleop ff mod", group = "teleop")
 public class Tom_teleop_two_remotes extends LinearOpMode {
 

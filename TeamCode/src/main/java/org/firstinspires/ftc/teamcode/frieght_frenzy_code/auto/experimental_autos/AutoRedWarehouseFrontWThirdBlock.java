@@ -38,12 +38,13 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "bad attempt at 3rd bloque", group = "red")
+@Autonomous(name = "semi decent attempt at 3rd bloque", group = "red")
 public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
     ElapsedTime spitTime = new ElapsedTime();
     ElapsedTime limitTime = new ElapsedTime();
+    ElapsedTime intakeTime = new ElapsedTime();
 
     double runningOpMode = 3;
     Pose2d intakeEnd;
@@ -92,6 +93,10 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
 
         Trajectory toPark2 = drive.trajectoryBuilder(toPark1_3.end())
                 .lineTo(traj.toParkRedPos2)
+                .build();
+
+        Trajectory toPark3 = drive.trajectoryBuilder(toPark1_3.end())
+                .lineTo(traj.toParkRedPosWarehouse)
                 .build();
 
         Trajectory goCollect = drive.trajectoryBuilder(toPark2.end())
@@ -251,7 +256,8 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
              */
             robot.svoIntake.setPower(var.lessPower * 1.5);
             drive.followTrajectoryAsync(goCollect);
-            while (robot.intakeLimit.isPressed()) {
+            intakeTime.reset();
+            while (robot.intakeLimit.isPressed() && intakeTime.seconds() < 3.5) {
                 telemetry.addLine("consuming");
                 telemetry.update();
                 drive.update();
@@ -272,15 +278,20 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
 
             Trajectory goBack = drive.trajectoryBuilder(intakeEnd, true)
                     .splineToConstantHeading(traj.redHub3, Math.toRadians(90))
-                    .addDisplacementMarker(0.25, 0, () -> {
+                    .addDisplacementMarker(0.2, 0, () -> {
                         robot.mtrTurret.setPower(-0.4);
+                    })
+                    .addDisplacementMarker(0.96,0, () -> {
+                        robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                        robot.svoIntake.setPower(-var.lessPower);
+                        spitTime.reset();
                     })
                     .build();
             robot.movearm(var.armInitPower, var.thirdLvl);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            //robot.svoIntake.setPower(0.15);
-            //sleep(750);
-            //robot.svoIntake.setPower(0.03);
+            robot.svoIntake.setPower(0.1);
+            sleep(500);
+            robot.svoIntake.setPower(0.03);
             drive.followTrajectoryAsync(goBack);
             drive.update();
 
@@ -293,8 +304,10 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
                 }
             }
             robot.mtrTurret.setPower(0);
-            spitOutBlock(true);
+            while(spitTime.seconds() < 2){
 
+            }
+            robot.svoIntake.setPower(0);
             /**
              el parque
              */
@@ -351,7 +364,8 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
              */
             robot.svoIntake.setPower(var.lessPower * 1.5);
             drive.followTrajectoryAsync(goCollect);
-            while (robot.intakeLimit.isPressed()) {
+            intakeTime.reset();
+            while (robot.intakeLimit.isPressed() && intakeTime.seconds() < 3.5) {
                 telemetry.addLine("consuming");
                 telemetry.update();
                 drive.update();
@@ -370,16 +384,21 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
              */
             Trajectory goBack2 = drive.trajectoryBuilder(intakeEnd, true)
                     .splineToConstantHeading(traj.redHub3, Math.toRadians(90))
-                    .addDisplacementMarker(0.25, 0, () -> {
+                    .addDisplacementMarker(0.2, 0, () -> {
                         robot.mtrTurret.setPower(-0.4);
+                    })
+                    .addDisplacementMarker(0.96, 0, () -> {
+                        robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                        robot.svoIntake.setPower(-var.lessPower);
+                        spitTime.reset();
                     })
                     .build();
 
             robot.movearm(var.armInitPower, var.thirdLvl);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            //robot.svoIntake.setPower(0.15);
-            //sleep(750);
-            //robot.svoIntake.setPower(0.03);
+            robot.svoIntake.setPower(0.1);
+            sleep(500);
+            robot.svoIntake.setPower(0.03);
             drive.followTrajectoryAsync(goBack2);
             drive.update();
             //TODO: update later to be during trajectory on way to hub :)
@@ -390,14 +409,17 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
                     telemetry.addLine("midlimit hit");
                 }
             }
+            robot.mtrTurret.setPower(0);
+            while (spitTime.seconds() < 2){
 
-            spitOutBlock(true);
+            }
+            robot.svoIntake.setPower(0);
 
             /**
              el parque
              */
             drive.followTrajectory(toPark1_3);
-            drive.followTrajectory(toPark2);
+            drive.followTrajectory(toPark3);
 
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.mtrTurret.setPower(0.7);

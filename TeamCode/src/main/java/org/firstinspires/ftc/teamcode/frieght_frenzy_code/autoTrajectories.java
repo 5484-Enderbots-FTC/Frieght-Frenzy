@@ -41,6 +41,7 @@ public class autoTrajectories {
 
     public Vector2d toParkRedPos1 = new Vector2d(12, -69 + 2);
     public Vector2d toParkRedPos2 = new Vector2d(37, -69 + 2);
+    public Vector2d toParkRedPosWarehouse = new Vector2d(40.5, -67);
 
     public Vector2d toParkBluePosCarousel1 = new Vector2d(12, 69);
     public Vector2d toParkBluePosCarousel2 = new Vector2d(45, 69);

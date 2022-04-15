@@ -38,7 +38,7 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "semi decent attempt at 3rd bloque", group = "red")
+@Autonomous(name = "new traj tests for 3rd bloque", group = "red")
 public class AutoRedWarehouseFrontWDiffTrajectories extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();

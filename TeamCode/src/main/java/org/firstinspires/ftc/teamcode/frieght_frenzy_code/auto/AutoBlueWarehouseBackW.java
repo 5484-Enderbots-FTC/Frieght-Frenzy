@@ -153,6 +153,7 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
             while (!robot.midLimit.isPressed()) {
                 robot.mtrTurret.setPower(-0.4);
             }
+            robot.mtrTurret.setPower(0);
             /**
              * go to red hub and spit out bloque
              * then go to wall
@@ -244,6 +245,7 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
             telemetry.addLine("consumed");
             telemetry.addData("intake end: ", intakeEnd);
             telemetry.update();
+            robot.mtrArm.setPower(var.holdDownArmPower);
             robot.svoIntake.setPower(0.1);
             sleep(500);
             robot.svoIntake.setPower(0.03);
@@ -251,7 +253,7 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
             /**
              * has been consumed, now go to hub (and move arm/turret)
              */
-            Trajectory goBack = drive.trajectoryBuilder(intakeEnd, true)
+            Trajectory goBack = drive.trajectoryBuilder(intakeEnd)
                     .splineToConstantHeading(traj.blueHub3, Math.toRadians(-90))
                     .addDisplacementMarker(0.2, 0, () -> {
                         robot.mtrTurret.setPower(0.4);

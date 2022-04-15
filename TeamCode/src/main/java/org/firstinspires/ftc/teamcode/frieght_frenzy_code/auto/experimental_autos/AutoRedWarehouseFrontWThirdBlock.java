@@ -255,7 +255,7 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
              * drive into warehouse for consumption
              */
             robot.svoIntake.setPower(var.almostFullPower);
-            robot.mtrArm.setPower(0.1);
+            robot.mtrArm.setPower(var.holdDownArmPower);
             drive.followTrajectoryAsync(goCollect);
             intakeTime.reset();
             while (robot.intakeLimit.isPressed() && intakeTime.seconds() < var.intakeStopTime) {
@@ -366,7 +366,7 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
              * drive into warehouse for consumption
              */
             robot.svoIntake.setPower(var.almostFullPower);
-            robot.mtrArm.setPower(0.1);
+            robot.mtrArm.setPower(var.holdDownArmPower);
             drive.followTrajectoryAsync(goCollect);
             intakeTime.reset();
             while (robot.intakeLimit.isPressed() && intakeTime.seconds() < var.intakeStopTime) {

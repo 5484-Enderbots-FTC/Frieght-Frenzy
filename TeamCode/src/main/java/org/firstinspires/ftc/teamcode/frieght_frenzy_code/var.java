@@ -27,11 +27,12 @@ public class var {
     public static double intakeExtraFreight = 0.69-0.09;
     public static double intakeLow = 0.37;
     public static double intakeMid = 0.25;
-    public static double intakeHigh = 0.085;
+    public static double intakeHigh = 0;
 
     public static double fullPower = 1;
     public static double almostFullPower = 0.75;
     public static double lessPower = 0.3;
+    public static double holdDownArmPower = 0.13;
 
     //auto parking encoder counts
     public static double stop = 0;
@@ -57,6 +58,6 @@ public class var {
     public static int turnDirection = 1;
     //lol i cant believe you are reading this. That is not pog!
     public static double duckTime = 3;
-    public static double intakeStopTime = 3.5;
+    public static double intakeStopTime = 2.5;
 
 }

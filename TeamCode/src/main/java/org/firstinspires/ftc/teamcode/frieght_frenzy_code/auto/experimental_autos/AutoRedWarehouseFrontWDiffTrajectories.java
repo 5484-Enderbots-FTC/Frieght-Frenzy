@@ -24,6 +24,7 @@ package org.firstinspires.ftc.teamcode.frieght_frenzy_code.auto.experimental_aut
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -38,6 +39,7 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
+@Disabled
 @Autonomous(name = "new traj tests for 3rd bloque", group = "red")
 public class AutoRedWarehouseFrontWDiffTrajectories extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
@@ -96,7 +98,7 @@ public class AutoRedWarehouseFrontWDiffTrajectories extends LinearOpMode {
                 .build();
 
         Trajectory toPark3 = drive.trajectoryBuilder(toPark1_3.end())
-                .lineTo(traj.toParkRedPosWarehouse)
+                .lineTo(traj.toParkRedPosWarehouseEnd)
                 .build();
 
         Trajectory goCollect = drive.trajectoryBuilder(toPark2.end())
@@ -396,7 +398,7 @@ public class AutoRedWarehouseFrontWDiffTrajectories extends LinearOpMode {
              * has been consumed, now go to hub (and move arm/turret)
              */
             Trajectory goBack2 = drive.trajectoryBuilder(intakeEnd, true)
-                    .splineToConstantHeading(traj.redHub3_2, Math.toRadians(90))
+                    .splineToConstantHeading(traj.redHub3Displaced, Math.toRadians(90))
                     .addDisplacementMarker(0.2, 0, () -> {
                         robot.mtrTurret.setPower(-0.4);
                     })

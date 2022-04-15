@@ -24,6 +24,7 @@ package org.firstinspires.ftc.teamcode.frieght_frenzy_code.hot_garbo;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -33,6 +34,7 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.autoTrajectories;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
+@Disabled
 @Autonomous(name = "red warehouse no webcam")
 public class AutoRedWarehouseNoWeb extends LinearOpMode {
     hardwareFF robot = new hardwareFF();

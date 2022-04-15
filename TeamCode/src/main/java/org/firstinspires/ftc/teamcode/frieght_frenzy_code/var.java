@@ -24,7 +24,7 @@ public class var {
     public static double intakeCollect = 0.15;
     public static double intakeCollectTeleop = 0.15;
     public static double intakeCollectHalfway = 0.5;
-    public static double intakeExtraFreight = 0.69-0.09;
+    public static double intakeExtraFreight = 0.6;
     public static double intakeLow = 0.37;
     public static double intakeMid = 0.25;
     public static double intakeHigh = 0;

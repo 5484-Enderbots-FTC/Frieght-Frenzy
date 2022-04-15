@@ -19,10 +19,11 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode.frieght_frenzy_code.auto.experimental_autos;
+package org.firstinspires.ftc.teamcode.frieght_frenzy_code.auto;
 
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -34,6 +35,7 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
+@Disabled
 @Autonomous(name = "red carousel storage but the reset is correct", group = "red")
 public class AutoRedCarouselStorageCorrectReset extends LinearOpMode {
     hardwareFF robot = new hardwareFF();

@@ -219,7 +219,7 @@ public class AutoRedWarehouseBackW extends LinearOpMode {
             /**
              * drive into warehouse for consumption
              */
-
+            robot.mtrArm.setPower(var.holdDownArmPower);
             robot.svoIntake.setPower(var.lessPower * 1.5);
             drive.followTrajectoryAsync(goCollect);
             while (robot.intakeLimit.isPressed()) {
@@ -228,6 +228,7 @@ public class AutoRedWarehouseBackW extends LinearOpMode {
                 drive.update();
                 drive.updatePoseEstimate();
             }
+            robot.mtrArm.setPower(0);
             drive.cancelFollowing();
             intakeEnd = drive.getPoseEstimate();
             drive.setDrivePower(new Pose2d());

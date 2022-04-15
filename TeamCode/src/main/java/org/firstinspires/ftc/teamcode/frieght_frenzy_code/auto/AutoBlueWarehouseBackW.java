@@ -185,7 +185,7 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
                 robot.svoIntake.setPower(0);
                 drive.followTrajectoryAsync(toPark1_1);
             }
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            robot.svoIntakeTilt.setPosition(var.intakeInit);
 
             /**
              * set turret to go collect pos and arm go down
@@ -227,7 +227,7 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
             /**
              * drive into warehouse for consumption
              */
-
+            robot.mtrArm.setPower(var.holdDownArmPower);
             robot.svoIntake.setPower(var.almostFullPower);
             drive.followTrajectoryAsync(goCollect);
             intakeTime.reset();
@@ -237,6 +237,7 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
                 drive.update();
                 drive.updatePoseEstimate();
             }
+            robot.mtrArm.setPower(0);
             drive.cancelFollowing();
 
             intakeEnd = drive.getPoseEstimate();
@@ -245,7 +246,6 @@ public class AutoBlueWarehouseBackW extends LinearOpMode {
             telemetry.addLine("consumed");
             telemetry.addData("intake end: ", intakeEnd);
             telemetry.update();
-            robot.mtrArm.setPower(var.holdDownArmPower);
             robot.svoIntake.setPower(0.1);
             sleep(500);
             robot.svoIntake.setPower(0.03);

@@ -162,7 +162,7 @@ public class AutoRedCarouselStorageFlank extends LinearOpMode {
             drive.followTrajectory(toFlank);
 
             if (runningOpMode == 3) {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.svoIntakeTilt.setPosition(var.intakeHighInitial);
                 drive.followTrajectory(toRedHub3);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_3);

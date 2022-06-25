@@ -199,7 +199,7 @@ public class teleop_two_remotes extends LinearOpMode {
                         robot.svoIntakeTilt.setPosition(var.intakeHigh);
                     }
                 }else{
-                    robot.svoIntakeTilt.setPosition(0);
+                    robot.svoIntakeTilt.setPosition(0.65);
                 }
             }else {
                 robot.LEDstrip.setPosition(var.rainbowo);
@@ -230,7 +230,7 @@ public class teleop_two_remotes extends LinearOpMode {
                 }
                 if (freightCollected) {
                     if (intakeState != Status.OUT) {
-                        robot.svoIntake.setPower(var.stop);
+                        robot.svoIntake.setPower(0.2);
                         intakeState = Status.STOPPED;
                         //if(runtime.seconds() < 90){
                         robot.LEDstrip.setPosition(var.red);

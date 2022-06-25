@@ -152,7 +152,7 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             if (runningOpMode == 3) {
                 robot.movearm(var.armInitPower, var.thirdLvl);
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.svoIntakeTilt.setPosition(var.intakeHighInitial);
             } else if (runningOpMode == 2) {
                 robot.movearm(var.armInitPower, var.secondLvl);
                 robot.svoIntakeTilt.setPosition(var.intakeMid);

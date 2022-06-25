@@ -159,7 +159,7 @@ public class AutoBlueWarehouseFrontWThirdBlock extends LinearOpMode {
              * then go to wall
              */
             if (runningOpMode == 3) {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.svoIntakeTilt.setPosition(var.intakeHighInitial);
                 drive.followTrajectory(toBlueHub3);
                 while (spitTime.seconds() < 1.5) {
 

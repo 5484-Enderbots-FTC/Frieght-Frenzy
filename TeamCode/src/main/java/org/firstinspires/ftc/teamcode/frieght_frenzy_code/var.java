@@ -27,6 +27,7 @@ public class var {
     public static double intakeExtraFreight = 0.6;
     public static double intakeLow = 0.37;
     public static double intakeMid = 0.25;
+    public static double intakeHighInitial = 0.17;
     public static double intakeHigh = 0;
 
     public static double fullPower = 1;
@@ -48,7 +49,7 @@ public class var {
     public static int thirdLvlTeleOp = 4100;
 
     public static int tapeLimit = 2000;
-    public static int tapeTimeIsNow = 200;
+    public static int tapeTimeIsNow = 150;
     public static int armIntakeTiltSwitch = 1800;
 
     //deinit arm

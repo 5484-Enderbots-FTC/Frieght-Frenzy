@@ -22,7 +22,6 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -39,8 +38,8 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 
 import java.util.ArrayList;
 
-@Autonomous(name = "blue warehouse front", group = "blue")
-public class AutoBlueWarehouseFrontW extends LinearOpMode {
+@Autonomous(name = "blue warehouse front TEST", group = "blue")
+public class AutoBlueWarehouseFrontWTEST extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();
     ElapsedTime spitTime = new ElapsedTime();
@@ -155,7 +154,7 @@ public class AutoBlueWarehouseFrontW extends LinearOpMode {
              * then go to wall
              */
             if (runningOpMode == 3) {
-                robot.svoIntakeTilt.setPosition(var.intakeHighInitial);
+                robot.svoIntakeTilt.setPosition(var.intakeHigh);
                 drive.followTrajectory(toBlueHub3);
                 while (spitTime.seconds() < 1.5) {
 

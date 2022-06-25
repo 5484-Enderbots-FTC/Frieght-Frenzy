@@ -154,7 +154,7 @@ public class AutoRedWarehouseFrontWOptimized extends LinearOpMode {
             telemetry.addLine("GOOOOOOOOO");
             telemetry.update();
             if (runningOpMode == 3) {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.svoIntakeTilt.setPosition(var.intakeHighInitial);
                 drive.followTrajectory(toRedHub3);
                 spitOutBlock(false);
                 drive.followTrajectoryAsync(toPark1_3);

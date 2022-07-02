@@ -7,6 +7,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -14,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.ultimate_goal_code.hardwareUltimateGoal;
 import org.firstinspires.ftc.teamcode.ultimate_goal_code.var;
 
-@Disabled
+//@Disabled
 @TeleOp(name = "ultrasonic babey", group = "testing")
 
 public class test_ultrasonic_sensor extends LinearOpMode {
@@ -22,7 +23,7 @@ public class test_ultrasonic_sensor extends LinearOpMode {
     ElapsedTime timer = new ElapsedTime();
 
     hardwareUltimateGoal robot = new hardwareUltimateGoal();
-    ModernRoboticsI2cRangeSensor rangeSensor;
+    AnalogInput rangeSensor;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -36,7 +37,7 @@ public class test_ultrasonic_sensor extends LinearOpMode {
          * - switches to optical distance sensor for distances accurate between 1cm and 7cm
          */
 
-        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
+        rangeSensor = hardwareMap.get(AnalogInput.class, "rangeSensor");
 
         //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         telemetry.addData("Status", "Initialized");
@@ -47,11 +48,9 @@ public class test_ultrasonic_sensor extends LinearOpMode {
 
         while (!isStopRequested() && opModeIsActive()) {
 
-            //robot.updateDrive(gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
+            telemetry.addData("raw ultrasonic", rangeSensor.getVoltage());
+            telemetry.addData("real distance", (rangeSensor.getVoltage() - .6050) / .0175);
 
-            telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
-            telemetry.addData("raw optical", rangeSensor.rawOptical());
-            telemetry.addData("cm", "%.2f cm", rangeSensor.getDistance(DistanceUnit.CM));
             telemetry.update();
         }
 

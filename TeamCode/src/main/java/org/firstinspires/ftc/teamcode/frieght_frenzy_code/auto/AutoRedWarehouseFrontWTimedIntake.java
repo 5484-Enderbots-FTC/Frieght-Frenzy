@@ -40,7 +40,7 @@ import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
 import java.util.ArrayList;
 
 @Disabled
-@Autonomous(name = "red warehouse front with timed intake", group = "red")
+@Autonomous(name = "(not for worlds) red warehouse front with timed intake", group = "red")
 public class AutoRedWarehouseFrontWTimedIntake extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
     autoTrajectories traj = new autoTrajectories();

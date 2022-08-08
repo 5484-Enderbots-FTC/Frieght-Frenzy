@@ -9,6 +9,14 @@ public class var {
     //ez pz :)
 
     //example:
+
+    public double decimalCanChange = 9.1;
+    public static double decimalCantChange = 9.1;
+    public int integer = 9;
+    private boolean trueOrFalse = true;
+
+
+
     public static double violet = 0.7545;
     public static double rainbowo = 0.2275;
     public static double confetti = 0.2575;

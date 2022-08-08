@@ -287,6 +287,11 @@ public class teleop_two_remotes extends LinearOpMode {
 
  */
 
+            if(gamepad1.a){
+                robot.svoIntakeTilt.setPosition(0.5);
+            }
+
+
             if (robot.mtrTape.getCurrentPosition() < -20) {
                 tapeDispensed = true;
             } else {

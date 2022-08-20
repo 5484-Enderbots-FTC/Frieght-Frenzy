@@ -69,7 +69,7 @@ public void runOpMode() {
                 duckTimer.reset();
             })
             .addTemporalMarker(0, () -> {
-                robot.movearm(0.7, var.thirdLvl);
+                robot.movearm(0.7, variable.thirdLvl);
                 robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 if (robot.mtrArm.isBusy()) {
 
@@ -84,21 +84,21 @@ public void runOpMode() {
     Trajectory toRedHub3 = drive.trajectoryBuilder(toRedCarousel.end())
             .splineTo(new Vector2d(-12, -47), Math.toRadians(0))
             .addTemporalMarker(0, () -> {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.svoIntakeTilt.setPosition(variable.intakeHigh);
             })
             .build();
 
     Trajectory toRedHub2 = drive.trajectoryBuilder(toRedCarousel.end())
             .splineTo(new Vector2d(-12, -52), Math.toRadians(0))
             .addTemporalMarker(0, () -> {
-                robot.svoIntakeTilt.setPosition(var.intakeMid);
+                robot.svoIntakeTilt.setPosition(variable.intakeMid);
             })
             .build();
 
     Trajectory toRedHub1 = drive.trajectoryBuilder(toRedCarousel.end())
             .splineTo(new Vector2d(-12, -47), Math.toRadians(0))
             .addTemporalMarker(0, () -> {
-                robot.svoIntakeTilt.setPosition(var.intakeLow);
+                robot.svoIntakeTilt.setPosition(variable.intakeLow);
             })
             .build();
 
@@ -146,8 +146,8 @@ public void runOpMode() {
             drive.followTrajectory(toRedHub1);
             endDepPos = toRedHub1.end();
         }
-        robot.svoIntakeTilt.setPosition(var.intakeHigh);
-        robot.svoIntake.setPower(-var.lessPower);
+        robot.svoIntakeTilt.setPosition(variable.intakeHigh);
+        robot.svoIntake.setPower(-variable.lessPower);
         sleep(1500);
         robot.svoIntake.setPower(0);
         if (runningOpMode == 1) {

@@ -67,12 +67,12 @@ public class teleop_matt_optimize extends LinearOpMode {
              */
 
             //make robot wheels go brrr
-            if (gamepad1.left_bumper && !babyMode && toggleBabyTimer.seconds() > var.toggleWait) {
+            if (gamepad1.left_bumper && !babyMode && toggleBabyTimer.seconds() > variable.toggleWait) {
                 //activate baby slow mode when left bumper is pressed
                 babyMode = true;
                 toggleBabyTimer.reset();
             }
-            if (gamepad1.left_bumper && babyMode && toggleBabyTimer.seconds() > var.toggleWait) {
+            if (gamepad1.left_bumper && babyMode && toggleBabyTimer.seconds() > variable.toggleWait) {
                 //deactivate baby slow mode by pressing left bumper again
                 babyMode = false;
                 toggleBabyTimer.reset();
@@ -88,22 +88,22 @@ public class teleop_matt_optimize extends LinearOpMode {
             if (gamepad1.a) {
                 carouselSpinning = true;
                 if (robot.alliance_switch.getState() == true) {
-                    robot.svoCarousel.setPower(var.fullPower);
+                    robot.svoCarousel.setPower(variable.fullPower);
                 } else {
-                    robot.svoCarousel.setPower(-var.fullPower);
+                    robot.svoCarousel.setPower(-variable.fullPower);
                 }
 
             }
             if (gamepad1.b) {
                 carouselSpinning = false;
-                robot.svoCarousel.setPower(var.stop);
+                robot.svoCarousel.setPower(variable.stop);
             }
             if (gamepad1.x) {
                 carouselSpinning = true;
                 if (robot.alliance_switch.getState() == true) {
-                    robot.svoCarousel.setPower(-var.fullPower);
+                    robot.svoCarousel.setPower(-variable.fullPower);
                 } else {
-                    robot.svoCarousel.setPower(var.fullPower);
+                    robot.svoCarousel.setPower(variable.fullPower);
                 }
             }
 
@@ -184,18 +184,18 @@ public class teleop_matt_optimize extends LinearOpMode {
              */
 
             //TODO: fix collect position if it's too low normally :P
-            if (robot.mtrTape.getCurrentPosition() < var.tapeTimeIsNow) {
+            if (robot.mtrTape.getCurrentPosition() < variable.tapeTimeIsNow) {
                 //basically: if not TAPE TIME then do this
-                if (robot.mtrArm.getCurrentPosition() >= -var.armIntakeTiltSwitch) {
-                    robot.svoIntakeTilt.setPosition(var.intakeCollectTeleop);
+                if (robot.mtrArm.getCurrentPosition() >= -variable.armIntakeTiltSwitch) {
+                    robot.svoIntakeTilt.setPosition(variable.intakeCollectTeleop);
                 }
-                if (robot.mtrArm.getCurrentPosition() < -var.armIntakeTiltSwitch) {
-                    robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                if (robot.mtrArm.getCurrentPosition() < -variable.armIntakeTiltSwitch) {
+                    robot.svoIntakeTilt.setPosition(variable.intakeHigh);
                 }
             } else {
                 //otherwise, set intake to init pls
-                robot.LEDstrip.setPosition(var.rainbowo);
-                robot.svoIntakeTilt.setPosition(var.intakeInit);
+                robot.LEDstrip.setPosition(variable.rainbowo);
+                robot.svoIntakeTilt.setPosition(variable.intakeInit);
             }
 
             /**
@@ -209,20 +209,20 @@ public class teleop_matt_optimize extends LinearOpMode {
 
             if (!freightCollected) {
                 if (robot.bottomLimit.isPressed() && intakeState != Status.IN) {
-                    robot.svoIntake.setPower(var.lessPower);
+                    robot.svoIntake.setPower(variable.lessPower);
                     intakeState = Status.IN;
                 }
                 if(runtime.seconds() < 90){
-                    robot.LEDstrip.setPosition(var.green);
+                    robot.LEDstrip.setPosition(variable.green);
                 }
 
             }
             if (freightCollected) {
                 if (intakeState != Status.OUT) {
-                    robot.svoIntake.setPower(var.stop);
+                    robot.svoIntake.setPower(variable.stop);
                     intakeState = Status.STOPPED;
                     if(runtime.seconds() < 90){
-                        robot.LEDstrip.setPosition(var.red);
+                        robot.LEDstrip.setPosition(variable.red);
                     }
 
                 }
@@ -231,18 +231,18 @@ public class teleop_matt_optimize extends LinearOpMode {
 
             //run intake
             if (gamepad2.a) {
-                robot.svoIntake.setPower(var.lessPower);
+                robot.svoIntake.setPower(variable.lessPower);
                 intakeState = Status.IN;
             }
             //reverse intake
             if (gamepad2.b) {
                 //might turn this into an output sequence
                 intakeState = Status.OUT;
-                robot.svoIntake.setPower(-var.lessPower);
+                robot.svoIntake.setPower(-variable.lessPower);
             }
             //stop intake
             if (gamepad2.x) {
-                robot.svoIntake.setPower(var.stop);
+                robot.svoIntake.setPower(variable.stop);
                 intakeState = Status.STOPPED;
             }
 
@@ -250,7 +250,7 @@ public class teleop_matt_optimize extends LinearOpMode {
              * MEASURE NOW
              */
 
-            if (gamepad2.left_bumper && togglePrecisionCap.seconds() > var.toggleWait) {
+            if (gamepad2.left_bumper && togglePrecisionCap.seconds() > variable.toggleWait) {
                 precisionCap += 1;
                 if (precisionCap == 4){
                     precisionCap = 1;

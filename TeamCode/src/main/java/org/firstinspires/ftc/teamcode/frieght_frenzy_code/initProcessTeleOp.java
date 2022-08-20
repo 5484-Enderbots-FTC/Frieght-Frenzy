@@ -12,7 +12,7 @@ public class initProcessTeleOp extends LinearOpMode {
     private double tiltNumber = 0;
     public void runOpMode() {
         robot.init(hardwareMap);
-        robot.svoIntakeTilt.setPosition(var.intakeInit);
+        robot.svoIntakeTilt.setPosition(variable.intakeInit);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
@@ -49,14 +49,27 @@ public class initProcessTeleOp extends LinearOpMode {
                 robot.svoIntakeTilt.setPosition(reset);
             }
             if(gamepad1.right_bumper){
-                robot.svoIntakeTilt.setPosition(var.intakeCollect);
+                robot.svoIntakeTilt.setPosition(variable.intakeCollect);
             }
             robot.mtrTape.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
+
+            //for fixing position
+            if(gamepad2.a){
+                robot.mtrIntake.setPower(0.1);
+            }
+            if(gamepad2.b){
+                robot.mtrIntake.setPower(-0.1);
+            }
+            if(gamepad2.x){
+                robot.mtrIntake.setPower(0);
+            }
+
 
             telemetry.addData("MidLimit? ", robot.midLimit.isPressed());
             telemetry.addData("Back limit? ", robot.backLimit.isPressed());
             telemetry.addData("Front limit? ", robot.frontLimit.isPressed());
-
+            telemetry.addData("mtrIntake power ", robot.mtrIntake.getVelocity());
+            telemetry.addData("Gamepad 2 a pressed? ", gamepad2.a);
             telemetry.addData("Servo current pos: ", robot.svoIntakeTilt.getPosition());
             telemetry.addData("Servo input number: ", tiltNumber);
             telemetry.update();

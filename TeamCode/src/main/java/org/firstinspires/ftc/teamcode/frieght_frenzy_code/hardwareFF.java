@@ -4,10 +4,8 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
@@ -34,8 +32,8 @@ public class hardwareFF {
     public ElementAnalysisPipelineFF pipeline;
 
     public DcMotorEx mtrBL, mtrBR, mtrFL, mtrFR; //control hub ports , , ,
-    public DcMotorEx mtrArm, mtrTurret, mtrTape; //expansion hub ports ,
-    public CRServo svoCarousel, svoIntake; //servo port 0, 1
+    public DcMotorEx mtrArm, mtrTurret, mtrTape, mtrIntake; //expansion hub ports ,
+    public CRServo svoCarousel, svoIntake; //servo port 0 (removed svoIntake)
     public Servo svoIntakeTilt, LEDstrip; //servo port
 
     public TouchSensor frontLimit,backLimit, midLimit, topLimit, bottomLimit, intakeLimit; //digital ports . . .
@@ -87,6 +85,10 @@ public class hardwareFF {
         mtrArm.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         mtrArm.setDirection(DcMotorEx.Direction.FORWARD);
 
+        mtrIntake = hw.get(DcMotorEx.class, "mtrIntake");
+        mtrIntake.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        mtrIntake.setDirection(DcMotorEx.Direction.REVERSE);
+
         mtrTurret = hw.get(DcMotorEx.class, "mtrTurret");
         mtrTurret.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         mtrTurret.setDirection(DcMotorEx.Direction.REVERSE);
@@ -123,7 +125,7 @@ public class hardwareFF {
 
         batteryVoltage = hw.voltageSensor.iterator().next();
 
-        LEDstrip.setPosition(var.ocean);
+        LEDstrip.setPosition(variable.ocean);
 
         if (alliance_switch.getState() == true) {
             alliance = red;
@@ -283,7 +285,7 @@ public class hardwareFF {
 
     public void deinit() {
         mtrArm.setPower(-0.7);
-        mtrArm.setTargetPosition(-var.deinitArm);
+        mtrArm.setTargetPosition(-variable.deinitArm);
         mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         while (mtrArm.isBusy()) {
 
@@ -300,11 +302,11 @@ public class hardwareFF {
         mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         if (runningOpMode == 3) {
-            movearm(0.7, var.thirdLvl);
+            movearm(0.7, variable.thirdLvl);
         } else if (runningOpMode == 2) {
-            movearm(0.7, var.secondLvl);
+            movearm(0.7, variable.secondLvl);
         } else if (runningOpMode == 1) {
-            movearm(0.7, var.firstLvl);
+            movearm(0.7, variable.firstLvl);
         }
         mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }

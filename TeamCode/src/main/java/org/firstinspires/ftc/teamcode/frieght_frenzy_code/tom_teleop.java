@@ -7,8 +7,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Random;
 
 @TeleOp(name = "teleop ff modified", group = "teleop")
@@ -74,22 +72,22 @@ public class tom_teleop extends LinearOpMode {
              */
 
             //make robot wheels go brrr
-            if (gamepad1.left_bumper && !babyMode && toggleBabyTimer.seconds() > var.toggleWait) {
+            if (gamepad1.left_bumper && !babyMode && toggleBabyTimer.seconds() > variable.toggleWait) {
                 //activate baby slow mode when left bumper is pressed
                 babyMode = true;
                 toggleBabyTimer.reset();
             }
-            if (gamepad1.left_bumper && babyMode && toggleBabyTimer.seconds() > var.toggleWait) {
+            if (gamepad1.left_bumper && babyMode && toggleBabyTimer.seconds() > variable.toggleWait) {
                 //deactivate baby slow mode by pressing left bumper again
                 babyMode = false;
                 toggleBabyTimer.reset();
             }
 
             //!TOMINSERTION!
-            if (gamepad2.left_bumper && precisionCap == 1 && togglePrecisionCap.seconds() > var.toggleWait) {
+            if (gamepad2.left_bumper && precisionCap == 1 && togglePrecisionCap.seconds() > variable.toggleWait) {
                 precisionCap = 2;
                 togglePrecisionCap.reset();
-                if (gamepad2.left_bumper && precisionCap == 2 && togglePrecisionCap.seconds() > var.toggleWait) {
+                if (gamepad2.left_bumper && precisionCap == 2 && togglePrecisionCap.seconds() > variable.toggleWait) {
                     precisionCap = 1;
                 }
                 togglePrecisionCap.reset();
@@ -123,7 +121,7 @@ public class tom_teleop extends LinearOpMode {
                 armAvoidance = 0;
             }
             if (armAvoidance == 1) {
-                robot.svoIntakeTilt.setPosition(var.intakeCollect);
+                robot.svoIntakeTilt.setPosition(variable.intakeCollect);
             }
             if (gamepad2.dpad_left) {
                 sway = true;
@@ -159,22 +157,22 @@ public class tom_teleop extends LinearOpMode {
             if (gamepad1.a) {
                 carouselSpinning = true;
                 if (robot.alliance_switch.getState() == true) {
-                    robot.svoCarousel.setPower(var.fullPower);
+                    robot.svoCarousel.setPower(variable.fullPower);
                 } else {
-                    robot.svoCarousel.setPower(-var.fullPower);
+                    robot.svoCarousel.setPower(-variable.fullPower);
                 }
 
             }
             if (gamepad1.b) {
                 carouselSpinning = false;
-                robot.svoCarousel.setPower(var.stop);
+                robot.svoCarousel.setPower(variable.stop);
             }
             if (gamepad1.x) {
                 carouselSpinning = true;
                 if (robot.alliance_switch.getState() == true) {
-                    robot.svoCarousel.setPower(-var.fullPower);
+                    robot.svoCarousel.setPower(-variable.fullPower);
                 } else {
-                    robot.svoCarousel.setPower(var.fullPower);
+                    robot.svoCarousel.setPower(variable.fullPower);
                 }
             }
 
@@ -264,13 +262,13 @@ public class tom_teleop extends LinearOpMode {
              */
 
             if (gamepad2.right_bumper) {
-                robot.svoIntakeTilt.setPosition(var.intakeMid);
+                robot.svoIntakeTilt.setPosition(variable.intakeMid);
             }
             if (gamepad2.dpad_up) {
-                robot.svoIntakeTilt.setPosition(var.intakeCollect);
+                robot.svoIntakeTilt.setPosition(variable.intakeCollect);
             }
             if (gamepad2.left_bumper) {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.svoIntakeTilt.setPosition(variable.intakeHigh);
             }
 
 
@@ -286,34 +284,34 @@ public class tom_teleop extends LinearOpMode {
 
             if (!freightCollected) {
                 if (robot.bottomLimit.isPressed() && intakeState != Status.IN) {
-                    robot.svoIntakeTilt.setPosition(var.intakeCollect);
-                    robot.svoIntake.setPower(var.lessPower);
+                    robot.svoIntakeTilt.setPosition(variable.intakeCollect);
+                    robot.svoIntake.setPower(variable.lessPower);
                     intakeState = Status.IN;
                 }
-                robot.LEDstrip.setPosition(var.green);
+                robot.LEDstrip.setPosition(variable.green);
             }
             if (freightCollected) {
                 if (intakeState != Status.OUT) {
-                    robot.svoIntake.setPower(var.stop);
+                    robot.svoIntake.setPower(variable.stop);
                     intakeState = Status.STOPPED;
-                    robot.LEDstrip.setPosition(var.red);
+                    robot.LEDstrip.setPosition(variable.red);
                 }
             }
 
             //run intake
             if (gamepad2.a) {
-                robot.svoIntake.setPower(var.lessPower);
+                robot.svoIntake.setPower(variable.lessPower);
                 intakeState = Status.IN;
             }
             //reverse intake
             if (gamepad2.b) {
                 //might turn this into an output sequence
                 intakeState = Status.OUT;
-                robot.svoIntake.setPower(-var.lessPower);
+                robot.svoIntake.setPower(-variable.lessPower);
             }
             //stop intake
             if (gamepad2.x) {
-                robot.svoIntake.setPower(var.stop);
+                robot.svoIntake.setPower(variable.stop);
                 intakeState = Status.STOPPED;
             }
 

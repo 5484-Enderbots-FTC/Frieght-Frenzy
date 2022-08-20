@@ -16,14 +16,14 @@ public class test_da_angle extends LinearOpMode {
     private double tiltNumber = 0;
     public void runOpMode() {
         robot.init(hardwareMap);
-        robot.svoIntakeTilt.setPosition(var.intakeInit);
+        robot.svoIntakeTilt.setPosition(variable.intakeInit);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
 
         while(opModeIsActive() && !isStopRequested()){
 
-            if (gamepad1.left_bumper && !babyMode && toggleBabyTimer.seconds() > var.toggleWait) {
+            if (gamepad1.left_bumper && !babyMode && toggleBabyTimer.seconds() > variable.toggleWait) {
                 //activate baby slow mode when left bumper is pressed
                 babyMode = true;
                 toggleBabyTimer.reset();
@@ -64,7 +64,7 @@ public class test_da_angle extends LinearOpMode {
                 robot.svoIntakeTilt.setPosition(reset);
             }
             if(gamepad2.right_bumper){
-                robot.svoIntakeTilt.setPosition(var.intakeCollect);
+                robot.svoIntakeTilt.setPosition(variable.intakeCollect);
             }
             robot.mtrTape.setPower(gamepad2.right_trigger);
             robot.mtrTape.setPower(-gamepad2.left_trigger);

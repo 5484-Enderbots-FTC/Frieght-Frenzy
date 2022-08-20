@@ -2,10 +2,6 @@ package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp(name = "test tape measuring", group = "teleop")
 public class testTapeMeasuring extends LinearOpMode {
@@ -49,10 +45,10 @@ public class testTapeMeasuring extends LinearOpMode {
              * tilt controls
              */
             if (gamepad1.right_bumper) {
-                robot.svoIntakeTilt.setPosition(var.intakeInit);
+                robot.svoIntakeTilt.setPosition(variable.intakeInit);
             }
             if (gamepad1.left_bumper) {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.svoIntakeTilt.setPosition(variable.intakeHigh);
             }
             /**
              * MEASURE NOW

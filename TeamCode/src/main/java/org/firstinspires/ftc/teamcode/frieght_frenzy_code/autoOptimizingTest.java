@@ -30,7 +30,7 @@ public class autoOptimizingTest extends LinearOpMode {
         robot.svoCarousel.setPower(1);
         robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.movearm(0.7, var.secondLvl);
+        robot.movearm(0.7, variable.secondLvl);
         robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         duckTimer.reset();
         while(duckTimer.seconds() <= duckTime && robot.mtrArm.isBusy()){

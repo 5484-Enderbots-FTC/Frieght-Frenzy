@@ -26,7 +26,6 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
 
@@ -94,11 +93,11 @@ public class AutoRedWarehouseNoWeb extends LinearOpMode {
              * drive to red hub & spit out block then park :3
              */
             if (runningOpMode == 3) {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.svoIntakeTilt.setPosition(variable.intakeHigh);
             } else if (runningOpMode == 2) {
-                robot.svoIntakeTilt.setPosition(var.intakeMid);
+                robot.svoIntakeTilt.setPosition(variable.intakeMid);
             } else if (runningOpMode == 1) {
-                robot.svoIntakeTilt.setPosition(var.intakeLow);
+                robot.svoIntakeTilt.setPosition(variable.intakeLow);
             }
             if (runningOpMode == 3) {
                 drive.followTrajectory(toRedHub3);
@@ -114,7 +113,7 @@ public class AutoRedWarehouseNoWeb extends LinearOpMode {
                 drive.followTrajectory(toPark1_1);
             }
 
-            robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            robot.svoIntakeTilt.setPosition(variable.intakeHigh);
             drive.followTrajectory(toPark2);
 
             break;
@@ -122,7 +121,7 @@ public class AutoRedWarehouseNoWeb extends LinearOpMode {
     }
 
     public void spitOutBlock() {
-        robot.svoIntake.setPower(-var.lessPower);
+        robot.svoIntake.setPower(-variable.lessPower);
         sleep(1500);
         robot.svoIntake.setPower(0);
     }

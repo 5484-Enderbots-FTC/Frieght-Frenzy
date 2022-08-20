@@ -27,7 +27,7 @@ public class armTurretMoveInTraj extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-63, -58), Math.toRadians(180))
                 .build();
 
-        robot.svoIntakeTilt.setPosition(var.intakeInit);
+        robot.svoIntakeTilt.setPosition(variable.intakeInit);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -38,7 +38,7 @@ public class armTurretMoveInTraj extends LinearOpMode {
             drive.followTrajectoryAsync(toRedCarousel);
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.movearm(0.7, var.thirdLvl);
+            robot.movearm(0.7, variable.thirdLvl);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             while (!robot.midLimit.isPressed()) {

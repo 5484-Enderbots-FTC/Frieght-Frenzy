@@ -28,12 +28,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.ElementAnalysisPipelineFF;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.autoTrajectories;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
-
-import java.util.ArrayList;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.variable;
 
 @Autonomous(name = "red carousel testing", group = "red")
 public class redCarouselTesting extends LinearOpMode {
@@ -60,7 +57,7 @@ public class redCarouselTesting extends LinearOpMode {
                 )
                 .build();
 
-        robot.svoIntakeTilt.setPosition(var.intakeInit);
+        robot.svoIntakeTilt.setPosition(variable.intakeInit);
 
         waitForStart();
 
@@ -70,7 +67,7 @@ public class redCarouselTesting extends LinearOpMode {
 
         robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.movearm(var.armInitPower, var.thirdLvl);
+        robot.movearm(variable.armInitPower, variable.thirdLvl);
         robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         drive.followTrajectory(toRedCarousel);

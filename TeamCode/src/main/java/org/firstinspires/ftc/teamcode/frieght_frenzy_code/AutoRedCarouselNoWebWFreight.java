@@ -93,7 +93,7 @@ public class AutoRedCarouselNoWebWFreight extends LinearOpMode {
         Trajectory intakeForward = drive.trajectoryBuilder(toPark2.end())
                 .forward(20,  FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .addTemporalMarker(0, () -> {robot.svoIntake.setPower(var.intakeCollect);})
+                .addTemporalMarker(0, () -> {robot.svoIntake.setPower(variable.intakeCollect);})
                 .build();
 
         //TODO: change the starting pose to be changeable??
@@ -120,7 +120,7 @@ public class AutoRedCarouselNoWebWFreight extends LinearOpMode {
             robot.svoCarousel.setPower(1);
             robot.armToPosition(runningOpMode);
             duckTimer.reset();
-            while(duckTimer.seconds() <= var.duckTime && robot.mtrArm.isBusy()){
+            while(duckTimer.seconds() <= variable.duckTime && robot.mtrArm.isBusy()){
                 telemetry.addData("is servo running? ", robot.svoCarousel.getPower());
                 telemetry.update();
             }
@@ -132,11 +132,11 @@ public class AutoRedCarouselNoWebWFreight extends LinearOpMode {
              * drive to red hub & spit out block then park :3
              */
             if (runningOpMode == 3) {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.svoIntakeTilt.setPosition(variable.intakeHigh);
             } else if (runningOpMode == 2) {
-                robot.svoIntakeTilt.setPosition(var.intakeMid);
+                robot.svoIntakeTilt.setPosition(variable.intakeMid);
             } else if (runningOpMode == 1) {
-                robot.svoIntakeTilt.setPosition(var.intakeLow);
+                robot.svoIntakeTilt.setPosition(variable.intakeLow);
             }
             if (runningOpMode == 3) {
                 drive.followTrajectory(toRedHub3);
@@ -155,7 +155,7 @@ public class AutoRedCarouselNoWebWFreight extends LinearOpMode {
             //TODO: utilize left/right limits to start moving the turret perhaps while it's in the park1 trajectory
             //      then move the arm down until it hits bottom limit
             //      THEN go grab more freight
-            robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            robot.svoIntakeTilt.setPosition(variable.intakeHigh);
             drive.followTrajectory(toPark2);
 
             /**
@@ -166,7 +166,7 @@ public class AutoRedCarouselNoWebWFreight extends LinearOpMode {
     }
 
     public void spitOutBlock() {
-        robot.svoIntake.setPower(-var.lessPower);
+        robot.svoIntake.setPower(-variable.lessPower);
         sleep(1500);
         robot.svoIntake.setPower(0);
     }

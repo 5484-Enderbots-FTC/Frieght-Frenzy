@@ -27,29 +27,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.ElementAnalysisPipelineFF;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfInt;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.MatOfPoint2f;
-import org.opencv.core.Point;
-import org.opencv.core.RotatedRect;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
-import org.openftc.easyopencv.OpenCvWebcam;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Disabled
 @Autonomous
@@ -67,7 +45,7 @@ public class AutoBlueWarehouse extends LinearOpMode
 
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
-        robot.svoIntakeTilt.setPosition(var.intakeInit);
+        robot.svoIntakeTilt.setPosition(variable.intakeInit);
         sleep(5000);
         while (!isStarted())
             {
@@ -111,20 +89,20 @@ public class AutoBlueWarehouse extends LinearOpMode
             telemetry.update();
             robot.svoIntake.setPower(0);
             if (alliance_element_location == 1){
-                robot.movearm(0.7,var.firstLvl);
+                robot.movearm(0.7, variable.firstLvl);
                 while (robot.mtrArm.isBusy()){
 
                 }
             }
             if (alliance_element_location == 2){
-                robot.movearm(0.7,var.secondLvl);
+                robot.movearm(0.7, variable.secondLvl);
                 while (robot.mtrArm.isBusy()){
 
                 }
             }
             if (alliance_element_location == 3){
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                robot.movearm(0.7,var.thirdLvl);
+                robot.svoIntakeTilt.setPosition(variable.intakeHigh);
+                robot.movearm(0.7, variable.thirdLvl);
                 while (robot.mtrArm.isBusy()){
 
                 }
@@ -134,13 +112,13 @@ public class AutoBlueWarehouse extends LinearOpMode
             robot.forward(-0.4,-800);
             robot.strafe(0.25,1200);
             robot.svoIntake.setDirection(DcMotorSimple.Direction.REVERSE);
-            robot.svoIntake.setPower(var.lessPower);
+            robot.svoIntake.setPower(variable.lessPower);
             sleep(3000);
             robot.svoIntake.setPower(0);
             robot.strafe(-0.25,-1250);
             robot.forward(0.4,1800);
-            robot.strafe(0.4,var.parkStrafe);
-            robot.forward(0.4,-1*var.parkBack);
+            robot.strafe(0.4, variable.parkStrafe);
+            robot.forward(0.4,-1* variable.parkBack);
             break;
         }
     }

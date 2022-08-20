@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
@@ -44,7 +43,7 @@ public class AutoBreakTrajectory extends LinearOpMode {
         /**
          * drive forward for consumption
          */
-        robot.svoIntake.setPower(var.lessPower);
+        robot.svoIntake.setPower(variable.lessPower);
         drive.followTrajectoryAsync(traj);
         while (robot.intakeLimit.isPressed()) {
             telemetry.addLine("consuming");
@@ -71,7 +70,7 @@ public class AutoBreakTrajectory extends LinearOpMode {
         //arm
         robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.movearm(0.7, var.thirdLvl);
+        robot.movearm(0.7, variable.thirdLvl);
 
         robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         while(robot.mtrArm.getCurrentPosition() >= -1000) {
@@ -108,7 +107,7 @@ public class AutoBreakTrajectory extends LinearOpMode {
         robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         telemetry.addLine("arm go brrrrrrrrrrrrrrrrrrrrrrrrrr");
         telemetry.update();
-        robot.svoIntakeTilt.setPosition(var.intakeCollect);
+        robot.svoIntakeTilt.setPosition(variable.intakeCollect);
         while(!robot.bottomLimit.isPressed()){
             robot.mtrArm.setPower(0.7);
         }
@@ -117,7 +116,7 @@ public class AutoBreakTrajectory extends LinearOpMode {
         /**
          * begin consumption AGAIN
          */
-        robot.svoIntake.setPower(var.lessPower);
+        robot.svoIntake.setPower(variable.lessPower);
         drive.followTrajectoryAsync(traj2);
         telemetry.addData("intake limit?", robot.intakeLimit.isPressed());
         telemetry.update();
@@ -143,7 +142,7 @@ public class AutoBreakTrajectory extends LinearOpMode {
         //arm
         robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.movearm(0.7, var.thirdLvl);
+        robot.movearm(0.7, variable.thirdLvl);
 
         robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         while(robot.mtrArm.getCurrentPosition() >= -1000){
@@ -167,9 +166,9 @@ public class AutoBreakTrajectory extends LinearOpMode {
     }
 
     public void spitOutBlock() {
-        robot.svoIntakeTilt.setPosition(var.intakeHigh);
+        robot.svoIntakeTilt.setPosition(variable.intakeHigh);
         sleep(1000);
-        robot.svoIntake.setPower(-var.lessPower);
+        robot.svoIntake.setPower(-variable.lessPower);
         sleep(1500);
         robot.svoIntake.setPower(0);
     }

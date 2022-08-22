@@ -34,7 +34,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.autoTrajectories;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.vari;
 
 @Disabled
 @Autonomous(name = "old autoRedCarousel no webcam")
@@ -72,7 +72,7 @@ public void runOpMode() {
                 duckTimer.reset();
             })
             .addTemporalMarker(0, () -> {
-                robot.movearm(0.7, var.thirdLvl);
+                robot.movearm(0.7, vari.thirdLvl);
                 robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 if (robot.mtrArm.isBusy()) {
 
@@ -87,21 +87,21 @@ public void runOpMode() {
     Trajectory toRedHub3 = drive.trajectoryBuilder(toRedCarousel.end())
             .splineTo(new Vector2d(-12, -47), Math.toRadians(0))
             .addTemporalMarker(0, () -> {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.svoIntakeTilt.setPosition(vari.intakeHigh);
             })
             .build();
 
     Trajectory toRedHub2 = drive.trajectoryBuilder(toRedCarousel.end())
             .splineTo(new Vector2d(-12, -52), Math.toRadians(0))
             .addTemporalMarker(0, () -> {
-                robot.svoIntakeTilt.setPosition(var.intakeMid);
+                robot.svoIntakeTilt.setPosition(vari.intakeMid);
             })
             .build();
 
     Trajectory toRedHub1 = drive.trajectoryBuilder(toRedCarousel.end())
             .splineTo(new Vector2d(-12, -47), Math.toRadians(0))
             .addTemporalMarker(0, () -> {
-                robot.svoIntakeTilt.setPosition(var.intakeLow);
+                robot.svoIntakeTilt.setPosition(vari.intakeLow);
             })
             .build();
 
@@ -149,8 +149,8 @@ public void runOpMode() {
             drive.followTrajectory(toRedHub1);
             endDepPos = toRedHub1.end();
         }
-        robot.svoIntakeTilt.setPosition(var.intakeHigh);
-        robot.svoIntake.setPower(-var.lessPower);
+        robot.svoIntakeTilt.setPosition(vari.intakeHigh);
+        robot.svoIntake.setPower(-vari.lessPower);
         sleep(1500);
         robot.svoIntake.setPower(0);
         if (runningOpMode == 1) {

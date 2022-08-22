@@ -35,7 +35,7 @@ import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.ElementAnalysisPipelineFF;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.autoTrajectories;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.vari;
 
 import java.util.ArrayList;
 
@@ -91,7 +91,7 @@ public class AutoRedWarehouseFrontWTimedIntake extends LinearOpMode {
 
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
-        robot.svoIntakeTilt.setPosition(var.intakeInit);
+        robot.svoIntakeTilt.setPosition(vari.intakeInit);
         sleep(5000);
         while (!isStarted()) {
             //what did u detect
@@ -129,11 +129,11 @@ public class AutoRedWarehouseFrontWTimedIntake extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             if (runningOpMode == 3) {
-                robot.movearm(var.armInitPower, var.thirdLvl);
+                robot.movearm(vari.armInitPower, vari.thirdLvl);
             } else if (runningOpMode == 2) {
-                robot.movearm(var.armInitPower, var.secondLvl);
+                robot.movearm(vari.armInitPower, vari.secondLvl);
             } else if (runningOpMode == 1) {
-                robot.movearm(var.armInitPower, var.firstLvl);
+                robot.movearm(vari.armInitPower, vari.firstLvl);
             }
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -157,26 +157,26 @@ public class AutoRedWarehouseFrontWTimedIntake extends LinearOpMode {
             telemetry.addLine("GOOOOOOOOO");
             telemetry.update();
             if (runningOpMode == 3) {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.svoIntakeTilt.setPosition(vari.intakeHigh);
                 drive.followTrajectory(toRedHub3);
                 spitOutBlock(false);
                 drive.followTrajectory(toPark1_3);
             } else if (runningOpMode == 2) {
-                robot.svoIntakeTilt.setPosition(var.intakeMid);
+                robot.svoIntakeTilt.setPosition(vari.intakeMid);
                 drive.followTrajectory(toRedHub2);
                 spitOutBlock(false);
                 drive.followTrajectory(toPark1_2);
             } else if (runningOpMode == 1) {
-                robot.svoIntakeTilt.setPosition(var.intakeLow);
+                robot.svoIntakeTilt.setPosition(vari.intakeLow);
                 drive.followTrajectory(toRedHub1);
                 spitOutBlock(false);
                 drive.followTrajectory(toPark1_1);
-                robot.svoIntakeTilt.setPosition(var.intakeInit);
+                robot.svoIntakeTilt.setPosition(vari.intakeInit);
             }
 
             telemetry.addLine("1st part done");
             telemetry.update();
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            robot.svoIntakeTilt.setPosition(vari.intakeCollect);
 
             /**
              * set turret to go collect pos and arm go down
@@ -215,7 +215,7 @@ public class AutoRedWarehouseFrontWTimedIntake extends LinearOpMode {
 
             }
             robot.mtrArm.setPower(0);
-            robot.svoIntakeTilt.setPosition(var.intakeCollect - 0.06);
+            robot.svoIntakeTilt.setPosition(vari.intakeCollect - 0.06);
 
             /*
             robot.movearm(0.7, var.collect);
@@ -243,10 +243,10 @@ public class AutoRedWarehouseFrontWTimedIntake extends LinearOpMode {
             /**
              * drive into warehouse for consumption
              */
-            robot.svoIntake.setPower(var.lessPower * 1.5);
+            robot.svoIntake.setPower(vari.lessPower * 1.5);
             drive.followTrajectoryAsync(goCollect);
             intakeTime.reset();
-            while (robot.intakeLimit.isPressed() && intakeTime.seconds() <= var.intakeStopTime) {
+            while (robot.intakeLimit.isPressed() && intakeTime.seconds() <= vari.intakeStopTime) {
                 telemetry.addData("time: ", intakeTime.time());
                 telemetry.addData("seconds: ", intakeTime.seconds());
                 telemetry.addLine("consuming");
@@ -254,7 +254,7 @@ public class AutoRedWarehouseFrontWTimedIntake extends LinearOpMode {
                 drive.update();
                 drive.updatePoseEstimate();
             }
-            if (intakeTime.seconds() < var.intakeStopTime) {
+            if (intakeTime.seconds() < vari.intakeStopTime) {
                 drive.cancelFollowing();
                 intakeEnd = drive.getPoseEstimate();
                 drive.setDrivePower(new Pose2d());
@@ -275,7 +275,7 @@ public class AutoRedWarehouseFrontWTimedIntake extends LinearOpMode {
                 //TODO: update later to be during trajectory on way to hub :)
                 robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                robot.movearm(var.armInitPower, var.thirdLvl);
+                robot.movearm(vari.armInitPower, vari.thirdLvl);
                 robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 while (robot.mtrArm.getCurrentPosition() >= -1000) {
@@ -322,16 +322,16 @@ public class AutoRedWarehouseFrontWTimedIntake extends LinearOpMode {
 
     public void spitOutBlock(boolean warehouse_block) {
         if (warehouse_block) {
-            robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            robot.svoIntakeTilt.setPosition(vari.intakeHigh);
         } else if (runningOpMode == 3) {
-            robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            robot.svoIntakeTilt.setPosition(vari.intakeHigh);
         } else if (runningOpMode == 2) {
-            robot.svoIntakeTilt.setPosition(var.intakeMid);
+            robot.svoIntakeTilt.setPosition(vari.intakeMid);
         } else if (runningOpMode == 1) {
-            robot.svoIntakeTilt.setPosition(var.intakeLow);
+            robot.svoIntakeTilt.setPosition(vari.intakeLow);
         }
         sleep(1000);
-        robot.svoIntake.setPower(-var.lessPower);
+        robot.svoIntake.setPower(-vari.lessPower);
         sleep(1500);
         robot.svoIntake.setPower(0);
     }

@@ -24,32 +24,10 @@ package org.firstinspires.ftc.teamcode.frieght_frenzy_code.hot_garbo;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfInt;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.MatOfPoint2f;
-import org.opencv.core.Point;
-import org.opencv.core.RotatedRect;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
-import org.openftc.easyopencv.OpenCvWebcam;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.vari;
 
 /*
  * This is an advanced sample showcasing detecting and determining the orientation
@@ -79,7 +57,7 @@ public class DistanceSensorAlign extends LinearOpMode
 
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
-        robot.svoIntakeTilt.setPosition(var.intakeInit);
+        robot.svoIntakeTilt.setPosition(vari.intakeInit);
 
         telemetry.update();
         telemetry.addData("Left Distance: ", robot.leftDistance.getDistance(DistanceUnit.CM));

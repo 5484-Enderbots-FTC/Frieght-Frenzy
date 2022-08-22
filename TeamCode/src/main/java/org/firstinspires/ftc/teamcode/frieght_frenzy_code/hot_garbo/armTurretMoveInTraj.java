@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.autoTrajectories;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.vari;
 
 @Disabled
 @Autonomous(name = "armturretduring traj", group = "auto")
@@ -30,7 +30,7 @@ public class armTurretMoveInTraj extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-63, -58), Math.toRadians(180))
                 .build();
 
-        robot.svoIntakeTilt.setPosition(var.intakeInit);
+        robot.svoIntakeTilt.setPosition(vari.intakeInit);
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
@@ -41,7 +41,7 @@ public class armTurretMoveInTraj extends LinearOpMode {
             drive.followTrajectoryAsync(toRedCarousel);
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.movearm(0.7, var.thirdLvl);
+            robot.movearm(0.7, vari.thirdLvl);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             while (!robot.midLimit.isPressed()) {

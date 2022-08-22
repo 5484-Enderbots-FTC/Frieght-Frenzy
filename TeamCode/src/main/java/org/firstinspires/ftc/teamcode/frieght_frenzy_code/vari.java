@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code;
 
-public class var {
+public class vari {
 
     //commonly used static variables can be stored here and used by multiple programs
     //mostly for servo positions that need to be edited once in a while when a builder screws up :}
@@ -29,14 +29,14 @@ public class var {
     public static double armInitPower = 1;
 
     public static double intakeInit = 1;
-    public static double intakeCollect = 0.15;
-    public static double intakeCollectTeleop = 0.15;
+    public static double intakeCollect = 0.46;
+    public static double intakeCollectTeleop = 0.46;
     public static double intakeCollectHalfway = 0.5;
     public static double intakeExtraFreight = 0.6;
-    public static double intakeLow = 0.37;
-    public static double intakeMid = 0.25;
-    public static double intakeHighInitial = 0.17;
-    public static double intakeHigh = 0;
+    public static double intakeLow = 0.8;
+    public static double intakeMid = 0.6;
+    public static double intakeHighInitial = 0.35;
+    public static double intakeHigh = 0.4;
 
     public static double fullPower = 1;
     public static double almostFullPower = 0.75;

@@ -34,7 +34,7 @@ import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.ElementAnalysisPipelineFF;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.autoTrajectories;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.vari;
 
 import java.util.ArrayList;
 
@@ -60,7 +60,7 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
         Trajectory toRedHub3 = drive.trajectoryBuilder(traj.startPoseRW, true)
                 .splineToConstantHeading(traj.redHub3, Math.toRadians(90))
                 .addDisplacementMarker(0.95, 0, () -> {
-                    robot.svoIntake.setPower(-var.lessPower);
+                    robot.svoIntake.setPower(-vari.lessPower);
                     spitTime.reset();
                 })
                 .build();
@@ -68,7 +68,7 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
         Trajectory toRedHub2 = drive.trajectoryBuilder(traj.startPoseRW, true)
                 .splineToConstantHeading(traj.redHub2, Math.toRadians(90))
                 .addDisplacementMarker(0.95, 0, () -> {
-                    robot.svoIntake.setPower(-var.lessPower);
+                    robot.svoIntake.setPower(-vari.lessPower);
                     spitTime.reset();
                 })
                 .build();
@@ -76,7 +76,7 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
         Trajectory toRedHub1 = drive.trajectoryBuilder(traj.startPoseRW, true)
                 .splineToConstantHeading(traj.redHub1, Math.toRadians(90))
                 .addDisplacementMarker(0.95, 0, () -> {
-                    robot.svoIntake.setPower(-var.lessPower);
+                    robot.svoIntake.setPower(-vari.lessPower);
                     spitTime.reset();
                 })
                 .build();
@@ -106,7 +106,7 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
 
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
-        robot.svoIntakeTilt.setPosition(var.intakeInit);
+        robot.svoIntakeTilt.setPosition(vari.intakeInit);
         sleep(5000);
         while (!isStarted()) {
             //what did u detect
@@ -151,14 +151,14 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             if (runningOpMode == 3) {
-                robot.movearm(var.armInitPower, var.thirdLvl);
-                robot.svoIntakeTilt.setPosition(var.intakeHighInitial);
+                robot.movearm(vari.armInitPower, vari.thirdLvl);
+                robot.svoIntakeTilt.setPosition(vari.intakeHighInitial);
             } else if (runningOpMode == 2) {
-                robot.movearm(var.armInitPower, var.secondLvl);
-                robot.svoIntakeTilt.setPosition(var.intakeMid);
+                robot.movearm(vari.armInitPower, vari.secondLvl);
+                robot.svoIntakeTilt.setPosition(vari.intakeMid);
             } else if (runningOpMode == 1) {
-                robot.movearm(var.armInitPower, var.firstLvl);
-                robot.svoIntakeTilt.setPosition(var.intakeLow);
+                robot.movearm(vari.armInitPower, vari.firstLvl);
+                robot.svoIntakeTilt.setPosition(vari.intakeLow);
             }
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
@@ -177,37 +177,37 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
             telemetry.addLine("GOOOOOOOOO");
             telemetry.update();
             if (runningOpMode == 3) {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.svoIntakeTilt.setPosition(vari.intakeHigh);
                 drive.followTrajectory(toRedHub3);
                 while (spitTime.seconds() < 1.5) {
 
                 }
                 robot.svoIntake.setPower(0);
-                var.intakeCollectHalfway = ((var.intakeHigh - var.intakeCollect) / 2) + var.intakeCollect;
+                vari.intakeCollectHalfway = ((vari.intakeHigh - vari.intakeCollect) / 2) + vari.intakeCollect;
                 drive.followTrajectoryAsync(toPark1_3);
             } else if (runningOpMode == 2) {
-                robot.svoIntakeTilt.setPosition(var.intakeMid);
+                robot.svoIntakeTilt.setPosition(vari.intakeMid);
                 drive.followTrajectory(toRedHub2);
                 while (spitTime.seconds() < 1.5) {
 
                 }
                 robot.svoIntake.setPower(0);
-                var.intakeCollectHalfway = ((var.intakeMid - var.intakeCollect) / 2) + var.intakeCollect;
+                vari.intakeCollectHalfway = ((vari.intakeMid - vari.intakeCollect) / 2) + vari.intakeCollect;
                 drive.followTrajectoryAsync(toPark1_2);
             } else if (runningOpMode == 1) {
-                robot.svoIntakeTilt.setPosition(var.intakeLow);
+                robot.svoIntakeTilt.setPosition(vari.intakeLow);
                 drive.followTrajectory(toRedHub1);
                 while (spitTime.seconds() < 1.5) {
 
                 }
                 robot.svoIntake.setPower(0);
-                var.intakeCollectHalfway = ((var.intakeLow - var.intakeCollect) / 2) + var.intakeCollect;
+                vari.intakeCollectHalfway = ((vari.intakeLow - vari.intakeCollect) / 2) + vari.intakeCollect;
                 drive.followTrajectoryAsync(toPark1_1);
             }
 
             telemetry.addLine("1st part done");
             telemetry.update();
-            robot.svoIntakeTilt.setPosition(var.intakeInit);
+            robot.svoIntakeTilt.setPosition(vari.intakeInit);
             robot.mtrTurret.setPower(0.7);
             drive.update();
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -218,7 +218,7 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
                 if (robot.frontLimit.isPressed()) {
                     robot.mtrTurret.setPower(0);
                     robot.mtrArm.setPower(0.65);
-                    robot.svoIntakeTilt.setPosition(var.intakeCollectHalfway);
+                    robot.svoIntakeTilt.setPosition(vari.intakeCollectHalfway);
                     telemetry.addLine("front limit pressed");
                 }
                 if (robot.bottomLimit.isPressed()) {
@@ -237,7 +237,7 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
             telemetry.update();
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setPower(0);
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            robot.svoIntakeTilt.setPosition(vari.intakeCollect);
             //robot.movearm(0.5,125);
             //robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             //while(robot.mtrArm.isBusy()){
@@ -254,11 +254,11 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
             /**
              * drive into warehouse for consumption
              */
-            robot.svoIntake.setPower(var.almostFullPower);
-            robot.mtrArm.setPower(var.holdDownArmPower);
+            robot.svoIntake.setPower(vari.almostFullPower);
+            robot.mtrArm.setPower(vari.holdDownArmPower);
             drive.followTrajectoryAsync(goCollect);
             intakeTime.reset();
-            while (robot.intakeLimit.isPressed() && intakeTime.seconds() < var.intakeStopTime) {
+            while (robot.intakeLimit.isPressed() && intakeTime.seconds() < vari.intakeStopTime) {
                 telemetry.addLine("consuming");
                 telemetry.update();
                 drive.update();
@@ -287,12 +287,12 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
                         robot.mtrTurret.setPower(-0.4);
                     })
                     .addDisplacementMarker(0.96, 0, () -> {
-                        robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                        robot.svoIntake.setPower(-var.lessPower);
+                        robot.svoIntakeTilt.setPosition(vari.intakeHigh);
+                        robot.svoIntake.setPower(-vari.lessPower);
                         spitTime.reset();
                     })
                     .build();
-            robot.movearm(var.armInitPower, var.thirdLvl);
+            robot.movearm(vari.armInitPower, vari.thirdLvl);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             drive.followTrajectoryAsync(goBack);
@@ -316,7 +316,7 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
              */
             drive.followTrajectoryAsync(toPark1_3);
 
-            robot.svoIntakeTilt.setPosition(var.intakeInit);
+            robot.svoIntakeTilt.setPosition(vari.intakeInit);
             robot.mtrTurret.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             robot.mtrTurret.setPower(0.7);
             telemetry.addData("power of turret: ", robot.mtrTurret.getPower());
@@ -332,7 +332,7 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
                 if (robot.frontLimit.isPressed() && limitTime.seconds() > 0.75) {
                     robot.mtrTurret.setPower(0);
                     robot.mtrArm.setPower(0.65);
-                    robot.svoIntakeTilt.setPosition(var.intakeCollectHalfway);
+                    robot.svoIntakeTilt.setPosition(vari.intakeCollectHalfway);
                     telemetry.addLine("front limit pressed");
                 }
                 if (robot.bottomLimit.isPressed()) {
@@ -351,7 +351,7 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
             telemetry.update();
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setPower(0);
-            robot.svoIntakeTilt.setPosition(var.intakeCollect);
+            robot.svoIntakeTilt.setPosition(vari.intakeCollect);
             //robot.movearm(0.5,125);
             //robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             //while(robot.mtrArm.isBusy()){
@@ -365,11 +365,11 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
             /**
              * drive into warehouse for consumption
              */
-            robot.svoIntake.setPower(var.almostFullPower);
-            robot.mtrArm.setPower(var.holdDownArmPower);
+            robot.svoIntake.setPower(vari.almostFullPower);
+            robot.mtrArm.setPower(vari.holdDownArmPower);
             drive.followTrajectoryAsync(goCollect);
             intakeTime.reset();
-            while (robot.intakeLimit.isPressed() && intakeTime.seconds() < var.intakeStopTime) {
+            while (robot.intakeLimit.isPressed() && intakeTime.seconds() < vari.intakeStopTime) {
                 telemetry.addLine("consuming");
                 telemetry.update();
                 drive.update();
@@ -393,13 +393,13 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
                         robot.mtrTurret.setPower(-0.4);
                     })
                     .addDisplacementMarker(0.96, 0, () -> {
-                        robot.svoIntakeTilt.setPosition(var.intakeHigh);
-                        robot.svoIntake.setPower(-var.lessPower);
+                        robot.svoIntakeTilt.setPosition(vari.intakeHigh);
+                        robot.svoIntake.setPower(-vari.lessPower);
                         spitTime.reset();
                     })
                     .build();
 
-            robot.movearm(var.armInitPower, var.thirdLvl);
+            robot.movearm(vari.armInitPower, vari.thirdLvl);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.svoIntake.setPower(0.1);
             sleep(500);
@@ -441,16 +441,16 @@ public class AutoRedWarehouseFrontWThirdBlock extends LinearOpMode {
 
     public void spitOutBlock(boolean warehouse_block) {
         if (warehouse_block) {
-            robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            robot.svoIntakeTilt.setPosition(vari.intakeHigh);
         } else if (runningOpMode == 3) {
-            robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            robot.svoIntakeTilt.setPosition(vari.intakeHigh);
         } else if (runningOpMode == 2) {
-            robot.svoIntakeTilt.setPosition(var.intakeMid);
+            robot.svoIntakeTilt.setPosition(vari.intakeMid);
         } else if (runningOpMode == 1) {
-            robot.svoIntakeTilt.setPosition(var.intakeLow);
+            robot.svoIntakeTilt.setPosition(vari.intakeLow);
         }
         sleep(750);
-        robot.svoIntake.setPower(-var.lessPower);
+        robot.svoIntake.setPower(-vari.lessPower);
         sleep(2500);
         robot.svoIntake.setPower(0);
     }

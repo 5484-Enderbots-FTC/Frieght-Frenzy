@@ -23,7 +23,7 @@ public class findArmEncoderPos extends LinearOpMode {
 
     public void runOpMode() {
         robot.init(hardwareMap);
-        robot.svoIntakeTilt.setPosition(var.intakeInit);
+        robot.svoIntakeTilt.setPosition(vari.intakeInit);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();

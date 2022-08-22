@@ -34,7 +34,7 @@ import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.autoTrajectories;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.vari;
 
 @Disabled
 @Autonomous(name = "autoRedCarousel no webcam w freight")
@@ -96,7 +96,7 @@ public class AutoRedCarouselNoWebWFreight extends LinearOpMode {
         Trajectory intakeForward = drive.trajectoryBuilder(toPark2.end())
                 .forward(20,  FFMecanumDrive.getVelocityConstraint(10, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .addTemporalMarker(0, () -> {robot.svoIntake.setPower(var.intakeCollect);})
+                .addTemporalMarker(0, () -> {robot.svoIntake.setPower(vari.intakeCollect);})
                 .build();
 
         //TODO: change the starting pose to be changeable??
@@ -123,7 +123,7 @@ public class AutoRedCarouselNoWebWFreight extends LinearOpMode {
             robot.svoCarousel.setPower(1);
             robot.armToPosition(runningOpMode);
             duckTimer.reset();
-            while(duckTimer.seconds() <= var.duckTime && robot.mtrArm.isBusy()){
+            while(duckTimer.seconds() <= vari.duckTime && robot.mtrArm.isBusy()){
                 telemetry.addData("is servo running? ", robot.svoCarousel.getPower());
                 telemetry.update();
             }
@@ -135,11 +135,11 @@ public class AutoRedCarouselNoWebWFreight extends LinearOpMode {
              * drive to red hub & spit out block then park :3
              */
             if (runningOpMode == 3) {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.svoIntakeTilt.setPosition(vari.intakeHigh);
             } else if (runningOpMode == 2) {
-                robot.svoIntakeTilt.setPosition(var.intakeMid);
+                robot.svoIntakeTilt.setPosition(vari.intakeMid);
             } else if (runningOpMode == 1) {
-                robot.svoIntakeTilt.setPosition(var.intakeLow);
+                robot.svoIntakeTilt.setPosition(vari.intakeLow);
             }
             if (runningOpMode == 3) {
                 drive.followTrajectory(toRedHub3);
@@ -158,7 +158,7 @@ public class AutoRedCarouselNoWebWFreight extends LinearOpMode {
             //TODO: utilize left/right limits to start moving the turret perhaps while it's in the park1 trajectory
             //      then move the arm down until it hits bottom limit
             //      THEN go grab more freight
-            robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            robot.svoIntakeTilt.setPosition(vari.intakeHigh);
             drive.followTrajectory(toPark2);
 
             /**
@@ -169,7 +169,7 @@ public class AutoRedCarouselNoWebWFreight extends LinearOpMode {
     }
 
     public void spitOutBlock() {
-        robot.svoIntake.setPower(-var.lessPower);
+        robot.svoIntake.setPower(-vari.lessPower);
         sleep(1500);
         robot.svoIntake.setPower(0);
     }

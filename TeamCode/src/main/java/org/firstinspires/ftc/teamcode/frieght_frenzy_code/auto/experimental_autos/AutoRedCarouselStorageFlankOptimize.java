@@ -32,7 +32,7 @@ import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.ElementAnalysisPipelineFF;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.autoTrajectories;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.vari;
 
 import java.util.ArrayList;
 
@@ -56,7 +56,7 @@ public class AutoRedCarouselStorageFlankOptimize extends LinearOpMode {
 
         Trajectory toRedCarousel3 = drive.trajectoryBuilder(traj.startPoseRC, true)
                 .addTemporalMarker(0, () -> {
-                    robot.movearm(var.armInitPower, var.thirdLvl);
+                    robot.movearm(vari.armInitPower, vari.thirdLvl);
                 })
                 .addTemporalMarker(0.01, () -> {
                     robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -72,7 +72,7 @@ public class AutoRedCarouselStorageFlankOptimize extends LinearOpMode {
 
         Trajectory toRedCarousel2 = drive.trajectoryBuilder(traj.startPoseRC, true)
                 .addTemporalMarker(0, () -> {
-                    robot.movearm(var.armInitPower, var.secondLvl);
+                    robot.movearm(vari.armInitPower, vari.secondLvl);
                 })
                 .addTemporalMarker(0.01, () -> {
                     robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -88,7 +88,7 @@ public class AutoRedCarouselStorageFlankOptimize extends LinearOpMode {
 
         Trajectory toRedCarousel1 = drive.trajectoryBuilder(traj.startPoseRC, true)
                 .addTemporalMarker(0, () -> {
-                    robot.movearm(var.armInitPower, var.firstLvl);
+                    robot.movearm(vari.armInitPower, vari.firstLvl);
                 })
                 .addTemporalMarker(0.01, () -> {
                     robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -132,7 +132,7 @@ public class AutoRedCarouselStorageFlankOptimize extends LinearOpMode {
 
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
-        robot.svoIntakeTilt.setPosition(var.intakeInit);
+        robot.svoIntakeTilt.setPosition(vari.intakeInit);
         sleep(5000);
         while (!isStarted()) {
             //what did u detect
@@ -202,23 +202,23 @@ public class AutoRedCarouselStorageFlankOptimize extends LinearOpMode {
             drive.followTrajectory(toFlank);
 
             if (runningOpMode == 3) {
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.svoIntakeTilt.setPosition(vari.intakeHigh);
                 drive.followTrajectory(toRedHub3);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_3);
             } else if (runningOpMode == 2) {
-                robot.svoIntakeTilt.setPosition(var.intakeMid);
+                robot.svoIntakeTilt.setPosition(vari.intakeMid);
                 drive.followTrajectory(toRedHub2);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_2);
             } else if (runningOpMode == 1) {
-                robot.svoIntakeTilt.setPosition(var.intakeLow);
+                robot.svoIntakeTilt.setPosition(vari.intakeLow);
                 drive.followTrajectory(toRedHub1);
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
             }
 
-            robot.svoIntakeTilt.setPosition(var.intakeInit);
+            robot.svoIntakeTilt.setPosition(vari.intakeInit);
 
             /**
              * set turret to go collect pos and arm go down
@@ -234,14 +234,14 @@ public class AutoRedCarouselStorageFlankOptimize extends LinearOpMode {
 
     public void spitOutBlock() {
         if (runningOpMode == 3) {
-            robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            robot.svoIntakeTilt.setPosition(vari.intakeHigh);
         } else if (runningOpMode == 2) {
-            robot.svoIntakeTilt.setPosition(var.intakeMid);
+            robot.svoIntakeTilt.setPosition(vari.intakeMid);
         } else if (runningOpMode == 1) {
-            robot.svoIntakeTilt.setPosition(var.intakeLow);
+            robot.svoIntakeTilt.setPosition(vari.intakeLow);
         }
         sleep(1000);
-        robot.svoIntake.setPower(-var.lessPower);
+        robot.svoIntake.setPower(-vari.lessPower);
         sleep(1500);
         robot.svoIntake.setPower(0);
     }

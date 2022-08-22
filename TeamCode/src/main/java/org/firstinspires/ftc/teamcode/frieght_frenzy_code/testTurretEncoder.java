@@ -9,8 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
 
 @Disabled
@@ -29,7 +27,7 @@ public class testTurretEncoder extends LinearOpMode {
                 .lineToConstantHeading(new Vector2d(35, 0))
                 .build();
 
-        robot.svoIntakeTilt.setPosition(var.intakeCollect);
+        robot.svoIntakeTilt.setPosition(vari.intakeCollect);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
@@ -39,7 +37,7 @@ public class testTurretEncoder extends LinearOpMode {
             drive.followTrajectoryAsync(traj);
             robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            robot.movearm(0.7, var.thirdLvl);
+            robot.movearm(0.7, vari.thirdLvl);
             robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             while(robot.mtrArm.getCurrentPosition() >= -1000){

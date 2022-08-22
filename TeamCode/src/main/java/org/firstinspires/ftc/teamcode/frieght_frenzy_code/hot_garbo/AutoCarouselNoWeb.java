@@ -21,7 +21,6 @@
 
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code.hot_garbo;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -33,7 +32,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.autoTrajectories;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.vari;
 
 @Disabled
 @Autonomous(name = "autoCarousel no webcam")
@@ -152,7 +151,7 @@ public class AutoCarouselNoWeb extends LinearOpMode {
 
         robot.armToPosition(runningOpMode);
         duckTimer.reset();
-        while (duckTimer.seconds() <= var.duckTime && robot.mtrArm.isBusy()) {
+        while (duckTimer.seconds() <= vari.duckTime && robot.mtrArm.isBusy()) {
             telemetry.addData("is servo running? ", robot.svoCarousel.getPower());
             telemetry.update();
         }
@@ -164,11 +163,11 @@ public class AutoCarouselNoWeb extends LinearOpMode {
          * drive to red hub & spit out block then park :3
          */
         if (runningOpMode == 3) {
-            robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            robot.svoIntakeTilt.setPosition(vari.intakeHigh);
         } else if (runningOpMode == 2) {
-            robot.svoIntakeTilt.setPosition(var.intakeMid);
+            robot.svoIntakeTilt.setPosition(vari.intakeMid);
         } else if (runningOpMode == 1) {
-            robot.svoIntakeTilt.setPosition(var.intakeLow);
+            robot.svoIntakeTilt.setPosition(vari.intakeLow);
         }
 
         if (robot.alliance == robot.red) {
@@ -185,7 +184,7 @@ public class AutoCarouselNoWeb extends LinearOpMode {
                 spitOutBlock();
                 drive.followTrajectory(toPark1_1);
             }
-            robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            robot.svoIntakeTilt.setPosition(vari.intakeHigh);
             drive.followTrajectory(toPark2);
         } else {
             if (runningOpMode == 3) {
@@ -201,13 +200,13 @@ public class AutoCarouselNoWeb extends LinearOpMode {
                 spitOutBlock();
                 drive.followTrajectory(toParkBlue1_1);
             }
-            robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            robot.svoIntakeTilt.setPosition(vari.intakeHigh);
             drive.followTrajectory(toParkBlue2);
         }
     }
 
     public void spitOutBlock() {
-        robot.svoIntake.setPower(-var.lessPower);
+        robot.svoIntake.setPower(-vari.lessPower);
         sleep(1500);
         robot.svoIntake.setPower(0);
     }

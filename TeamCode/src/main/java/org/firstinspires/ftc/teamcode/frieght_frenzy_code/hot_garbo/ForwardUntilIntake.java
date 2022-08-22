@@ -22,12 +22,10 @@
 package org.firstinspires.ftc.teamcode.frieght_frenzy_code.hot_garbo;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
@@ -35,9 +33,7 @@ import org.firstinspires.ftc.teamcode.drive.FFMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.FFMecanumDriveCancelable;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.autoTrajectories;
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
-
-import java.util.ArrayList;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.vari;
 
 @Disabled
 @Autonomous(name = "intaque")
@@ -67,7 +63,7 @@ public class ForwardUntilIntake extends LinearOpMode {
         Trajectory intakeForward = drive.trajectoryBuilder(traj.startPoseRC)
                 .forward(20,  FFMecanumDrive.getVelocityConstraint(maxVel, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         FFMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .addTemporalMarker(0, () -> {robot.svoIntake.setPower(var.intakeCollect);})
+                .addTemporalMarker(0, () -> {robot.svoIntake.setPower(vari.intakeCollect);})
                 .build();
 
 
@@ -96,16 +92,16 @@ public class ForwardUntilIntake extends LinearOpMode {
     }
     public void spitOutBlock (){
         if (runningOpMode ==3 ){
-            robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            robot.svoIntakeTilt.setPosition(vari.intakeHigh);
         }
         else if (runningOpMode == 2){
-            robot.svoIntakeTilt.setPosition(var.intakeMid);
+            robot.svoIntakeTilt.setPosition(vari.intakeMid);
         }
         else if (runningOpMode  == 1){
-            robot.svoIntakeTilt.setPosition(var.intakeLow);
+            robot.svoIntakeTilt.setPosition(vari.intakeLow);
         }
         sleep(1000);
-        robot.svoIntake.setPower(-var.lessPower);
+        robot.svoIntake.setPower(-vari.lessPower);
         sleep(1500);
         robot.svoIntake.setPower(0);
     }

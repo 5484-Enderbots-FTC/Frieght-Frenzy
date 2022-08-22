@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp(name = "initProcess", group = "teleop")
 public class initProcessTeleOp extends LinearOpMode {
     hardwareFF robot = new hardwareFF();
-    private static double reset = 0;
+    private static double reset = 0.35;
     private static double low = 0;
     private static double inc = 0.005;
     private double tiltNumber = 0;
@@ -23,7 +23,7 @@ public class initProcessTeleOp extends LinearOpMode {
         while(opModeIsActive() && !isStopRequested()){
 
             if(gamepad1.dpad_up){
-                robot.svoIntake.setPower(-var.lessPower);
+                robot.svoIntake.setPower(-vari.lessPower);
             }
             if (!robot.intakeLimit.isPressed()) {
                 freightCollected = true;
@@ -31,13 +31,13 @@ public class initProcessTeleOp extends LinearOpMode {
                 freightCollected = false;
             }
             if(freightCollected){
-                robot.svoIntake.setPower(var.stop);
+                robot.svoIntake.setPower(vari.stop);
             }
             if(gamepad1.y){
-                robot.svoIntake.setPower(var.lessPower);
+                robot.svoIntake.setPower(vari.lessPower);
             }
             if(gamepad1.x){
-                robot.svoIntake.setPower(var.stop);
+                robot.svoIntake.setPower(vari.stop);
             }
             if(robot.bottomLimit.isPressed() && gamepad1.left_stick_y > 0){
                 robot.mtrArm.setPower(0);
@@ -79,8 +79,13 @@ public class initProcessTeleOp extends LinearOpMode {
                 robot.svoIntakeTilt.setPosition(reset);
             }
             if(gamepad1.right_bumper){
-                robot.svoIntakeTilt.setPosition(var.intakeCollect);
+                robot.svoIntakeTilt.setPosition(vari.intakeCollect);
             }
+
+            if(gamepad2.a){
+                robot.mtrIntake.setPower(0.2);
+            }
+
             robot.mtrTape.setPower(gamepad1.right_trigger-gamepad1.left_trigger);
 
             telemetry.addData("MidLimit? ", robot.midLimit.isPressed());

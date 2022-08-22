@@ -95,7 +95,7 @@ public class AutoRedCarouselWithWeb extends LinearOpMode {
 
         // Tell telemetry to update faster than the default 250ms period :)
         telemetry.setMsTransmissionInterval(20);
-        robot.svoIntakeTilt.setPosition(var.intakeInit);
+        robot.svoIntakeTilt.setPosition(vari.intakeInit);
         sleep(5000);
         while (!isStarted()) {
             //what did u detect
@@ -142,7 +142,7 @@ public class AutoRedCarouselWithWeb extends LinearOpMode {
             robot.svoCarousel.setPower(1);
             robot.armToPosition(runningOpMode);
             duckTimer.reset();
-            while(duckTimer.seconds() <= var.duckTime && robot.mtrArm.isBusy()){
+            while(duckTimer.seconds() <= vari.duckTime && robot.mtrArm.isBusy()){
                 telemetry.addData("is servo running? ", robot.svoCarousel.getPower());
                 telemetry.update();
             }
@@ -154,13 +154,13 @@ public class AutoRedCarouselWithWeb extends LinearOpMode {
              * drive to red hub & spit out block then park :3
              */
             if (runningOpMode ==3 ){
-                robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                robot.svoIntakeTilt.setPosition(vari.intakeHigh);
             }
             else if (runningOpMode == 2){
-                robot.svoIntakeTilt.setPosition(var.intakeMid);
+                robot.svoIntakeTilt.setPosition(vari.intakeMid);
             }
             else if (runningOpMode  == 1){
-                robot.svoIntakeTilt.setPosition(var.intakeLow);
+                robot.svoIntakeTilt.setPosition(vari.intakeLow);
             }
             if (runningOpMode == 3) {
                 drive.followTrajectory(toRedHub3);
@@ -176,14 +176,14 @@ public class AutoRedCarouselWithWeb extends LinearOpMode {
                 drive.followTrajectory(toPark1_1);
             }
 
-            robot.svoIntakeTilt.setPosition(var.intakeHigh);
+            robot.svoIntakeTilt.setPosition(vari.intakeHigh);
             drive.followTrajectory(toPark2);
 
             break;
         }
     }
     public void spitOutBlock (){
-        robot.svoIntake.setPower(-var.lessPower);
+        robot.svoIntake.setPower(-vari.lessPower);
         sleep(1500);
         robot.svoIntake.setPower(0);
     }

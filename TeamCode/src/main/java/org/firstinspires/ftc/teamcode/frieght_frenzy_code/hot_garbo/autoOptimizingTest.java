@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.vari;
 
 @Disabled
 @Autonomous(name = "auto optimizing woo")
@@ -33,7 +33,7 @@ public class autoOptimizingTest extends LinearOpMode {
         robot.svoCarousel.setPower(1);
         robot.mtrArm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.mtrArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.movearm(0.7, var.secondLvl);
+        robot.movearm(0.7, vari.secondLvl);
         robot.mtrArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         duckTimer.reset();
         while(duckTimer.seconds() <= duckTime && robot.mtrArm.isBusy()){

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.frieght_frenzy_code.hardwareFF;
-import org.firstinspires.ftc.teamcode.frieght_frenzy_code.var;
+import org.firstinspires.ftc.teamcode.frieght_frenzy_code.vari;
 
 @TeleOp(name = "teleop ff mod", group = "teleop")
 public class Tom_teleop_two_remotes extends LinearOpMode {
@@ -68,12 +68,12 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
              */
 
             //make robot wheels go brrr
-            if (gamepad1.left_bumper && !babyMode && toggleBabyTimer.seconds() > var.toggleWait) {
+            if (gamepad1.left_bumper && !babyMode && toggleBabyTimer.seconds() > vari.toggleWait) {
                 //activate baby slow mode when left bumper is pressed
                 babyMode = true;
                 toggleBabyTimer.reset();
             }
-            if (gamepad1.left_bumper && babyMode && toggleBabyTimer.seconds() > var.toggleWait) {
+            if (gamepad1.left_bumper && babyMode && toggleBabyTimer.seconds() > vari.toggleWait) {
                 //deactivate baby slow mode by pressing left bumper again
                 babyMode = false;
                 toggleBabyTimer.reset();
@@ -89,22 +89,22 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
             if (gamepad1.a) {
                 carouselSpinning = true;
                 if (robot.alliance_switch.getState() == true) {
-                    robot.svoCarousel.setPower(var.fullPower);
+                    robot.svoCarousel.setPower(vari.fullPower);
                 } else {
-                    robot.svoCarousel.setPower(-var.fullPower);
+                    robot.svoCarousel.setPower(-vari.fullPower);
                 }
 
             }
             if (gamepad1.b) {
                 carouselSpinning = false;
-                robot.svoCarousel.setPower(var.stop);
+                robot.svoCarousel.setPower(vari.stop);
             }
             if (gamepad1.x) {
                 carouselSpinning = true;
                 if (robot.alliance_switch.getState() == true) {
-                    robot.svoCarousel.setPower(-var.fullPower);
+                    robot.svoCarousel.setPower(-vari.fullPower);
                 } else {
-                    robot.svoCarousel.setPower(var.fullPower);
+                    robot.svoCarousel.setPower(vari.fullPower);
                 }
             }
 
@@ -185,17 +185,17 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
              */
 
             //TODO: fix collect position if it's too low normally :P
-            if(robot.mtrTape.getCurrentPosition() < var.tapeTimeIsNow){
+            if(robot.mtrTape.getCurrentPosition() < vari.tapeTimeIsNow){
                 //basically: if not TAPE TIME then do this
-                if(robot.mtrArm.getCurrentPosition() >= -var.armIntakeTiltSwitch){
-                    robot.svoIntakeTilt.setPosition(var.intakeCollectTeleop);
+                if(robot.mtrArm.getCurrentPosition() >= -vari.armIntakeTiltSwitch){
+                    robot.svoIntakeTilt.setPosition(vari.intakeCollectTeleop);
                 }
-                if(robot.mtrArm.getCurrentPosition() < -var.armIntakeTiltSwitch){
-                    robot.svoIntakeTilt.setPosition(var.intakeHigh);
+                if(robot.mtrArm.getCurrentPosition() < -vari.armIntakeTiltSwitch){
+                    robot.svoIntakeTilt.setPosition(vari.intakeHigh);
                 }
             }else{
                 //otherwise, set intake to init pls
-                robot.svoIntakeTilt.setPosition(var.intakeInit);
+                robot.svoIntakeTilt.setPosition(vari.intakeInit);
             }
 
             /**
@@ -209,16 +209,16 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
 
             if (!freightCollected) {
                 if (robot.bottomLimit.isPressed() && intakeState != Status.IN) {
-                    robot.svoIntake.setPower(var.lessPower);
+                    robot.svoIntake.setPower(vari.lessPower);
                     intakeState = Status.IN;
                 }
-                robot.LEDstrip.setPosition(var.green);
+                robot.LEDstrip.setPosition(vari.green);
             }
             if (freightCollected) {
                 if (intakeState != Status.OUT) {
-                    robot.svoIntake.setPower(var.stop);
+                    robot.svoIntake.setPower(vari.stop);
                     intakeState = Status.STOPPED;
-                    robot.LEDstrip.setPosition(var.red);
+                    robot.LEDstrip.setPosition(vari.red);
                 }
             }
 
@@ -226,18 +226,18 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
 
             //run intake
             if (gamepad2.a) {
-                robot.svoIntake.setPower(var.lessPower);
+                robot.svoIntake.setPower(vari.lessPower);
                 intakeState = Status.IN;
             }
             //reverse intake
             if (gamepad2.b) {
                 //might turn this into an output sequence
                 intakeState = Status.OUT;
-                robot.svoIntake.setPower(-var.lessPower);
+                robot.svoIntake.setPower(-vari.lessPower);
             }
             //stop intake
             if (gamepad2.x) {
-                robot.svoIntake.setPower(var.stop);
+                robot.svoIntake.setPower(vari.stop);
                 intakeState = Status.STOPPED;
             }
 
@@ -245,10 +245,10 @@ public class Tom_teleop_two_remotes extends LinearOpMode {
              * MEASURE NOW
              */
 
-            if (gamepad2.left_bumper && precisionCap == 1 && togglePrecisionCap.seconds() > var.toggleWait) {
+            if (gamepad2.left_bumper && precisionCap == 1 && togglePrecisionCap.seconds() > vari.toggleWait) {
                 precisionCap = 2;
                 togglePrecisionCap.reset();
-                if (gamepad2.left_bumper && precisionCap == 2 && togglePrecisionCap.seconds() > var.toggleWait) {
+                if (gamepad2.left_bumper && precisionCap == 2 && togglePrecisionCap.seconds() > vari.toggleWait) {
                     precisionCap = 1;
                 }
                 togglePrecisionCap.reset();
